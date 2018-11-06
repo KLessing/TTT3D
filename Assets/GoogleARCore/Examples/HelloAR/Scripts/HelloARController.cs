@@ -55,6 +55,14 @@ namespace GoogleARCore.Examples.HelloAR
         /// </summary>
         public GameObject AndyPointPrefab;
 
+        // Own prefabs
+        public GameObject SmallCrossPrefab;
+        public GameObject MediumCrossPrefab;
+        public GameObject LargeCrossPrefab;
+        public GameObject SmallCirclePrefab;
+        public GameObject MediumCirclePrefab;
+        public GameObject LargeCirclePrefab;
+
         /// <summary>
         /// A gameobject parenting UI for displaying the "searching for planes" snackbar.
         /// </summary>
@@ -121,29 +129,35 @@ namespace GoogleARCore.Examples.HelloAR
                 }
                 else
                 {
-                    // Choose the Andy model for the Trackable that got hit.
-                    GameObject prefab;
-                    if (hit.Trackable is FeaturePoint)
-                    {
-                        prefab = AndyPointPrefab;
-                    }
-                    else
-                    {
-                        prefab = AndyPlanePrefab;
-                    }
+                    //// Choose the Andy model for the Trackable that got hit.
+                    //GameObject prefab;
+                    //if (hit.Trackable is FeaturePoint)
+                    //{
+                    //    prefab = AndyPointPrefab;
+                    //}
+                    //else
+                    //{
+                    //    prefab = AndyPlanePrefab;
+                    //}
 
-                    // Instantiate Andy model at the hit pose.
-                    var andyObject = Instantiate(prefab, hit.Pose.position, hit.Pose.rotation);
+                    //// Instantiate Andy model at the hit pose.
+                    //var andyObject = Instantiate(prefab, hit.Pose.position, hit.Pose.rotation);
+
+                    // TODO get selected prefab
+                    GameObject prefab = SmallCrossPrefab;
+
+                    var playerObject = Instantiate(prefab, hit.Pose.position, hit.Pose.rotation);
+
 
                     // Compensate for the hitPose rotation facing away from the raycast (i.e. camera).
-                    andyObject.transform.Rotate(0, k_ModelRotation, 0, Space.Self);
+                    playerObject.transform.Rotate(0, k_ModelRotation, 0, Space.Self);
 
                     // Create an anchor to allow ARCore to track the hitpoint as understanding of the physical
                     // world evolves.
                     var anchor = hit.Trackable.CreateAnchor(hit.Pose);
 
                     // Make Andy model a child of the anchor.
-                    andyObject.transform.parent = anchor.transform;
+                    playerObject.transform.parent = anchor.transform;
                 }
             }
         }
