@@ -129,34 +129,16 @@ namespace GoogleARCore.Examples.HelloAR
                 }
                 else
                 {
-                    //// Choose the Andy model for the Trackable that got hit.
-                    //GameObject prefab;
-                    //if (hit.Trackable is FeaturePoint)
-                    //{
-                    //    prefab = AndyPointPrefab;
-                    //}
-                    //else
-                    //{
-                    //    prefab = AndyPlanePrefab;
-                    //}
-
-                    //// Instantiate Andy model at the hit pose.
-                    //var andyObject = Instantiate(prefab, hit.Pose.position, hit.Pose.rotation);
-
                     // TODO get selected prefab
-                    GameObject prefab = SmallCrossPrefab;
+                    GameObject selectedPrefab = SmallCrossPrefab;
+                    // rotate the object to place it flat on the surface
+                    Quaternion rotation = Quaternion.Euler(90.0f, 45.0f, 0.0f);
+                    // show the object
+                    var playerObject = Instantiate(selectedPrefab, hit.Pose.position, rotation);
 
-                    var playerObject = Instantiate(prefab, hit.Pose.position, hit.Pose.rotation);
-
-
-                    // Compensate for the hitPose rotation facing away from the raycast (i.e. camera).
-                    playerObject.transform.Rotate(0, k_ModelRotation, 0, Space.Self);
-
-                    // Create an anchor to allow ARCore to track the hitpoint as understanding of the physical
-                    // world evolves.
+                    // use parent anchor to ensure that the object stays on the same postition 
+                    // ON the surface while the camera moves
                     var anchor = hit.Trackable.CreateAnchor(hit.Pose);
-
-                    // Make Andy model a child of the anchor.
                     playerObject.transform.parent = anchor.transform;
                 }
             }
