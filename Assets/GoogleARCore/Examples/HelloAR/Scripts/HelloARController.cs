@@ -130,7 +130,7 @@ namespace GoogleARCore.Examples.HelloAR
                 else
                 {
                     // TODO get selected prefab
-                    GameObject selectedPrefab = SmallCrossPrefab;
+                    GameObject selectedPrefab = LargeCirclePrefab;
                     // rotate the object to place it flat on the surface
                     Quaternion rotation = Quaternion.Euler(90.0f, 45.0f, 0.0f);
                     // show the object
