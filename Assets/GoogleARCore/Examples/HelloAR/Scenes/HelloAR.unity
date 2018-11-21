@@ -276,12 +276,12 @@ MonoBehaviour:
     type: 2}
   AndyPointPrefab: {fileID: 1190091649889860, guid: b27e8d7fe70df464188ea5dcf2af0bb3,
     type: 2}
-  SmallCrossPrefab: {fileID: 100000, guid: 0c5be8d6b14c7c846aa5e924f04eae7c, type: 3}
-  MediumCrossPrefab: {fileID: 100000, guid: 60900e257f30a974bae3000b049357c3, type: 3}
-  LargeCrossPrefab: {fileID: 100000, guid: 2ffa45434c55d0d4b8fc275920c5ed78, type: 3}
-  SmallCirclePrefab: {fileID: 100000, guid: 4e06dd49ede2d744098ded4f971a848f, type: 3}
-  MediumCirclePrefab: {fileID: 100000, guid: eba78f545a5f7ff41bbdd17ef5226a76, type: 3}
-  LargeCirclePrefab: {fileID: 100000, guid: 73fba2e5f1f16bb479964b8803ca3a7f, type: 3}
+  SmallCrossPrefab: {fileID: 100000, guid: 497bd2901c7ec9347afd442557369ddf, type: 3}
+  MediumCrossPrefab: {fileID: 100000, guid: 3f31bea4628040149ac6dcd6d7d766a5, type: 3}
+  LargeCrossPrefab: {fileID: 100000, guid: 9aef9bd05fe17fd45aa0d73a4a5760ab, type: 3}
+  SmallCirclePrefab: {fileID: 100000, guid: 8b2f2149d0fad984cb6691b41689ddcc, type: 3}
+  MediumCirclePrefab: {fileID: 100000, guid: debcbd6c20841c84ca10e2d5f5332219, type: 3}
+  LargeCirclePrefab: {fileID: 100000, guid: 9745e8050fea74a47b26db7f33dd9b4f, type: 3}
   SearchingForPlaneUI: {fileID: 1133631540}
 --- !u!20 &896679035 stripped
 Camera:
