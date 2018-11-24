@@ -41,36 +41,64 @@ namespace GoogleARCore.Examples.AugmentedImage
         public GameObject MediumCross;
         public GameObject LargeCross;
 
+        public GameObject SmallCircle;
+        public GameObject MediumCircle;
+        public GameObject LargeCircle;
+
         /// <summary>
         /// The Unity Update method.
         /// </summary>
         public void Update()
         {
+            // Always deactivate everything first
+            // Otherwise they are visible even when not used
+            SmallCross.SetActive(false);
+            MediumCross.SetActive(false);
             LargeCross.SetActive(false);
-            //SmallCross.SetActive(false);
 
-            if (Image == null || Image.TrackingState != TrackingState.Tracking)
-            {
-                SmallCross.SetActive(false);
-                MediumCross.SetActive(false);
-                return;
-            }
+            SmallCircle.SetActive(false);
+            MediumCircle.SetActive(false);
+            LargeCircle.SetActive(false);
 
-            float halfWidth = Image.ExtentX / 2;
-            float halfHeight = Image.ExtentZ / 2;
+            //if (Image == null || Image.TrackingState != TrackingState.Tracking)
+            //{
+            //    SmallCross.SetActive(false);
+            //    MediumCross.SetActive(false);
+            //    return;
+            //}
 
-            //FrameLowerLeft.transform.localPosition = (halfWidth * Vector3.left) + (halfHeight * Vector3.back);
-            //FrameLowerRight.transform.localPosition = (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
-            //FrameUpperLeft.transform.localPosition = (halfWidth * Vector3.left) + (halfHeight * Vector3.forward);
+            // Third width and height for middle of outer fields
+            float thirdWidth = Image.ExtentX / 3;
+            float thirdHeight = Image.ExtentZ / 3;
 
-            SmallCross.transform.localPosition = (halfWidth * Vector3.forward);
-            MediumCross.transform.localPosition = Vector3.zero;
+            // Position Vectors
+            Vector3 topLeft = (thirdWidth * Vector3.left) + (thirdHeight * Vector3.forward);
+            Vector3 topMiddle = (thirdHeight * Vector3.forward);
+            Vector3 topRight = (thirdWidth * Vector3.right) + (thirdHeight * Vector3.forward);
+
+            Vector3 middleLeft = (thirdWidth * Vector3.left);
+            Vector3 middle = Vector3.zero;
+            Vector3 middleRight = (thirdWidth * Vector3.right);
+
+            Vector3 bottomLeft = (thirdWidth * Vector3.left) + (thirdHeight * Vector3.back);
+            Vector3 bottomMiddle = (thirdHeight * Vector3.back);
+            Vector3 bottomRight = (thirdWidth * Vector3.right) + (thirdHeight * Vector3.back);            
 
 
+            SmallCross.transform.localPosition = topMiddle;
+            MediumCross.transform.localPosition = middle;
+            LargeCross.transform.localPosition = bottomMiddle;
+
+            SmallCircle.transform.localPosition = bottomLeft;
+            MediumCircle.transform.localPosition = topRight;
 
 
-           // SmallCross.SetActive(true);
+            SmallCross.SetActive(true);
             MediumCross.SetActive(true);
+            LargeCross.SetActive(true);
+
+            SmallCircle.SetActive(true);
+            MediumCircle.SetActive(true);
         }
     }
 }
