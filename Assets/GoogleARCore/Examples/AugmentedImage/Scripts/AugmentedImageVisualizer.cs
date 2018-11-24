@@ -38,15 +38,21 @@ namespace GoogleARCore.Examples.AugmentedImage
         public AugmentedImage Image;
 
         public GameObject SmallCross;
+        public GameObject MediumCross;
+        public GameObject LargeCross;
 
         /// <summary>
         /// The Unity Update method.
         /// </summary>
         public void Update()
         {
+            LargeCross.SetActive(false);
+            //SmallCross.SetActive(false);
+
             if (Image == null || Image.TrackingState != TrackingState.Tracking)
             {
                 SmallCross.SetActive(false);
+                MediumCross.SetActive(false);
                 return;
             }
 
@@ -57,10 +63,14 @@ namespace GoogleARCore.Examples.AugmentedImage
             //FrameLowerRight.transform.localPosition = (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
             //FrameUpperLeft.transform.localPosition = (halfWidth * Vector3.left) + (halfHeight * Vector3.forward);
 
-            SmallCross.transform.localPosition = Vector3.zero;
+            SmallCross.transform.localPosition = (halfWidth * Vector3.forward);
+            MediumCross.transform.localPosition = Vector3.zero;
 
 
-            SmallCross.SetActive(true);
+
+
+           // SmallCross.SetActive(true);
+            MediumCross.SetActive(true);
         }
     }
 }
