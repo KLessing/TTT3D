@@ -24,7 +24,6 @@ namespace GoogleARCore.Examples.HelloAR
     using GoogleARCore;
     using GoogleARCore.Examples.Common;
     using UnityEngine;
-    using UnityEngine.UI;
 
 #if UNITY_EDITOR
     // Set up touch input propagation while using Instant Preview in the editor.
@@ -84,23 +83,6 @@ namespace GoogleARCore.Examples.HelloAR
         /// True if the app is in the process of quitting due to an ARCore connection error, otherwise false.
         /// </summary>
         private bool m_IsQuitting = false;
-
-
-        // needs UnityEngine.UI
-        public Button TestButton;
-        
-        void Start()
-        {
-            Debug.Log("Start called");
-            TestButton.OnSelect(ButtonClicked); // onClick.AddListener(ButtonClicked);                
-        }
-
-        void ButtonClicked()
-        {
-            Debug.Log("Button clicked");
-        }
-
-
 
         /// <summary>
         /// The Unity Update() method.
