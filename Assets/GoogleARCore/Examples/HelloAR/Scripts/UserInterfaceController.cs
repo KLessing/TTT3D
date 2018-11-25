@@ -11,39 +11,50 @@ public class UserInterfaceController : MonoBehaviour {
     public GameObject GameFieldSelection;
 
     // The Selections
-    private string selectedToken;
-    private string selectedField;
+    private string selectedToken = "";
+    private string selectedField = "";
     // TODO enum for individual Token and Field ids
 
+    
 
     public void next()
     {
-        CrossTokenSelection.SetActive(false);
-        GameFieldSelection.SetActive(true);
+        if (selectedToken != "")
+        {
+            CrossTokenSelection.SetActive(false);
+            GameFieldSelection.SetActive(true);
+        }        
     }
 
     public void prev()
     {
+        // Reset Selection
+        selectedField = "";
+        selectedToken = "";
         GameFieldSelection.SetActive(false);
         CrossTokenSelection.SetActive(true);        
     }
 
-    public void save()
+    public void confirm()
     {
-        // call game function (which disables this controller?!)
-        selectedToken = "";
-        selectedField = "";
+        if (selectedToken != "" && selectedField != "")
+        {
+            Debug.Log("Selections confirmed");
+            // TODO call game function (which disables this controller?!)
+            selectedToken = "";
+            selectedField = "";
+        }
     }
 
     public void setToken(string tokenName)
     {
         selectedToken = tokenName;
-        Debug.Log("selected Token: " + selectedToken);
+        Debug.Log("Selected Token: " + selectedToken);
     }
 
     public void setField(string fieldName)
     {
         selectedField = fieldName;
-        Debug.Log("selected Field: " + selectedField);
+        Debug.Log("Selected Field: " + selectedField);
     }
 }
