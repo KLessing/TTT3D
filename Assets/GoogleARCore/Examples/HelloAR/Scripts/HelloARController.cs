@@ -24,6 +24,7 @@ namespace GoogleARCore.Examples.HelloAR
     using GoogleARCore;
     using GoogleARCore.Examples.Common;
     using UnityEngine;
+    using UnityEngine.UI;
 
 #if UNITY_EDITOR
     // Set up touch input propagation while using Instant Preview in the editor.
@@ -66,7 +67,7 @@ namespace GoogleARCore.Examples.HelloAR
         /// <summary>
         /// A gameobject parenting UI for displaying the "searching for planes" snackbar.
         /// </summary>
-        public GameObject SearchingForPlaneUI;
+        //public GameObject SearchingForPlaneUI;
 
         /// <summary>
         /// The rotation in degrees need to apply to model when the Andy model is placed.
@@ -83,6 +84,23 @@ namespace GoogleARCore.Examples.HelloAR
         /// True if the app is in the process of quitting due to an ARCore connection error, otherwise false.
         /// </summary>
         private bool m_IsQuitting = false;
+
+
+        // needs UnityEngine.UI
+        public Button TestButton;
+        
+        void Start()
+        {
+            Debug.Log("Start called");
+            TestButton.OnSelect(ButtonClicked); // onClick.AddListener(ButtonClicked);                
+        }
+
+        void ButtonClicked()
+        {
+            Debug.Log("Button clicked");
+        }
+
+
 
         /// <summary>
         /// The Unity Update() method.
@@ -103,7 +121,7 @@ namespace GoogleARCore.Examples.HelloAR
                 }
             }
 
-            SearchingForPlaneUI.SetActive(showSearchingUI);
+            //SearchingForPlaneUI.SetActive(showSearchingUI);
 
             // If the player has not touched the screen, we are done with this update.
             Touch touch;
