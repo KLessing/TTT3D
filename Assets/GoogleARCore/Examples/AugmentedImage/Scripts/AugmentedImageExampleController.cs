@@ -41,8 +41,8 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// </summary>
         public GameObject FitToScanOverlay;
 
-        // The Ui on the Screen Button for Token and Field selection
-        public GameObject SelectionUI;
+        // The UI on the Screen Button for Token and Field selection
+        public GameObject UserInterface;
 
         private Dictionary<int, AugmentedImageVisualizer> m_Visualizers
             = new Dictionary<int, AugmentedImageVisualizer>();
@@ -97,13 +97,13 @@ namespace GoogleARCore.Examples.AugmentedImage
                 {
                     FitToScanOverlay.SetActive(false);
                     // Show Selection User Interface
-                    SelectionUI.SetActive(true);
+                    UserInterface.SetActive(true);
                     return;
                 }
             }
 
             FitToScanOverlay.SetActive(true);
-            SelectionUI.SetActive(false);
+            UserInterface.SetActive(false);
         }
     }
 }
