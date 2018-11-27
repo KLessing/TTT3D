@@ -825,7 +825,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Texture: {fileID: 2800000, guid: 02bd6f3d1516e42af87ba5dd2d38f60c, type: 3}
+  m_Texture: {fileID: 2800000, guid: 42455f5f749216942ae54571db92fd70, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -3946,7 +3946,7 @@ RectTransform:
   - {fileID: 1794047498}
   - {fileID: 814506034}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4314,7 +4314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AugmentedImageVisualizerPrefab: {fileID: 2054342102}
   FitToScanOverlay: {fileID: 332743836}
-  UserInterface: {fileID: 0}
+  UserInterface: {fileID: 19805301}
 --- !u!1 &2012557665
 GameObject:
   m_ObjectHideFlags: 0
@@ -4526,7 +4526,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2126270918
 GameObject:
