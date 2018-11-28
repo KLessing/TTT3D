@@ -24,7 +24,6 @@ namespace GoogleARCore.Examples.AugmentedImage
     using System.Runtime.InteropServices;
     using GoogleARCore;
     using UnityEngine;
-    using UnityEngine.UI;
 
     /// <summary>
     /// Controller for AugmentedImage example.
@@ -102,6 +101,7 @@ namespace GoogleARCore.Examples.AugmentedImage
                 }
             }
 
+            Debug.Log("overlay active");
             FitToScanOverlay.SetActive(true);
             UserInterface.SetActive(false);
         }
