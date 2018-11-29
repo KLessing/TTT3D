@@ -38,20 +38,20 @@ namespace GoogleARCore.Examples.AugmentedImage
         public AugmentedImage Image;
 
         public GameObject SmallCross1;
-        //public GameObject MediumCross1;
-        //public GameObject LargeCross1;
+        public GameObject MediumCross1;
+        public GameObject LargeCross1;
 
-        //public GameObject SmallCross2;
-        //public GameObject MediumCross2;
-        //public GameObject LargeCross2;
+        public GameObject SmallCross2;
+        public GameObject MediumCross2;
+        public GameObject LargeCross2;
 
-        //public GameObject SmallCircle1;
-        //public GameObject MediumCircle1;
-        //public GameObject LargeCircle1;
+        public GameObject SmallCircle1;
+        public GameObject MediumCircle1;
+        public GameObject LargeCircle1;
 
-        //public GameObject SmallCircle2;
-        //public GameObject MediumCircle2;
-        //public GameObject LargeCircle2;
+        public GameObject SmallCircle2;
+        public GameObject MediumCircle2;
+        public GameObject LargeCircle2;
 
         /// <summary>
         /// The Unity Update method.
@@ -61,20 +61,20 @@ namespace GoogleARCore.Examples.AugmentedImage
             // Always deactivate everything first
             // Otherwise they are visible even when not used
             SmallCross1.SetActive(false);
-            //MediumCross1.SetActive(false);
-            //LargeCross1.SetActive(false);
+            MediumCross1.SetActive(false);
+            LargeCross1.SetActive(false);
 
-            //SmallCross2.SetActive(false);
-            //MediumCross2.SetActive(false);
-            //LargeCross2.SetActive(false);
+            SmallCross2.SetActive(false);
+            MediumCross2.SetActive(false);
+            LargeCross2.SetActive(false);
 
-            //SmallCircle1.SetActive(false);
-            //MediumCircle1.SetActive(false);
-            //LargeCircle1.SetActive(false);
+            SmallCircle1.SetActive(false);
+            MediumCircle1.SetActive(false);
+            LargeCircle1.SetActive(false);
 
-            //SmallCircle2.SetActive(false);
-            //MediumCircle2.SetActive(false);
-            //LargeCircle2.SetActive(false);
+            SmallCircle2.SetActive(false);
+            MediumCircle2.SetActive(false);
+            LargeCircle2.SetActive(false);
 
             //if (Image == null || Image.TrackingState != TrackingState.Tracking)
             //{
@@ -102,25 +102,25 @@ namespace GoogleARCore.Examples.AugmentedImage
 
 
             SmallCross1.transform.localPosition = topMiddle;
-            //MediumCross1.transform.localPosition = middle;
-            //LargeCross1.transform.localPosition = bottomMiddle;
+            MediumCross1.transform.localPosition = middle;
+            LargeCross1.transform.localPosition = bottomMiddle;
 
-            //SmallCircle1.transform.localPosition = bottomLeft;
-            //MediumCircle1.transform.localPosition = topRight;
+            SmallCircle1.transform.localPosition = bottomLeft;
+            MediumCircle1.transform.localPosition = topRight;
 
-            //SmallCircle2.transform.localPosition = topLeft;
-            //MediumCircle2.transform.localPosition = bottomRight;            
+            SmallCircle2.transform.localPosition = topLeft;
+            MediumCircle2.transform.localPosition = bottomRight;
 
 
             SmallCross1.SetActive(true);
-            //MediumCross1.SetActive(true);
-            //LargeCross1.SetActive(true);
+            MediumCross1.SetActive(true);
+            LargeCross1.SetActive(true);
 
-            //SmallCircle1.SetActive(true);
-            //MediumCircle1.SetActive(true);
+            SmallCircle1.SetActive(true);
+            MediumCircle1.SetActive(true);
 
-            //SmallCircle2.SetActive(true);
-            //MediumCircle2.SetActive(true);
+            SmallCircle2.SetActive(true);
+            MediumCircle2.SetActive(true);
         }
     }
 }
