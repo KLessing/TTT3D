@@ -65,6 +65,8 @@ namespace GoogleARCore.Examples.AugmentedImage
                 return;
             }
 
+            Debug.Log("Tracking!!!");
+
             // Get updated augmented images for this frame.
             Session.GetTrackables<AugmentedImage>(m_TempAugmentedImages, TrackableQueryFilter.Updated);
 
@@ -89,11 +91,13 @@ namespace GoogleARCore.Examples.AugmentedImage
                 }
             }
 
+
             // Show the fit-to-scan overlay if there are no images that are Tracking.
             foreach (var visualizer in m_Visualizers.Values)
             {
                 if (visualizer.Image.TrackingState == TrackingState.Tracking)
                 {
+                    Debug.Log("overlay false");
                     FitToScanOverlay.SetActive(false);
                     // Show Selection User Interface
                     UserInterface.SetActive(true);
@@ -101,6 +105,7 @@ namespace GoogleARCore.Examples.AugmentedImage
                 }
             }
 
+            Debug.Log("overlay true");
             FitToScanOverlay.SetActive(true);
             UserInterface.SetActive(false);
         }

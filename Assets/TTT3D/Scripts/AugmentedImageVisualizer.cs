@@ -53,83 +53,86 @@ namespace GoogleARCore.Examples.AugmentedImage
         public GameObject MediumCircle2;
         public GameObject LargeCircle2;
 
-       private enum Field { TopLeft, TopMiddle, TopRight, MiddleLeft, Middle, MiddleRight, BottomLeft, BottomMiddle, BottomRight };
+        //private enum Field { TopLeft, TopMiddle, TopRight, MiddleLeft, Middle, MiddleRight, BottomLeft, BottomMiddle, BottomRight };
 
 
-        private Vector3 GetPositionVector(Field field)
-        {
-            float thirdWidth = Image.ExtentX / 3;
-            float thirdHeight = Image.ExtentZ / 3;
+        //private Vector3 GetPositionVector(Field field)
+        //{
+        //    float thirdWidth = Image.ExtentX / 3;
+        //    float thirdHeight = Image.ExtentZ / 3;
 
-            switch (field)
-            {
-                case Field.TopLeft: return (thirdWidth * Vector3.left) + (thirdHeight * Vector3.forward);
-                case Field.TopMiddle: return (thirdHeight * Vector3.forward);
-                case Field.TopRight: return (thirdWidth * Vector3.right) + (thirdHeight * Vector3.forward);
+        //    switch (field)
+        //    {
+        //        case Field.TopLeft: return (thirdWidth * Vector3.left) + (thirdHeight * Vector3.forward);
+        //        case Field.TopMiddle: return (thirdHeight * Vector3.forward);
+        //        case Field.TopRight: return (thirdWidth * Vector3.right) + (thirdHeight * Vector3.forward);
 
-                case Field.MiddleLeft: return (thirdWidth * Vector3.left);
-                case Field.Middle: return Vector3.zero;
-                case Field.MiddleRight: return (thirdWidth * Vector3.right);
+        //        case Field.MiddleLeft: return (thirdWidth * Vector3.left);
+        //        case Field.Middle: return Vector3.zero;
+        //        case Field.MiddleRight: return (thirdWidth * Vector3.right);
 
-                case Field.BottomLeft: return (thirdWidth * Vector3.left) + (thirdHeight * Vector3.back);
-                case Field.BottomMiddle: return (thirdHeight * Vector3.back);
-                case Field.BottomRight: return (thirdWidth * Vector3.right) + (thirdHeight * Vector3.back);
+        //        case Field.BottomLeft: return (thirdWidth * Vector3.left) + (thirdHeight * Vector3.back);
+        //        case Field.BottomMiddle: return (thirdHeight * Vector3.back);
+        //        case Field.BottomRight: return (thirdWidth * Vector3.right) + (thirdHeight * Vector3.back);
 
-                default: return Vector3.zero;
-            }
-        }
+        //        default: return Vector3.zero;
+        //    }
+        //}
 
 
         /// <summary>
         /// The Unity Update method.
         /// </summary>
         public void Update()
-        {            
-            // Always deactivate everything first
-            // Otherwise they are visible even when not used
-            SmallCross1.SetActive(false);
-            MediumCross1.SetActive(false);
-            LargeCross1.SetActive(false);
+        {
+            if (Image == null || Image.TrackingState != TrackingState.Tracking)
+            {
+                // Always deactivate everything first
+                // Otherwise they are visible even when not used ?????
+                SmallCross1.SetActive(false);
+                MediumCross1.SetActive(false);
+                LargeCross1.SetActive(false);
 
-            SmallCross2.SetActive(false);
-            MediumCross2.SetActive(false);
-            LargeCross2.SetActive(false);
+                SmallCross2.SetActive(false);
+                MediumCross2.SetActive(false);
+                LargeCross2.SetActive(false);
 
-            SmallCircle1.SetActive(false);
-            MediumCircle1.SetActive(false);
-            LargeCircle1.SetActive(false);
+                SmallCircle1.SetActive(false);
+                MediumCircle1.SetActive(false);
+                LargeCircle1.SetActive(false);
 
-            SmallCircle2.SetActive(false);
-            MediumCircle2.SetActive(false);
-            LargeCircle2.SetActive(false);
+                SmallCircle2.SetActive(false);
+                MediumCircle2.SetActive(false);
+                LargeCircle2.SetActive(false);
 
-            //if (Image == null || Image.TrackingState != TrackingState.Tracking)
-            //{
-            //    SmallCross1.SetActive(false);
-            //    MediumCross1.SetActive(false);
-            //    return;
-            //}
+               // Debug.Log("Image null or not tracking");
+          
+                return;
+            }
+
+            Debug.Log("image not null");
+
             
-            SmallCross1.transform.localPosition = GetPositionVector(Field.TopMiddle);
-            MediumCross1.transform.localPosition = GetPositionVector(Field.Middle);
-            LargeCross1.transform.localPosition = GetPositionVector(Field.BottomMiddle);
+            //SmallCross1.transform.localPosition = GetPositionVector(Field.TopMiddle);
+            MediumCross1.transform.localPosition = Vector3.zero;//GetPositionVector(Field.Middle);
+            //LargeCross1.transform.localPosition = GetPositionVector(Field.BottomMiddle);
 
-            SmallCircle1.transform.localPosition = GetPositionVector(Field.BottomLeft);
-            MediumCircle1.transform.localPosition = GetPositionVector(Field.MiddleLeft);
+            //SmallCircle1.transform.localPosition = GetPositionVector(Field.BottomLeft);
+            //MediumCircle1.transform.localPosition = GetPositionVector(Field.MiddleLeft);
 
-            SmallCircle2.transform.localPosition = GetPositionVector(Field.TopLeft);
-            MediumCircle2.transform.localPosition = GetPositionVector(Field.BottomRight);
+            //SmallCircle2.transform.localPosition = GetPositionVector(Field.TopLeft);
+            //MediumCircle2.transform.localPosition = GetPositionVector(Field.BottomRight);
 
 
-            SmallCross1.SetActive(true);
+           // SmallCross1.SetActive(true);
             MediumCross1.SetActive(true);
-            LargeCross1.SetActive(true);
+            //LargeCross1.SetActive(true);
 
-            SmallCircle1.SetActive(true);
-            MediumCircle1.SetActive(true);
+            //SmallCircle1.SetActive(true);
+            //MediumCircle1.SetActive(true);
 
-            SmallCircle2.SetActive(true);
-            MediumCircle2.SetActive(true);
+            //SmallCircle2.SetActive(true);
+            //MediumCircle2.SetActive(true);
         }
 
     }
