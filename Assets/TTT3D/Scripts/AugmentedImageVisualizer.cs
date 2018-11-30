@@ -53,38 +53,11 @@ namespace GoogleARCore.Examples.AugmentedImage
         public GameObject MediumCircle2;
         public GameObject LargeCircle2;
 
-       private enum Field { TopLeft, TopMiddle, TopRight, MiddleLeft, Middle, MiddleRight, BottomLeft, BottomMiddle, BottomRight };
-
-
-        private Vector3 GetPositionVector(Field field)
-        {
-            float thirdWidth = Image.ExtentX / 3;
-            float thirdHeight = Image.ExtentZ / 3;
-
-            switch (field)
-            {
-                case Field.TopLeft: return (thirdWidth * Vector3.left) + (thirdHeight * Vector3.forward);
-                case Field.TopMiddle: return (thirdHeight * Vector3.forward);
-                case Field.TopRight: return (thirdWidth * Vector3.right) + (thirdHeight * Vector3.forward);
-
-                case Field.MiddleLeft: return (thirdWidth * Vector3.left);
-                case Field.Middle: return Vector3.zero;
-                case Field.MiddleRight: return (thirdWidth * Vector3.right);
-
-                case Field.BottomLeft: return (thirdWidth * Vector3.left) + (thirdHeight * Vector3.back);
-                case Field.BottomMiddle: return (thirdHeight * Vector3.back);
-                case Field.BottomRight: return (thirdWidth * Vector3.right) + (thirdHeight * Vector3.back);
-
-                default: return Vector3.zero;
-            }
-        }
-
-
         /// <summary>
         /// The Unity Update method.
         /// </summary>
         public void Update()
-        {            
+        {
             // Always deactivate everything first
             // Otherwise they are visible even when not used
             SmallCross1.SetActive(false);
@@ -109,16 +82,34 @@ namespace GoogleARCore.Examples.AugmentedImage
             //    MediumCross1.SetActive(false);
             //    return;
             //}
-            
-            SmallCross1.transform.localPosition = GetPositionVector(Field.TopMiddle);
-            MediumCross1.transform.localPosition = GetPositionVector(Field.Middle);
-            LargeCross1.transform.localPosition = GetPositionVector(Field.BottomMiddle);
 
-            SmallCircle1.transform.localPosition = GetPositionVector(Field.BottomLeft);
-            MediumCircle1.transform.localPosition = GetPositionVector(Field.MiddleLeft);
+            // Third width and height for middle of outer fields
+            float thirdWidth = Image.ExtentX / 3;
+            float thirdHeight = Image.ExtentZ / 3;
 
-            SmallCircle2.transform.localPosition = GetPositionVector(Field.TopLeft);
-            MediumCircle2.transform.localPosition = GetPositionVector(Field.BottomRight);
+            // Position Vectors
+            Vector3 topLeft = (thirdWidth * Vector3.left) + (thirdHeight * Vector3.forward);
+            Vector3 topMiddle = (thirdHeight * Vector3.forward);
+            Vector3 topRight = (thirdWidth * Vector3.right) + (thirdHeight * Vector3.forward);
+
+            Vector3 middleLeft = (thirdWidth * Vector3.left);
+            Vector3 middle = Vector3.zero;
+            Vector3 middleRight = (thirdWidth * Vector3.right);
+
+            Vector3 bottomLeft = (thirdWidth * Vector3.left) + (thirdHeight * Vector3.back);
+            Vector3 bottomMiddle = (thirdHeight * Vector3.back);
+            Vector3 bottomRight = (thirdWidth * Vector3.right) + (thirdHeight * Vector3.back);            
+
+
+            SmallCross1.transform.localPosition = topMiddle;
+            MediumCross1.transform.localPosition = middle;
+            LargeCross1.transform.localPosition = bottomMiddle;
+
+            SmallCircle1.transform.localPosition = bottomLeft;
+            MediumCircle1.transform.localPosition = topRight;
+
+            SmallCircle2.transform.localPosition = topLeft;
+            MediumCircle2.transform.localPosition = bottomRight;
 
 
             SmallCross1.SetActive(true);
@@ -131,6 +122,5 @@ namespace GoogleARCore.Examples.AugmentedImage
             SmallCircle2.SetActive(true);
             MediumCircle2.SetActive(true);
         }
-
     }
 }
