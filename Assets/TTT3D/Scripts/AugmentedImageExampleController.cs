@@ -101,7 +101,6 @@ namespace GoogleARCore.Examples.AugmentedImage
                 }
             }
 
-            Debug.Log("overlay active");
             FitToScanOverlay.SetActive(true);
             UserInterface.SetActive(false);
         }
