@@ -42,7 +42,7 @@ namespace GoogleARCore.Examples.AugmentedImage
 
         // The UI on the Screen Button for Token and Field selection
         //public GameObject UserInterface;
-
+        
         private Dictionary<int, AugmentedImageVisualizer> m_Visualizers
             = new Dictionary<int, AugmentedImageVisualizer>();
 
