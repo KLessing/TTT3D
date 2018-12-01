@@ -105,8 +105,8 @@ namespace GoogleARCore.Examples.AugmentedImage
                 MediumCircle2.SetActive(false);
                 LargeCircle2.SetActive(false);
 
-               // Debug.Log("Image null or not tracking");
-          
+            if (Image == null || Image.TrackingState != TrackingState.Tracking)
+            {
                 return;
             }
 
