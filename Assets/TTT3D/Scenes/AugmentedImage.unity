@@ -1401,7 +1401,7 @@ RectTransform:
   - {fileID: 1211578834}
   - {fileID: 943599053}
   m_Father: {fileID: 1883590872}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -2380,7 +2380,7 @@ GameObject:
   - component: {fileID: 1100586787}
   - component: {fileID: 1100586786}
   m_Layer: 5
-  m_Name: BtnUpperLeft
+  m_Name: BtnTopLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2451,7 +2451,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: UpperLeft
+          m_StringArgument: TopLeft
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -3634,7 +3634,7 @@ GameObject:
   - component: {fileID: 1743062929}
   - component: {fileID: 1743062928}
   m_Layer: 5
-  m_Name: BtnUpperRight
+  m_Name: BtnTopRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3705,7 +3705,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: UpperRight
+          m_StringArgument: TopRight
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -3818,7 +3818,7 @@ RectTransform:
   - {fileID: 1372736086}
   - {fileID: 2012557666}
   m_Father: {fileID: 1883590872}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -3912,8 +3912,8 @@ RectTransform:
   m_Children:
   - {fileID: 19805303}
   - {fileID: 821543041}
-  - {fileID: 1794047498}
   - {fileID: 814506034}
+  - {fileID: 1794047498}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4056,7 +4056,7 @@ GameObject:
   - component: {fileID: 1971973560}
   - component: {fileID: 1971973559}
   m_Layer: 5
-  m_Name: BtnUpperMiddle
+  m_Name: BtnTopMiddle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4127,7 +4127,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: UpperMiddle
+          m_StringArgument: TopMiddle
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,

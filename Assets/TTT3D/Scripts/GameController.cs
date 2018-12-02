@@ -6,22 +6,60 @@ using AugmentedImage;
 
 public class GameController : MonoBehaviour {
 
-    public Dictionary<Field, Token> GameField = new Dictionary<Field, Token>()
+    // TODO use list of Tokens 
+    public Dictionary<Field, Token> GameField = new Dictionary<Field, Token>();
+
+    // returns a Level for a Token
+    private int GetTokenLevel(Token token)
     {
-        { Field.TopLeft, Token.SmallCross1 },
-        { Field.Middle, Token.MediumCross2 },
-        { Field.BottomRight, Token.LargeCross1 },
-        { Field.BottomLeft, Token.LargeCircle1 },
-        { Field.MiddleLeft, Token.LargeCircle2 }
-    };
+        switch (token)
+        {
+            case Token.SmallCross1: 
+            case Token.SmallCircle1: 
+            case Token.SmallCross2: 
+            case Token.SmallCircle2: return 1;
+
+            case Token.MediumCross1:
+            case Token.MediumCircle1: 
+            case Token.MediumCross2:
+            case Token.MediumCircle2: return 2;
+
+            case Token.LargeCross1:          
+            case Token.LargeCircle1: 
+            case Token.LargeCross2:
+            case Token.LargeCircle2: return 3;
+
+            default: return 0;
+        }
+    }
         
     // Sets a Token on a Field on the GameField
     // (The validation is handeld via button enabling)
-    public void SetTokenOnField(Token token, Field field)
+    // return true = set possible
+    public bool SetTokenOnField(Token token, Field field)
     {
-        // if already availalabe... blub bla
-       GameField.Add(field, token);
+        bool res = false;
 
-       Debug.Log("GameField: " + GameField);
+        if (GameField.ContainsKey(field))
+        {
+            // Compare with previous token on the field
+            if (GetTokenLevel(token) > GetTokenLevel(GameField[field]))
+            {
+                GameField[field] = token;
+                res = true;
+            }
+        }
+        else
+        {
+            GameField.Add(field, token);
+            res = true;
+        }
+        return res;
+
+        // TODO check if Token was on another field and remove it
+
+        // TODO check if game is won
     }
+
+    // TODO functions for testing if selection possible before next and confirm button
 }
