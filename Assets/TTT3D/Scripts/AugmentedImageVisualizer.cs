@@ -17,7 +17,6 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
-
 namespace GoogleARCore.Examples.AugmentedImage
 {
     using System;
@@ -26,17 +25,22 @@ namespace GoogleARCore.Examples.AugmentedImage
     using GoogleARCore;
     using GoogleARCoreInternal;
     using UnityEngine;
+    using TTT3DTypes;
 
-    /// <summary>
-    /// Uses 4 frame corner objects to visualize an AugmentedImage.
-    /// </summary>
     public class AugmentedImageVisualizer : MonoBehaviour
     {
-        /// <summary>
         /// The AugmentedImage to visualize.
-        /// </summary>
         public AugmentedImage Image;
 
+        // The GameField for the Tokens to visualize above the Augmented Image of the GameField
+        public Dictionary<Field, Token> GameField = new Dictionary<Field, Token>()
+        {
+            { Field.TopLeft, Token.SmallCross1 },
+            { Field.Middle, Token.MediumCross2 },
+            { Field.BottomRight, Token.LargeCross1 }
+        };
+
+        // All Tokens
         public GameObject SmallCross1;
         public GameObject MediumCross1;
         public GameObject LargeCross1;
@@ -52,17 +56,6 @@ namespace GoogleARCore.Examples.AugmentedImage
         public GameObject SmallCircle2;
         public GameObject MediumCircle2;
         public GameObject LargeCircle2;
-
-        private enum Field { TopLeft, TopMiddle, TopRight, MiddleLeft, Middle, MiddleRight, BottomLeft, BottomMiddle, BottomRight };
-        private enum Token { SmallCross1, MediumCross1, LargeCross1, SmallCircle1, MediumCircle1, LargeCircle1,
-                             SmallCross2, MediumCross2, LargeCross2, SmallCircle2, MediumCircle2, LargeCircle2 };
-
-        private Dictionary<Field, Token> GameField = new Dictionary<Field, Token>()
-        {
-            { Field.TopLeft, Token.SmallCross1 },
-            { Field.Middle, Token.MediumCross2 },
-            { Field.BottomRight, Token.LargeCross1 }
-        };
 
         // Returns a position Vector for the Field on the Gamefield img
         private Vector3 GetPositionVector(Field field, float centerX, float centerY)
@@ -110,29 +103,15 @@ namespace GoogleARCore.Examples.AugmentedImage
             }
         }
 
-
-        /// <summary>
-        /// The Unity Update method.
-        /// </summary>
+        // The Unity Update method.
         public void Update()
         {
-            // Always deactivate everything first
-            // Otherwise they are visible even when not used
-            SmallCross1.SetActive(false);
-            MediumCross1.SetActive(false);
-            LargeCross1.SetActive(false);
-
-            SmallCross2.SetActive(false);
-            MediumCross2.SetActive(false);
-            LargeCross2.SetActive(false);
-
-            SmallCircle1.SetActive(false);
-            MediumCircle1.SetActive(false);
-            LargeCircle1.SetActive(false);
-
-            SmallCircle2.SetActive(false);
-            MediumCircle2.SetActive(false);
-            LargeCircle2.SetActive(false);
+            // Always deactivate all Tokens first
+            // (Otherwise Tokens are visible even when not used)     
+            foreach (Token token in Enum.GetValues(typeof(Token)))
+            {
+                GetTokenObject(token).SetActive(false);
+            }                  
 
             // Show Tokens while tracking the image
             if (Image != null && Image.TrackingState == TrackingState.Tracking)
@@ -146,27 +125,6 @@ namespace GoogleARCore.Examples.AugmentedImage
                     GetTokenObject(placement.Value).transform.localPosition = GetPositionVector(placement.Key, centerX, centerY);
                     GetTokenObject(placement.Value).SetActive(true);
                 }
-
-                //SmallCross1.transform.localPosition = GetPositionVector(Field.TopLeft, centerX, centerY);
-                //MediumCross1.transform.localPosition = GetPositionVector(Field.Middle, centerX, centerY);
-                //LargeCross1.transform.localPosition = GetPositionVector(Field.BottomRight, centerX, centerY);
-
-                //SmallCircle1.transform.localPosition = GetPositionVector(Field.BottomLeft, centerX, centerY);
-                //MediumCircle1.transform.localPosition = GetPositionVector(Field.MiddleLeft, centerX, centerY);
-
-                //SmallCircle2.transform.localPosition = GetPositionVector(Field.TopLeft, centerX, centerY);
-                //MediumCircle2.transform.localPosition = GetPositionVector(Field.BottomRight, centerX, centerY);
-
-
-                //SmallCross1.SetActive(true);
-                //MediumCross1.SetActive(true);
-                //LargeCross1.SetActive(true);
-
-                //SmallCircle1.SetActive(true);
-                //MediumCircle1.SetActive(true);
-
-                //SmallCircle2.SetActive(true);
-                //MediumCircle2.SetActive(true);
             }
         }
 
