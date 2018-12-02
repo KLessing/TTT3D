@@ -5,6 +5,8 @@ using TTT3DTypes;
 
 public class UserInterfaceController : MonoBehaviour {
 
+    public GameController GameControllerPrefab;
+
     // The User Interface for Cross Token Selection
     public GameObject CrossTokenSelection;
 
@@ -68,8 +70,8 @@ public class UserInterfaceController : MonoBehaviour {
         {
             Debug.Log("Selections confirmed");
 
-            // TODO call game function (which disables this controller?!)
-
+            GameControllerPrefab.SetTokenOnField((Token) selectedToken, (Field) selectedField);
+            
             // Reset Selection
             selectedField = null;
             selectedToken = null;

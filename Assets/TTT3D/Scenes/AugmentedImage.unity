@@ -140,6 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09411c2f10ccd2c4e98f53c86942edc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameControllerPrefab: {fileID: 1035978436}
   CrossTokenSelection: {fileID: 821543038}
   CircleTokenSelection: {fileID: 814506033}
   GameFieldSelection: {fileID: 1794047495}
@@ -4407,6 +4408,10 @@ Prefab:
       propertyPath: GameController
       value: 
       objectReference: {fileID: 1035978436}
+    - target: {fileID: 1138118951868772, guid: 6bb07e82a2929964eaf7897fbc0799a0, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6bb07e82a2929964eaf7897fbc0799a0, type: 2}
   m_IsPrefabAsset: 0

@@ -51,7 +51,8 @@ namespace AugmentedImage
 
         public GameObject SmallCircle2;
         public GameObject MediumCircle2;
-        public GameObject LargeCircle2;        
+        public GameObject LargeCircle2;
+
 
         // Returns a position Vector for the Field on the Gamefield img
         private Vector3 GetPositionVector(Field field, float centerX, float centerY)
@@ -107,7 +108,7 @@ namespace AugmentedImage
             foreach (Token token in Enum.GetValues(typeof(Token)))
             {
                 GetTokenObject(token).SetActive(false);
-            }                  
+            }
 
             // Show Tokens while tracking the image
             if (Image != null && Image.TrackingState == TrackingState.Tracking)
