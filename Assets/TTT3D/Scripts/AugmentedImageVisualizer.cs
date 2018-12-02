@@ -55,25 +55,22 @@ namespace GoogleARCore.Examples.AugmentedImage
 
         private enum Field { TopLeft, TopMiddle, TopRight, MiddleLeft, Middle, MiddleRight, BottomLeft, BottomMiddle, BottomRight };
 
-
-        private Vector3 GetPositionVector(Field field)
+        // Returns a position Vector for the Field on the Gamefield img
+        private Vector3 GetPositionVector(Field field, float centerX, float centerY)
         {
-            float thirdWidth = Image.ExtentX / 3;
-            float thirdHeight = Image.ExtentZ / 3;
-
             switch (field)
             {
-                case Field.TopLeft: return (thirdWidth * Vector3.left) + (thirdHeight * Vector3.forward);
-                case Field.TopMiddle: return (thirdHeight * Vector3.forward);
-                case Field.TopRight: return (thirdWidth * Vector3.right) + (thirdHeight * Vector3.forward);
+                case Field.TopLeft: return (centerX * Vector3.left) + (centerY * Vector3.forward);
+                case Field.TopMiddle: return (centerY * Vector3.forward);
+                case Field.TopRight: return (centerX * Vector3.right) + (centerY * Vector3.forward);
 
-                case Field.MiddleLeft: return (thirdWidth * Vector3.left);
+                case Field.MiddleLeft: return (centerX * Vector3.left);
                 case Field.Middle: return Vector3.zero;
-                case Field.MiddleRight: return (thirdWidth * Vector3.right);
+                case Field.MiddleRight: return (centerX * Vector3.right);
 
-                case Field.BottomLeft: return (thirdWidth * Vector3.left) + (thirdHeight * Vector3.back);
-                case Field.BottomMiddle: return (thirdHeight * Vector3.back);
-                case Field.BottomRight: return (thirdWidth * Vector3.right) + (thirdHeight * Vector3.back);
+                case Field.BottomLeft: return (centerX * Vector3.left) + (centerY * Vector3.back);
+                case Field.BottomMiddle: return (centerY * Vector3.back);
+                case Field.BottomRight: return (centerX * Vector3.right) + (centerY * Vector3.back);
 
                 default: return Vector3.zero;
             }
@@ -86,7 +83,7 @@ namespace GoogleARCore.Examples.AugmentedImage
         public void Update()
         {
             // Always deactivate everything first
-            // Otherwise they are visible even when not used ?????
+            // Otherwise they are visible even when not used
             SmallCross1.SetActive(false);
             MediumCross1.SetActive(false);
             LargeCross1.SetActive(false);
@@ -103,34 +100,34 @@ namespace GoogleARCore.Examples.AugmentedImage
             MediumCircle2.SetActive(false);
             LargeCircle2.SetActive(false);
 
-            if (Image == null || Image.TrackingState != TrackingState.Tracking)
+            // Show Tokens while tracking the image
+            if (Image != null && Image.TrackingState == TrackingState.Tracking)
             {
-                return;
+                // Calcuate the center of the indivdual Fields on the Gamefield                
+                float centerX = Image.ExtentX / 3;
+                float centerY = Image.ExtentZ / 3;
+
+                SmallCross1.transform.localPosition = GetPositionVector(Field.TopMiddle, centerX, centerY);
+                MediumCross1.transform.localPosition = GetPositionVector(Field.Middle, centerX, centerY);
+                LargeCross1.transform.localPosition = GetPositionVector(Field.BottomMiddle, centerX, centerY);
+
+                SmallCircle1.transform.localPosition = GetPositionVector(Field.BottomLeft, centerX, centerY);
+                MediumCircle1.transform.localPosition = GetPositionVector(Field.MiddleLeft, centerX, centerY);
+
+                SmallCircle2.transform.localPosition = GetPositionVector(Field.TopLeft, centerX, centerY);
+                MediumCircle2.transform.localPosition = GetPositionVector(Field.BottomRight, centerX, centerY);
+
+
+                SmallCross1.SetActive(true);
+                MediumCross1.SetActive(true);
+                LargeCross1.SetActive(true);
+
+                SmallCircle1.SetActive(true);
+                MediumCircle1.SetActive(true);
+
+                SmallCircle2.SetActive(true);
+                MediumCircle2.SetActive(true);
             }
-
-            Debug.Log("image not null");
-
-            
-            SmallCross1.transform.localPosition = GetPositionVector(Field.TopMiddle);
-            MediumCross1.transform.localPosition = GetPositionVector(Field.Middle);
-            LargeCross1.transform.localPosition = GetPositionVector(Field.BottomMiddle);
-
-            //SmallCircle1.transform.localPosition = GetPositionVector(Field.BottomLeft);
-            //MediumCircle1.transform.localPosition = GetPositionVector(Field.MiddleLeft);
-
-            //SmallCircle2.transform.localPosition = GetPositionVector(Field.TopLeft);
-            //MediumCircle2.transform.localPosition = GetPositionVector(Field.BottomRight);
-
-
-            SmallCross1.SetActive(true);
-            MediumCross1.SetActive(true);
-            LargeCross1.SetActive(true);
-
-            //SmallCircle1.SetActive(true);
-            //MediumCircle1.SetActive(true);
-
-            //SmallCircle2.SetActive(true);
-            //MediumCircle2.SetActive(true);
         }
 
     }

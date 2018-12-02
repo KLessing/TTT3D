@@ -39,9 +39,6 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// The overlay containing the fit to scan user guide.
         /// </summary>
         public GameObject FitToScanOverlay;
-
-        // The UI on the Screen Button for Token and Field selection
-        //public GameObject UserInterface;
         
         private Dictionary<int, AugmentedImageVisualizer> m_Visualizers
             = new Dictionary<int, AugmentedImageVisualizer>();
@@ -64,8 +61,6 @@ namespace GoogleARCore.Examples.AugmentedImage
             {
                 return;
             }
-
-            Debug.Log("Tracking!!!");
 
             // Get updated augmented images for this frame.
             Session.GetTrackables<AugmentedImage>(m_TempAugmentedImages, TrackableQueryFilter.Updated);
@@ -97,17 +92,12 @@ namespace GoogleARCore.Examples.AugmentedImage
             {
                 if (visualizer.Image.TrackingState == TrackingState.Tracking)
                 {
-                    Debug.Log("overlay false");
                     FitToScanOverlay.SetActive(false);
-                    // Show Selection User Interface
-                   // UserInterface.SetActive(true);
                     return;
                 }
             }
 
-            Debug.Log("overlay true");
             FitToScanOverlay.SetActive(true);
-            //UserInterface.SetActive(false);
         }
     }
 }
