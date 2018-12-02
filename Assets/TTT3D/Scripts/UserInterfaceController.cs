@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TTT3DTypes;
 
 public class UserInterfaceController : MonoBehaviour {
 
@@ -14,13 +15,13 @@ public class UserInterfaceController : MonoBehaviour {
     public GameObject GameFieldSelection;
 
     // The Current Player (Cross or Circle)
-    private string currentPlayer = "Cross";
+    private Player currentPlayer = Player.Cross;
 
-    // The selected Token (Cross or Circle)
-    private string selectedToken = "";
+    // The nullable selected Token
+    private Token? selectedToken = null;
 
-    // The selected Field on the GameField
-    private string selectedField = "";
+    // The nullable selected Field on the GameField
+    private Field? selectedField = null;
 
 
     // TODO enum for individual Token and Field ids?!    
@@ -28,9 +29,9 @@ public class UserInterfaceController : MonoBehaviour {
     // Deactivates the current Token Selection UI and activates Field Selection Ui
     public void Next()
     {
-        if (selectedToken != "")
+        if (selectedToken != null)
         {
-            if (currentPlayer == "Cross")
+            if (currentPlayer == Player.Cross)
             {
                 CrossTokenSelection.SetActive(false);
             }
@@ -47,12 +48,12 @@ public class UserInterfaceController : MonoBehaviour {
     public void Prev()
     {
         // Reset Selection
-        selectedField = "";
-        selectedToken = "";
+        selectedField = null;
+        selectedToken = null;
 
         GameFieldSelection.SetActive(false);
 
-        if (currentPlayer == "Cross")
+        if (currentPlayer == Player.Cross)
         {
             CrossTokenSelection.SetActive(true);
         }
@@ -65,40 +66,47 @@ public class UserInterfaceController : MonoBehaviour {
     // Executes the move with the selected Options and changes the current Player
     public void Confirm()
     {
-        if (selectedToken != "" && selectedField != "")
+        if (selectedToken != null && selectedField != null)
         {
             Debug.Log("Selections confirmed");
+
             // TODO call game function (which disables this controller?!)
-            selectedToken = "";
-            selectedField = "";
+
+            // Reset Selection
+            selectedField = null;
+            selectedToken = null;
 
             GameFieldSelection.SetActive(false);
 
             // Change current Player and UI
-            if (currentPlayer == "Cross")
+            if (currentPlayer == Player.Cross)
             {
-                currentPlayer = "Circle";
+                currentPlayer = Player.Circle;
                 CircleTokenSelection.SetActive(true);
             }
             else
             {
-                currentPlayer = "Cross";
+                currentPlayer = Player.Cross;
                 CrossTokenSelection.SetActive(true);
             }
         }
     }
 
+    // Hint: Button on Click works only with max 1 string or bool parameter
+
     // Saves the selected Token
     public void SetToken(string tokenName)
     {
-        selectedToken = tokenName;
+        // Convert string parameter to token type
+        selectedToken = (Token) System.Enum.Parse(typeof(Token), tokenName);
         Debug.Log("Selected Token: " + selectedToken);
     }
 
     // Saves the selected Field
     public void SetField(string fieldName)
     {
-        selectedField = fieldName;
+        // Convert string parameter to field type
+        selectedField = (Field)System.Enum.Parse(typeof(Field), fieldName);
         Debug.Log("Selected Field: " + selectedField);
     }
 }
