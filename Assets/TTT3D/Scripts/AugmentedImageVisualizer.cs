@@ -17,7 +17,7 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
-namespace GoogleARCore.Examples.AugmentedImage
+namespace AugmentedImage
 {
     using System;
     using System.Collections.Generic;
@@ -32,13 +32,9 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// The AugmentedImage to visualize.
         public AugmentedImage Image;
 
-        // The GameField for the Tokens to visualize above the Augmented Image of the GameField
-        public Dictionary<Field, Token> GameField = new Dictionary<Field, Token>()
-        {
-            { Field.TopLeft, Token.SmallCross1 },
-            { Field.Middle, Token.MediumCross2 },
-            { Field.BottomRight, Token.LargeCross1 }
-        };
+        // The GameController which contains the Gamefield for the Tokens
+        // to visualize above the Augmented Image of the GameField
+        public GameController GameController;
 
         // All Tokens
         public GameObject SmallCross1;
@@ -55,7 +51,7 @@ namespace GoogleARCore.Examples.AugmentedImage
 
         public GameObject SmallCircle2;
         public GameObject MediumCircle2;
-        public GameObject LargeCircle2;
+        public GameObject LargeCircle2;        
 
         // Returns a position Vector for the Field on the Gamefield img
         private Vector3 GetPositionVector(Field field, float centerX, float centerY)
@@ -120,7 +116,7 @@ namespace GoogleARCore.Examples.AugmentedImage
                 float centerX = Image.ExtentX / 3;
                 float centerY = Image.ExtentZ / 3;
 
-                foreach (var placement in GameField)
+                foreach (var placement in GameController.GameField)
                 {
                     GetTokenObject(placement.Value).transform.localPosition = GetPositionVector(placement.Key, centerX, centerY);
                     GetTokenObject(placement.Value).SetActive(true);

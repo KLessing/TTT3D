@@ -24,8 +24,6 @@ public class UserInterfaceController : MonoBehaviour {
     private Field? selectedField = null;
 
 
-    // TODO enum for individual Token and Field ids?!    
-
     // Deactivates the current Token Selection UI and activates Field Selection Ui
     public void Next()
     {

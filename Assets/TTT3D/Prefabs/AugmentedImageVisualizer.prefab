@@ -1155,6 +1155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b157be061a7e86046a790ed83cefb412, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameController: {fileID: 0}
   SmallCross1: {fileID: 1976894002533114}
   MediumCross1: {fileID: 1785030834147916}
   LargeCross1: {fileID: 1757065703846638}

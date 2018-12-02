@@ -18,17 +18,15 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace GoogleARCore.Examples.AugmentedImage
+namespace AugmentedImage
 {
     using System.Collections.Generic;
     using System.Runtime.InteropServices;
     using GoogleARCore;
     using UnityEngine;
 
-    /// <summary>
-    /// Controller for AugmentedImage example.
-    /// </summary>
-    public class AugmentedImageExampleController : MonoBehaviour
+    // Controller for the Augmented Image
+    public class AugmentedImageController : MonoBehaviour
     {
         /// <summary>
         /// A prefab for visualizing an AugmentedImage.
