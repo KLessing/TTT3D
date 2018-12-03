@@ -119,8 +119,9 @@ namespace AugmentedImage
 
                 foreach (var placement in GameController.GameField)
                 {
-                    GetTokenObject(placement.Value).transform.localPosition = GetPositionVector(placement.Key, centerX, centerY);
-                    GetTokenObject(placement.Value).SetActive(true);
+                    // set the highest objects on the Gamefield
+                    GetTokenObject(placement.Value[0]).transform.localPosition = GetPositionVector(placement.Key, centerX, centerY);
+                    GetTokenObject(placement.Value[0]).SetActive(true);
                 }
             }
         }
