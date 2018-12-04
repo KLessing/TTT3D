@@ -34,7 +34,7 @@ namespace AugmentedImage
 
         // The GameController which contains the Gamefield for the Tokens
         // to visualize above the Augmented Image of the GameField
-        public GameController GameController;
+        public GameController GameControllerPrefab;
 
         // All Tokens
         public GameObject SmallCross1;
@@ -117,7 +117,7 @@ namespace AugmentedImage
                 float centerX = Image.ExtentX / 3;
                 float centerY = Image.ExtentZ / 3;
 
-                foreach (var placement in GameController.GameField)
+                foreach (var placement in GameControllerPrefab.GameField)
                 {
                     // set the highest objects on the Gamefield
                     GetTokenObject(placement.Value[0]).transform.localPosition = GetPositionVector(placement.Key, centerX, centerY);

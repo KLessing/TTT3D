@@ -68,8 +68,6 @@ public class UserInterfaceController : MonoBehaviour {
     {
         if (selectedToken != null && selectedField != null)
         {
-            Debug.Log("Selections confirmed");
-
             GameControllerPrefab.SetTokenOnField((Token) selectedToken, (Field) selectedField);
             
             // Reset Selection
@@ -99,7 +97,6 @@ public class UserInterfaceController : MonoBehaviour {
     {
         // Convert string parameter to token type
         selectedToken = (Token) System.Enum.Parse(typeof(Token), tokenName);
-        Debug.Log("Selected Token: " + selectedToken);
     }
 
     // Saves the selected Field
@@ -107,6 +104,5 @@ public class UserInterfaceController : MonoBehaviour {
     {
         // Convert string parameter to field type
         selectedField = (Field)System.Enum.Parse(typeof(Field), fieldName);
-        Debug.Log("Selected Field: " + selectedField);
     }
 }

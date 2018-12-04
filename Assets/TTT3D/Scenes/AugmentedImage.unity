@@ -1454,6 +1454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c43948d587ed124f98cf3dfcee42040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameControllerPrefab: {fileID: 1035978436}
 --- !u!1 &821543038
 GameObject:
   m_ObjectHideFlags: 0
@@ -1543,6 +1544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c43948d587ed124f98cf3dfcee42040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameControllerPrefab: {fileID: 1035978436}
 --- !u!1 &826144761
 GameObject:
   m_ObjectHideFlags: 0
@@ -4447,6 +4449,11 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114456719788833914, guid: 6bb07e82a2929964eaf7897fbc0799a0,
+        type: 2}
+      propertyPath: GameControllerPrefab
+      value: 
+      objectReference: {fileID: 1035978436}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6bb07e82a2929964eaf7897fbc0799a0, type: 2}
   m_IsPrefabAsset: 0
