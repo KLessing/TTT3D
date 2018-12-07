@@ -7,15 +7,15 @@ using System.Linq;
 
 public class GameController : MonoBehaviour {
 
-    // GameField: Each Field has a List of Tokens sorted by the TokenSize
-    // e.g. Index 0 = Large Token (Cross or Circle); Index 1 = Middle Token etc.
-    public Dictionary<Field, List<Token>> GameField = new Dictionary<Field, List<Token>>();
+    // GameField: Each Field has a Stack of Tokens sorted by the TokenSize
+    // The largest Token is at the top of the stack
+    public Dictionary<Field, Stack<GameObject>> GameField = new Dictionary<Field, Stack<GameObject>>();
 
         
     // Sets a Token on a Field on the GameField
     // (The validation is handeld via button enabling)
     // return true = set possible
-    public bool SetTokenOnField(Token token, Field field)
+    public bool SetTokenOnField(GameObject token, Field field)
     {
         bool res = false;
 
@@ -28,17 +28,19 @@ public class GameController : MonoBehaviour {
             if (GameField.ContainsKey(field))
             {
                 // Compare with the upper Token on the Field
-                if (GetTokenSize(token) > GetTokenSize(GameField[field][0]))
+                if (GetTokenSize(token) > GetTokenSize(GameField[field].Peek()))
                 {
                     // Place the Token on the highest position of the Field
-                    GameField[field].Insert(0, token);
+                    GameField[field].Push(token);
                     res = true;
                 }
             }
             else
             {
+                Stack<GameObject> tokenStack = new Stack<GameObject>();
+                tokenStack.Push(token);
                 // Place the Token on the Field
-                GameField.Add(field, new List<Token> { token });
+                GameField.Add(field, tokenStack);
                 res = true;
             }
         }
@@ -50,7 +52,7 @@ public class GameController : MonoBehaviour {
 
 
     // Return if selection possible or token is covered by a bigger token
-    public bool TokenIsCovered(Token token)
+    public bool TokenIsCovered(GameObject token)
     {
         bool res = false;
         int index = 0;
@@ -61,7 +63,7 @@ public class GameController : MonoBehaviour {
             //res = GameField.ElementAt(index).Value[0] != token
             //   && GameField.ElementAt(index).Value.Contains(token);
 
-            if (GameField.ElementAt(index).Value[0] == token)
+            if (GameField.ElementAt(index).Value.Peek().name == token.name)
             {
                 // Token is on upper Field therefore it cant be covered
                 return false;
@@ -84,7 +86,7 @@ public class GameController : MonoBehaviour {
     //          false : the Token could not be removed because
     //                  1. it is not on the Gamefield
     //                  2. it is covered by a bigger Token
-    private bool RemoveTokenFromField(Token token)
+    private bool RemoveTokenFromField(GameObject token)
     {
         bool res = false;
         int index = 0;
@@ -92,9 +94,9 @@ public class GameController : MonoBehaviour {
         while (!res && index < GameField.Count)
         {
             // Check if token is on upper field
-            res = GameField.ElementAt(index).Value[0] == token;
+            res = GameField.ElementAt(index).Value.Peek().name == token.name;
 
-            if (res)
+                if (res)
             {
                 // Check if the token was the only token on that field
                 if (GameField.ElementAt(index).Value.Count == 1)
@@ -103,7 +105,7 @@ public class GameController : MonoBehaviour {
                     GameField.Remove(GameField.ElementAt(index).Key);
                 }
                 // Remove only the upper Token from the field
-                GameField.ElementAt(index).Value.Remove(token);
+                GameField.ElementAt(index).Value.Pop();
             }
 
             index++;
@@ -113,24 +115,13 @@ public class GameController : MonoBehaviour {
     }
 
     // Returns the Size for a Token
-    private int GetTokenSize(Token token)
+    private int GetTokenSize(GameObject token)
     {
-        switch (token)
+        switch (token.tag)
         {
-            case Token.SmallCross1:
-            case Token.SmallCircle1:
-            case Token.SmallCross2:
-            case Token.SmallCircle2: return 1;
-
-            case Token.MediumCross1:
-            case Token.MediumCircle1:
-            case Token.MediumCross2:
-            case Token.MediumCircle2: return 2;
-
-            case Token.LargeCross1:
-            case Token.LargeCircle1:
-            case Token.LargeCross2:
-            case Token.LargeCircle2: return 3;
+            case "Small": return 1;
+            case "Medium": return 2;
+            case "Large": return 3;
 
             default: return 0;
         }

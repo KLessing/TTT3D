@@ -20,7 +20,7 @@ public class UserInterfaceController : MonoBehaviour {
     private Player currentPlayer = Player.Cross;
 
     // The nullable selected Token
-    private Token? selectedToken = null;
+    private GameObject selectedToken = null;
 
     // The nullable selected Field on the GameField
     private Field? selectedField = null;
@@ -68,7 +68,7 @@ public class UserInterfaceController : MonoBehaviour {
     {
         if (selectedToken != null && selectedField != null)
         {
-            GameControllerPrefab.SetTokenOnField((Token) selectedToken, (Field) selectedField);
+            GameControllerPrefab.SetTokenOnField(selectedToken, (Field) selectedField);
             
             // Reset Selection
             selectedField = null;
@@ -93,10 +93,12 @@ public class UserInterfaceController : MonoBehaviour {
     // Hint: Button on Click works only with max 1 string or bool parameter
 
     // Saves the selected Token
-    public void SetToken(string tokenName)
+    public void SetToken(GameObject token)
     {
         // Convert string parameter to token type
-        selectedToken = (Token) System.Enum.Parse(typeof(Token), tokenName);
+        //selectedToken = (Token) System.Enum.Parse(typeof(Token), tokenName);
+
+        //selectedToken = 
     }
 
     // Saves the selected Field
