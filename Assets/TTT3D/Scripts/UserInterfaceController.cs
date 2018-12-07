@@ -95,10 +95,7 @@ public class UserInterfaceController : MonoBehaviour {
     // Saves the selected Token
     public void SetToken(GameObject token)
     {
-        // Convert string parameter to token type
-        //selectedToken = (Token) System.Enum.Parse(typeof(Token), tokenName);
-
-        //selectedToken = 
+        selectedToken = token;
     }
 
     // Saves the selected Field

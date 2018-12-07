@@ -162,7 +162,6 @@ GameObject:
   - component: {fileID: 224803891602954056}
   - component: {fileID: 222813660642589648}
   - component: {fileID: 114018266062535518}
-  - component: {fileID: 114230726198214050}
   m_Layer: 5
   m_Name: CircleTokenSelectionUI
   m_TagString: Untagged
@@ -198,7 +197,6 @@ GameObject:
   - component: {fileID: 224393193742466876}
   - component: {fileID: 222094583993990836}
   - component: {fileID: 114157240916519642}
-  - component: {fileID: 114523624176385492}
   m_Layer: 5
   m_Name: CrossTokenSelectionUI
   m_TagString: Untagged
@@ -1955,10 +1953,10 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114060008863304412}
         m_MethodName: SetToken
-        m_Mode: 5
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1886313779765948}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: MediumCircle2
@@ -2007,10 +2005,10 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114060008863304412}
         m_MethodName: SetToken
-        m_Mode: 5
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1775381405640072}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: MediumCross1
@@ -2059,10 +2057,10 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114060008863304412}
         m_MethodName: SetToken
-        m_Mode: 5
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1342674899630854}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: SmallCross2
@@ -2252,10 +2250,10 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114060008863304412}
         m_MethodName: SetToken
-        m_Mode: 5
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1314474332634132}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: LargeCross1
@@ -2460,10 +2458,10 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114060008863304412}
         m_MethodName: SetToken
-        m_Mode: 5
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1369888170170766}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: LargeCross2
@@ -2596,18 +2594,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "Spielfigur ausw\xE4hlen"
---- !u!114 &114230726198214050
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1184029898679016}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c43948d587ed124f98cf3dfcee42040, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GameControllerPrefab: {fileID: 114148556303822934}
 --- !u!114 &114235207698086944
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2973,21 +2959,10 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114060008863304412}
         m_MethodName: SetToken
-        m_Mode: 5
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: SmallCross1
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 11500000, guid: 6c43948d587ed124f98cf3dfcee42040, type: 3}
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgument: {fileID: 1040405027005078}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3115,10 +3090,10 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114060008863304412}
         m_MethodName: SetToken
-        m_Mode: 5
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1745922814079482}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: SmallCircle2
@@ -3331,10 +3306,10 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114060008863304412}
         m_MethodName: SetToken
-        m_Mode: 5
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1399968908228348}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: LargeCircle1
@@ -3351,30 +3326,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b157be061a7e86046a790ed83cefb412, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GameControllerPrefab: {fileID: 114148556303822934}
-  SmallCross1: {fileID: 1040405027005078}
-  MediumCross1: {fileID: 1775381405640072}
-  LargeCross1: {fileID: 1314474332634132}
-  SmallCross2: {fileID: 1342674899630854}
-  MediumCross2: {fileID: 1105436037232680}
-  LargeCross2: {fileID: 1369888170170766}
-  SmallCircle1: {fileID: 1172736118913238}
-  MediumCircle1: {fileID: 1199155630516206}
-  LargeCircle1: {fileID: 1399968908228348}
-  SmallCircle2: {fileID: 1745922814079482}
-  MediumCircle2: {fileID: 1886313779765948}
-  LargeCircle2: {fileID: 1493178047454262}
---- !u!114 &114523624176385492
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1229633039010228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c43948d587ed124f98cf3dfcee42040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   GameControllerPrefab: {fileID: 114148556303822934}
@@ -3446,10 +3397,10 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114060008863304412}
         m_MethodName: SetToken
-        m_Mode: 5
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1172736118913238}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: SmallCircle1
@@ -3579,10 +3530,10 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114060008863304412}
         m_MethodName: SetToken
-        m_Mode: 5
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1493178047454262}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: LargeCircle2
@@ -3893,10 +3844,10 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114060008863304412}
         m_MethodName: SetToken
-        m_Mode: 5
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1105436037232680}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: MediumCross2
@@ -4051,10 +4002,10 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114060008863304412}
         m_MethodName: SetToken
-        m_Mode: 5
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1199155630516206}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: MediumCircle1
