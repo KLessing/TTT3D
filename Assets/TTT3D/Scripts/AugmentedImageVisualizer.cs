@@ -60,11 +60,13 @@ namespace AugmentedImage
 
                 foreach (var placement in GameControllerPrefab.GameField)
                 {
-                    // get the highest Token from the gameField as token from the prefab array (select by name; GameObjebect comparison doens't work)
-                    GameObject activeToken = Array.Find(Tokens, token => token.name == placement.Value.Peek().name);
+                    // get the index of the highest Token from the gameField as token from the prefab array
+                    // (select by name; GameObjebect comparison doens't work)
+                    int index = Array.FindIndex(Tokens, token => token.name == placement.Value.Peek().name);
+
                     // Set the Token on the Gamefield
-                    activeToken.transform.localPosition = Vector3.zero; // this.transform.localPosition; //GetPositionVector(placement.Key, centerX, centerY);
-                    activeToken.SetActive(true);
+                    Tokens[index].transform.localPosition = GetPositionVector(placement.Key, centerX, centerY);
+                    Tokens[index].SetActive(true);
                 }
             }
         }
