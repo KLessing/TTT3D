@@ -60,8 +60,8 @@ namespace AugmentedImage
 
                 foreach (var placement in GameControllerPrefab.GameField)
                 {
-                    // get the index of the highest Token from the gameField as token from the prefab array
-                    // (select by name; GameObjebect comparison doens't work)
+                    // Get the index of the highest Token from the GameField for the Token from the prefab array
+                    // (select by name; GameObject comparison doesn't work)
                     int index = Array.FindIndex(Tokens, token => token.name == placement.Value.Peek().name);
 
                     // Set the Token on the Gamefield

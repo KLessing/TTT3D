@@ -27,9 +27,11 @@ public class GameController : MonoBehaviour {
             // Check if the Field is empty
             if (GameField.ContainsKey(field))
             {
+                Debug.Log("Field is not empty");
                 // Compare with the upper Token on the Field
                 if (GetTokenSize(token) > GetTokenSize(GameField[field].Peek()))
                 {
+                    Debug.Log("Push Token on top");
                     // Place the Token on the highest position of the Field
                     GameField[field].Push(token);
                     res = true;
@@ -37,13 +39,14 @@ public class GameController : MonoBehaviour {
             }
             else
             {
+                Debug.Log("Field is empty");
                 Stack<GameObject> tokenStack = new Stack<GameObject>();
                 tokenStack.Push(token);
                 // Place the Token on the Field
                 GameField.Add(field, tokenStack);
                 res = true;
             }
-        }
+        }        
 
         return res;
 
@@ -57,21 +60,27 @@ public class GameController : MonoBehaviour {
         bool res = false;
         int index = 0;
 
+        // check all used GameField Fields till 
+        // Token found on Peek
+        // or detected that Token is covered 
         while (!res && index < GameField.Count)
         {
-            // Check if token is covered
-            //res = GameField.ElementAt(index).Value[0] != token
-            //   && GameField.ElementAt(index).Value.Contains(token);
-
+            Debug.Log("index: " + index);
             if (GameField.ElementAt(index).Value.Peek().name == token.name)
             {
+                Debug.Log("PEEK");
+
                 // Token is on upper Field therefore it cant be covered
                 return false;
             }
             else
             {
                 // Search onward
-                res = GameField.ElementAt(index).Value.Contains(token);
+                res = GameField.ElementAt(index).Value.Contains(token); // token suche funktioniert nicht
+                // eigene Implementation mit zugriff auf untere elemente
+
+                // vieleicht mit condition für name
+                Debug.Log("Contains: " + res);
             }
 
             index++;
@@ -96,16 +105,23 @@ public class GameController : MonoBehaviour {
             // Check if token is on upper field
             res = GameField.ElementAt(index).Value.Peek().name == token.name;
 
-                if (res)
+            if (res)
             {
                 // Check if the token was the only token on that field
                 if (GameField.ElementAt(index).Value.Count == 1)
                 {
+                    Debug.Log("Trying to remove");
                     // Remove field from dictionary
                     GameField.Remove(GameField.ElementAt(index).Key);
+                    Debug.Log("removed");
                 }
-                // Remove only the upper Token from the field
-                GameField.ElementAt(index).Value.Pop();
+                else
+                {
+                    Debug.Log("trying to pop highest element");
+                    // Remove only the upper Token from the field
+                    GameField.ElementAt(index).Value.Pop();
+                    Debug.Log("Removed highest element");
+                }
             }
 
             index++;
@@ -117,6 +133,8 @@ public class GameController : MonoBehaviour {
     // Returns the Size for a Token
     private int GetTokenSize(GameObject token)
     {
+        Debug.Log("Token tag: " + token.tag);
+
         switch (token.tag)
         {
             case "Small": return 1;
