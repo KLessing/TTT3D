@@ -3329,6 +3329,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GameControllerPrefab: {fileID: 114148556303822934}
+  Tokens:
+  - {fileID: 1040405027005078}
+  - {fileID: 1775381405640072}
+  - {fileID: 1314474332634132}
+  - {fileID: 1172736118913238}
+  - {fileID: 1199155630516206}
+  - {fileID: 1399968908228348}
+  - {fileID: 1342674899630854}
+  - {fileID: 1105436037232680}
+  - {fileID: 1369888170170766}
+  - {fileID: 1745922814079482}
+  - {fileID: 1886313779765948}
+  - {fileID: 1493178047454262}
 --- !u!114 &114566138588104552
 MonoBehaviour:
   m_ObjectHideFlags: 1

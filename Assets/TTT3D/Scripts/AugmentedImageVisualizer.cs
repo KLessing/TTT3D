@@ -17,23 +17,8 @@ namespace AugmentedImage
         // to visualize above the Augmented Image of the GameField
         public GameController GameControllerPrefab;
 
-        // All Tokens
-        //public GameObject SmallCross1;
-        //public GameObject MediumCross1;
-        //public GameObject LargeCross1;
-
-        //public GameObject SmallCross2;
-        //public GameObject MediumCross2;
-        //public GameObject LargeCross2;
-
-        //public GameObject SmallCircle1;
-        //public GameObject MediumCircle1;
-        //public GameObject LargeCircle1;
-
-        //public GameObject SmallCircle2;
-        //public GameObject MediumCircle2;
-        //public GameObject LargeCircle2;
-
+        // The Tokens to visualize above the Augmented Image of the GameField
+        public GameObject[] Tokens;
 
         // Returns a position Vector for the Field on the Gamefield img
         private Vector3 GetPositionVector(Field field, float centerX, float centerY)
@@ -56,43 +41,18 @@ namespace AugmentedImage
             }
         }
 
-        // Returns the Gameobject for a Token enum
-        //private GameObject GetTokenObject(Token token)
-        //{
-        //    switch (token)
-        //    {
-        //        case Token.SmallCross1: return SmallCross1;
-        //        case Token.MediumCross1: return MediumCross1;
-        //        case Token.LargeCross1: return LargeCross1;
-
-        //        case Token.SmallCircle1: return SmallCircle1;
-        //        case Token.MediumCircle1: return MediumCircle1;
-        //        case Token.LargeCircle1: return LargeCircle1;
-
-        //        case Token.SmallCross2: return SmallCross2;
-        //        case Token.MediumCross2: return MediumCross2;
-        //        case Token.LargeCross2: return LargeCross2;
-
-        //        case Token.SmallCircle2: return SmallCircle2;
-        //        case Token.MediumCircle2: return MediumCircle2;
-        //        case Token.LargeCircle2: return LargeCircle2;
-
-        //        default: return null;
-        //    }
-        //}
-
         // The Unity Update method.
         public void Update()
         {
             // Always deactivate all Tokens first
-            // (Otherwise Tokens are visible even when not used)     
-            //foreach (Token token in Enum.GetValues(typeof(Token)))
-            //{
-            //    GetTokenObject(token).SetActive(false);
-            //}
+            // (Otherwise Tokens are visible even when not used)
+            foreach (GameObject token in Tokens)
+            {
+                token.SetActive(false);
+            }
 
             // Show Tokens while tracking the image
-            if (Image != null && Image.TrackingState == TrackingState.Tracking)
+            if (Image != null && Image.TrackingState == TrackingState.Tracking) 
             {
                 // Calcuate the center of the indivdual Fields on the Gamefield                
                 float centerX = Image.ExtentX / 3;
@@ -100,9 +60,11 @@ namespace AugmentedImage
 
                 foreach (var placement in GameControllerPrefab.GameField)
                 {
-                    // set the highest objects on the Gamefield
-                    placement.Value.Peek().transform.localPosition = GetPositionVector(placement.Key, centerX, centerY);
-                    placement.Value.Peek().SetActive(true);
+                    // get the highest Token from the gameField as token from the prefab array (select by name; GameObjebect comparison doens't work)
+                    GameObject activeToken = Array.Find(Tokens, token => token.name == placement.Value.Peek().name);
+                    // Set the Token on the Gamefield
+                    activeToken.transform.localPosition = Vector3.zero; // this.transform.localPosition; //GetPositionVector(placement.Key, centerX, centerY);
+                    activeToken.SetActive(true);
                 }
             }
         }
