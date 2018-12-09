@@ -11,14 +11,12 @@ public class GameController : MonoBehaviour {
     // The largest Token is at the top of the stack
     public Dictionary<Field, Stack<GameObject>> GameField = new Dictionary<Field, Stack<GameObject>>();
 
-        
+
     // Sets a Token on a Field on the GameField
     // (The validation is handeld via button enabling)
-    // return true = set possible
-    public bool SetTokenOnField(GameObject token, Field field)
+    // Return the winner or null
+    public Player? SetTokenOnField(GameObject token, Field field)
     {
-        bool res = false;
-
         if (!TokenIsCovered(token))
         {
             // Remove the Token if it's on an upper Field
@@ -32,7 +30,6 @@ public class GameController : MonoBehaviour {
                 {
                     // Place the Token on the highest position of the Field
                     GameField[field].Push(token);
-                    res = true;
                 }
             }
             else
@@ -41,13 +38,11 @@ public class GameController : MonoBehaviour {
                 tokenStack.Push(token);
                 // Place the Token on the Field
                 GameField.Add(field, tokenStack);
-                res = true;
             }
         }        
 
-        return res;
-
-        // TODO check if game is won
+        // Check if Game is won and return the player or null
+        return CheckWinner();
     }
 
 
@@ -77,6 +72,19 @@ public class GameController : MonoBehaviour {
         }
 
         return res;
+    }
+
+    // Return if the placement of a specific token on a specific field is possible
+    public bool PlacementPossible(GameObject token, Field field)
+    {
+        return true;
+    }
+
+    // Check the GameField for Three same tokens in a Row
+    // Return the winner or null
+    private Player? CheckWinner()
+    {
+        return null;
     }
 
     // Removes Token from upper Field (if possible)

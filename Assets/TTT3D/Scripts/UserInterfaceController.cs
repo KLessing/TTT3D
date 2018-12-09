@@ -90,8 +90,6 @@ public class UserInterfaceController : MonoBehaviour {
         }
     }
 
-    // Hint: Button on Click works only with max 1 string or bool parameter
-
     // Saves the selected Token
     public void SetToken(GameObject token)
     {
@@ -103,5 +101,11 @@ public class UserInterfaceController : MonoBehaviour {
     {
         // Convert string parameter to field type
         selectedField = (Field)System.Enum.Parse(typeof(Field), fieldName);
+    }
+
+    // Return if Placement of selected token is possible on field parameter
+    public bool PlacementOnFieldPossible(Field field)
+    {
+        return GameControllerPrefab.PlacementPossible(selectedToken, field);
     }
 }

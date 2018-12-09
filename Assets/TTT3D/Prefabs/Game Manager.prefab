@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 114929584009269648}
   m_Layer: 5
   m_Name: BtnBottomRight
-  m_TagString: Untagged
+  m_TagString: BottomRight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -255,7 +255,7 @@ GameObject:
   - component: {fileID: 114335755827319522}
   m_Layer: 5
   m_Name: BtnBottomMiddle
-  m_TagString: Untagged
+  m_TagString: BottomMiddle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -502,7 +502,7 @@ GameObject:
   - component: {fileID: 114368408412204272}
   m_Layer: 5
   m_Name: BtnTopRight
-  m_TagString: Untagged
+  m_TagString: TopRight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -520,7 +520,7 @@ GameObject:
   - component: {fileID: 114407810494110220}
   m_Layer: 5
   m_Name: BtnBottomLeft
-  m_TagString: Untagged
+  m_TagString: BottomLeft
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -589,7 +589,7 @@ GameObject:
   - component: {fileID: 114985999275041508}
   m_Layer: 5
   m_Name: BtnTopMiddle
-  m_TagString: Untagged
+  m_TagString: TopMiddle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -658,7 +658,7 @@ GameObject:
   - component: {fileID: 114106522350106190}
   m_Layer: 5
   m_Name: BtnMiddle
-  m_TagString: Untagged
+  m_TagString: Middle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -729,7 +729,7 @@ GameObject:
   - component: {fileID: 114840780203424206}
   m_Layer: 5
   m_Name: BtnMiddleRight
-  m_TagString: Untagged
+  m_TagString: MiddleRight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -765,7 +765,7 @@ GameObject:
   - component: {fileID: 114340873701220976}
   m_Layer: 5
   m_Name: BtnTopLeft
-  m_TagString: Untagged
+  m_TagString: TopLeft
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -919,7 +919,7 @@ GameObject:
   - component: {fileID: 114235207698086944}
   m_Layer: 5
   m_Name: BtnMiddleLeft
-  m_TagString: Untagged
+  m_TagString: MiddleLeft
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

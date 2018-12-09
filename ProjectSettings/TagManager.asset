@@ -9,6 +9,15 @@ TagManager:
   - Small
   - Medium
   - Large
+  - TopLeft
+  - TopMiddle
+  - TopRight
+  - MiddleLeft
+  - Middle
+  - MiddleRight
+  - BottomLeft
+  - BottomMiddle
+  - BottomRight
   layers:
   - Default
   - TransparentFX
