@@ -62,22 +62,15 @@ public class GameController : MonoBehaviour {
         // or detected that Token is covered 
         while (!res && index < GameField.Count)
         {
-            Debug.Log("index: " + index);
             if (GameField.ElementAt(index).Value.Peek().name == token.name)
             {
-                Debug.Log("PEEK");
-
                 // Token is on upper Field therefore it cant be covered
                 return false;
             }
             else
             {
                 // Search onward
-                res = GameField.ElementAt(index).Value.Contains(token); // token suche funktioniert nicht
-                // eigene Implementation mit zugriff auf untere elemente
-
-                // vieleicht mit condition für name
-                Debug.Log("Contains: " + res);
+                res = GameField.ElementAt(index).Value.Contains(token);
             }
 
             index++;

@@ -162,6 +162,7 @@ GameObject:
   - component: {fileID: 224803891602954056}
   - component: {fileID: 222813660642589648}
   - component: {fileID: 114018266062535518}
+  - component: {fileID: 114027046536003062}
   m_Layer: 5
   m_Name: CircleTokenSelectionUI
   m_TagString: Untagged
@@ -2023,6 +2024,32 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114027046536003062
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1184029898679016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40934a756772c2b43b1a29ae0cdf2f4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameControllerPrefab: {fileID: 114148556303822934}
+  TokenButtons:
+  - {fileID: 114635582527272854}
+  - {fileID: 114895797761179906}
+  - {fileID: 114438818656413142}
+  - {fileID: 114382727868303620}
+  - {fileID: 114026971712402000}
+  - {fileID: 114689405789191798}
+  TokenPrefabs:
+  - {fileID: 1172736118913238}
+  - {fileID: 1199155630516206}
+  - {fileID: 1399968908228348}
+  - {fileID: 1745922814079482}
+  - {fileID: 1886313779765948}
+  - {fileID: 1493178047454262}
 --- !u!114 &114042382718062964
 MonoBehaviour:
   m_ObjectHideFlags: 1
