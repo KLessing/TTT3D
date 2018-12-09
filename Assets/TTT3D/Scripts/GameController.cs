@@ -17,6 +17,9 @@ public class GameController : MonoBehaviour {
     // Return the winner or null
     public Player? SetTokenOnField(GameObject token, Field field)
     {
+        Player? winner = null;
+
+        // Only do something when token is not covered        
         if (!TokenIsCovered(token))
         {
             // Remove the Token if it's on an upper Field
@@ -39,10 +42,12 @@ public class GameController : MonoBehaviour {
                 // Place the Token on the Field
                 GameField.Add(field, tokenStack);
             }
+
+            // Check if game is won
+            winner = CheckWinner();
         }        
 
-        // Check if Game is won and return the player or null
-        return CheckWinner();
+        return winner;
     }
 
 
@@ -78,13 +83,6 @@ public class GameController : MonoBehaviour {
     public bool PlacementPossible(GameObject token, Field field)
     {      
         return !GameField.ContainsKey(field) || GetTokenSize(GameField[field].Peek()) < GetTokenSize(token);                
-    }
-
-    // Check the GameField for Three same tokens in a Row
-    // Return the winner or null
-    private Player? CheckWinner()
-    {
-        return null;
     }
 
     // Removes Token from upper Field (if possible)
@@ -135,5 +133,52 @@ public class GameController : MonoBehaviour {
 
             default: return 0;
         }
+    }
+
+    /***** Check Winner *****/
+
+    public int FIELD_COUNT = System.Enum.GetNames(typeof(Field)).Length;
+
+
+    // Compares the player tag on the given Fields and return the winner or null
+    private Player? ComparePlayerOnFields(string firstField, string secondField, string thirdField)
+    {
+        if (firstField == "Cross" && secondField == "Cross" && thirdField == "Cross")
+            return Player.Cross;
+        else if (firstField == "Circle" && secondField == "Circle" && thirdField == "Circle")
+            return Player.Circle;
+        else
+            return null;
+    }
+
+
+    // Check the GameField for Three same tokens in a Row
+    // Return the winner or null
+    private Player? CheckWinner()
+    {
+        int fieldIndex = 0;
+        Player? winner = null;
+
+        // Check Horizontal Winner
+        while (winner == null && fieldIndex < FIELD_COUNT - 1)
+        {
+            winner = ComparePlayerOnFields(GameField.ElementAt(fieldIndex).Value.Peek().tag,
+                                           GameField.ElementAt(fieldIndex + 1).Value.Peek().tag,
+                                           GameField.ElementAt(fieldIndex + 2).Value.Peek().tag);
+            fieldIndex += 3;
+        }
+
+        fieldIndex = 0;
+
+        // Check Vertical Winner
+        while (winner == null && fieldIndex < 3)
+        {
+            winner = ComparePlayerOnFields(GameField.ElementAt(fieldIndex).Value.Peek().tag,
+                                           GameField.ElementAt(fieldIndex + 3).Value.Peek().tag,
+                                           GameField.ElementAt(fieldIndex + 6).Value.Peek().tag);
+            fieldIndex++;
+        }
+
+        return winner;
     }
 }

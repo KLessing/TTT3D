@@ -5,6 +5,7 @@ using TTT3DTypes;
 
 public class UserInterfaceController : MonoBehaviour {
 
+    // The GameController which contains the Gamefield
     public GameController GameControllerPrefab;
 
     // The User Interface for Cross Token Selection
@@ -16,22 +17,39 @@ public class UserInterfaceController : MonoBehaviour {
     // The User Interface for Game Field Selection
     public GameObject GameFieldSelection;
 
+    // The User Interface to show when the Game was won
+    // Shows the winner and a Button for a new Game
+    public GameObject WinnerShowcaseUI;       
+
     // The Current Player (Cross or Circle)
-    private Player currentPlayer = Player.Cross;
+    private Player CurrentPlayer = Player.Cross;
 
     // The nullable selected Token
-    private GameObject selectedToken = null;
+    private GameObject SelectedToken = null;
 
     // The nullable selected Field on the GameField
-    private Field? selectedField = null;
+    private Field? SelectedField = null;
 
+    // The Winner to check if game was won
+    private Player? Winner = null;
+
+    // Needed for new Game call?!
+    // public void Start();
+
+    public void NewGame()
+    {
+        Debug.Log("Start new Game!");
+        WinnerShowcaseUI.SetActive(false);
+        CrossTokenSelection.SetActive(true);
+
+    }
 
     // Deactivates the current Token Selection UI and activates Field Selection Ui
     public void Next()
     {
-        if (selectedToken != null)
+        if (SelectedToken != null)
         {
-            if (currentPlayer == Player.Cross)
+            if (CurrentPlayer == Player.Cross)
             {
                 CrossTokenSelection.SetActive(false);
             }
@@ -48,12 +66,12 @@ public class UserInterfaceController : MonoBehaviour {
     public void Prev()
     {
         // Reset Selection
-        selectedField = null;
-        selectedToken = null;
+        SelectedField = null;
+        SelectedToken = null;
 
         GameFieldSelection.SetActive(false);
 
-        if (currentPlayer == Player.Cross)
+        if (CurrentPlayer == Player.Cross)
         {
             CrossTokenSelection.SetActive(true);
         }
@@ -66,47 +84,63 @@ public class UserInterfaceController : MonoBehaviour {
     // Executes the move with the selected Options and changes the current Player
     public void Confirm()
     {
-        if (selectedToken != null && selectedField != null)
+        if (SelectedToken != null && SelectedField != null)
         {
-            GameControllerPrefab.SetTokenOnField(selectedToken, (Field) selectedField);
-            
-            // Reset Selection
-            selectedField = null;
-            selectedToken = null;
+            Winner = GameControllerPrefab.SetTokenOnField(SelectedToken, (Field) SelectedField);
 
+            Debug.Log("Winner: " + Winner);
+            Debug.Log("SelectedToken: " + SelectedToken);
+            Debug.Log("SelectedField: " + SelectedField);            
+
+            // Reset Selection
+            SelectedField = null;
+            SelectedToken = null;
+
+            // Hide Game Field Selection UI
             GameFieldSelection.SetActive(false);
 
-            // Change current Player and UI
-            if (currentPlayer == Player.Cross)
+            // Continue game when no winner yet
+            if (Winner == null)
             {
-                currentPlayer = Player.Circle;
-                CircleTokenSelection.SetActive(true);
-            }
+                // Change current Player and UI
+                if (CurrentPlayer == Player.Cross)
+                {
+                    CurrentPlayer = Player.Circle;
+                    CircleTokenSelection.SetActive(true);
+                }
+                else
+                {
+                    CurrentPlayer = Player.Cross;
+                    CrossTokenSelection.SetActive(true);
+                }
+            } 
             else
             {
-                currentPlayer = Player.Cross;
-                CrossTokenSelection.SetActive(true);
+                // Show Winner Message UI
+                WinnerShowcaseUI.SetActive(true);
             }
+
+
         }
     }
 
     // Saves the selected Token
     public void SetToken(GameObject token)
     {
-        selectedToken = token;
+        SelectedToken = token;
     }
 
     // Saves the selected Field
     public void SetField(string fieldName)
     {
         // Convert string parameter to field type
-        selectedField = GetFieldEnumFromString(fieldName);
+        SelectedField = GetFieldEnumFromString(fieldName);
     }
 
     // Return if Placement of selected token is possible on field parameter
     public bool PlacementOnFieldPossible(string fieldName)
     {
-        return GameControllerPrefab.PlacementPossible(selectedToken, GetFieldEnumFromString(fieldName));
+        return GameControllerPrefab.PlacementPossible(SelectedToken, GetFieldEnumFromString(fieldName));
     }
 
     // Parse the given string to a Field Enum

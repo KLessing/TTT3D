@@ -276,6 +276,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 224319688249151496, guid: d58c42f1f5713fb439c94507bf2b414a,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d58c42f1f5713fb439c94507bf2b414a, type: 2}
   m_IsPrefabAsset: 0

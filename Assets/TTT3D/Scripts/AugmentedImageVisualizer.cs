@@ -41,7 +41,7 @@ namespace AugmentedImage
             }
         }
 
-        // The Unity Update method.
+        // The Unity Update method
         public void Update()
         {
             // Always deactivate all Tokens first
