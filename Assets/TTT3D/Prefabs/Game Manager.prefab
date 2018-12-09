@@ -197,6 +197,7 @@ GameObject:
   - component: {fileID: 224393193742466876}
   - component: {fileID: 222094583993990836}
   - component: {fileID: 114157240916519642}
+  - component: {fileID: 114274800209209694}
   m_Layer: 5
   m_Name: CrossTokenSelectionUI
   m_TagString: Untagged
@@ -2731,6 +2732,32 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114274800209209694
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1229633039010228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40934a756772c2b43b1a29ae0cdf2f4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameControllerPrefab: {fileID: 114148556303822934}
+  TokenButtons:
+  - {fileID: 114353461796746692}
+  - {fileID: 114042382718062964}
+  - {fileID: 114082881238334976}
+  - {fileID: 114053736224085318}
+  - {fileID: 114788360713655246}
+  - {fileID: 114120348498582744}
+  TokenPrefabs:
+  - {fileID: 1040405027005078}
+  - {fileID: 1775381405640072}
+  - {fileID: 1314474332634132}
+  - {fileID: 1342674899630854}
+  - {fileID: 1105436037232680}
+  - {fileID: 1369888170170766}
 --- !u!114 &114276590116508774
 MonoBehaviour:
   m_ObjectHideFlags: 1

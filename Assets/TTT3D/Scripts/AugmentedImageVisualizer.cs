@@ -58,7 +58,7 @@ namespace AugmentedImage
                 float centerX = Image.ExtentX / 3;
                 float centerY = Image.ExtentZ / 3;
 
-                // Iterate through GameField Fields with Tokens
+                // Iterate GameField Fields with Tokens
                 foreach (var placement in GameControllerPrefab.GameField)
                 {
                     // Get the index of the highest Token (Peek) from the GameField Field for the prefab array
