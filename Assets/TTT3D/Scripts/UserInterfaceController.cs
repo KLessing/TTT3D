@@ -100,12 +100,18 @@ public class UserInterfaceController : MonoBehaviour {
     public void SetField(string fieldName)
     {
         // Convert string parameter to field type
-        selectedField = (Field)System.Enum.Parse(typeof(Field), fieldName);
+        selectedField = GetFieldEnumFromString(fieldName);
     }
 
     // Return if Placement of selected token is possible on field parameter
-    public bool PlacementOnFieldPossible(Field field)
+    public bool PlacementOnFieldPossible(string fieldName)
     {
-        return GameControllerPrefab.PlacementPossible(selectedToken, field);
+        return GameControllerPrefab.PlacementPossible(selectedToken, GetFieldEnumFromString(fieldName));
+    }
+
+    // Parse the given string to a Field Enum
+    private Field GetFieldEnumFromString(string fieldName)
+    {
+        return (Field)System.Enum.Parse(typeof(Field), fieldName);
     }
 }

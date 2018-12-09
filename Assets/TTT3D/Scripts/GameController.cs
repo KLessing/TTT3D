@@ -76,8 +76,8 @@ public class GameController : MonoBehaviour {
 
     // Return if the placement of a specific token on a specific field is possible
     public bool PlacementPossible(GameObject token, Field field)
-    {
-        return true;
+    {      
+        return !GameField.ContainsKey(field) || GetTokenSize(GameField[field].Peek()) < GetTokenSize(token);                
     }
 
     // Check the GameField for Three same tokens in a Row

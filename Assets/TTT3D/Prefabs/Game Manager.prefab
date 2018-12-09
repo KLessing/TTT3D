@@ -464,6 +464,7 @@ GameObject:
   - component: {fileID: 224344593458996050}
   - component: {fileID: 222246432826771706}
   - component: {fileID: 114312705991269708}
+  - component: {fileID: 114635643961517268}
   m_Layer: 5
   m_Name: GameFieldSelectionUI
   m_TagString: Untagged
@@ -3533,6 +3534,28 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114635643961517268
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1433202621951198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80cb21728fac12b45b28fda85aaf8f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UserInterfaceControllerPrefab: {fileID: 114060008863304412}
+  FieldButtons:
+  - {fileID: 114340873701220976}
+  - {fileID: 114985999275041508}
+  - {fileID: 114368408412204272}
+  - {fileID: 114235207698086944}
+  - {fileID: 114106522350106190}
+  - {fileID: 114840780203424206}
+  - {fileID: 114407810494110220}
+  - {fileID: 114335755827319522}
+  - {fileID: 114929584009269648}
 --- !u!114 &114653017532892968
 MonoBehaviour:
   m_ObjectHideFlags: 1
