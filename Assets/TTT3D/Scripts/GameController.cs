@@ -44,7 +44,7 @@ public class GameController : MonoBehaviour {
             }
 
             // Check if game is won
-            winner = CheckWinner();
+           // winner = CheckWinner();
         }        
 
         return winner;

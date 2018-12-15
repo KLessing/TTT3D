@@ -41,6 +41,7 @@ public class UserInterfaceController : MonoBehaviour {
         Debug.Log("Start new Game!");
         WinnerShowcaseUI.SetActive(false);
         CrossTokenSelection.SetActive(true);
+        //TODO Logic for Gamefield reset in Gamecontroller
 
     }
 
@@ -88,9 +89,9 @@ public class UserInterfaceController : MonoBehaviour {
         {
             Winner = GameControllerPrefab.SetTokenOnField(SelectedToken, (Field) SelectedField);
 
-            Debug.Log("Winner: " + Winner);
-            Debug.Log("SelectedToken: " + SelectedToken);
-            Debug.Log("SelectedField: " + SelectedField);            
+            //Debug.Log("Winner: " + Winner);
+            //Debug.Log("SelectedToken: " + SelectedToken);
+            //Debug.Log("SelectedField: " + SelectedField);            
 
             // Reset Selection
             SelectedField = null;
