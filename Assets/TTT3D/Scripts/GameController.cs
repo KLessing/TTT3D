@@ -192,6 +192,24 @@ public class GameController : MonoBehaviour {
             fieldIndex++;
         }
 
+        // Check Diagonal Winner
+        if (winner == null && GameField.ContainsKey(Field.TopLeft) && GameField.ContainsKey(Field.Middle) && GameField.ContainsKey(Field.BottomRight))
+        {
+            // Check the parent name (= Player Name) of the peek (= highest Token) on the Fields
+            winner = ComparePlayerOnFields(GameField[Field.TopLeft].Peek().transform.parent.name,
+                                           GameField[Field.Middle].Peek().transform.parent.name,
+                                           GameField[Field.BottomRight].Peek().transform.parent.name);
+        }
+
+        if (winner == null && GameField.ContainsKey(Field.TopRight) && GameField.ContainsKey(Field.Middle) && GameField.ContainsKey(Field.BottomLeft))
+        {
+            // Check the parent name (= Player Name) of the peek (= highest Token) on the Fields
+            winner = ComparePlayerOnFields(GameField[Field.TopRight].Peek().transform.parent.name,
+                                           GameField[Field.Middle].Peek().transform.parent.name,
+                                           GameField[Field.BottomLeft].Peek().transform.parent.name);
+        }
+
+
         return winner;
     }
 }
