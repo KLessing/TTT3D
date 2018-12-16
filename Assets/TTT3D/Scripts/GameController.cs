@@ -44,7 +44,7 @@ public class GameController : MonoBehaviour {
             }
 
             // Check if game is won
-           // winner = CheckWinner();
+            winner = CheckWinner();
         }        
 
         return winner;
@@ -137,7 +137,8 @@ public class GameController : MonoBehaviour {
 
     /***** Check Winner *****/
 
-    public int FIELD_COUNT = System.Enum.GetNames(typeof(Field)).Length;
+    // The number of fields
+    private int FIELD_COUNT = System.Enum.GetNames(typeof(Field)).Length;
 
 
     // Compares the player tag on the given Fields and return the winner or null
@@ -162,10 +163,16 @@ public class GameController : MonoBehaviour {
         // Check Horizontal Winner
         while (winner == null && fieldIndex < FIELD_COUNT - 1)
         {
-            winner = ComparePlayerOnFields(GameField.ElementAt(fieldIndex).Value.Peek().tag,
-                                           GameField.ElementAt(fieldIndex + 1).Value.Peek().tag,
-                                           GameField.ElementAt(fieldIndex + 2).Value.Peek().tag);
-            fieldIndex += 3;
+            // Check if fields are available (if they are they contain at least one token)
+            if (GameField.ContainsKey((Field)fieldIndex) && GameField.ContainsKey((Field)fieldIndex + 1) && GameField.ContainsKey((Field)fieldIndex + 2))
+            {
+                // Check the parent name (= Player Name) of the peek (= highest Token) on the Fields
+                winner = ComparePlayerOnFields(GameField[(Field)fieldIndex].Peek().transform.parent.name,
+                                               GameField[(Field)fieldIndex + 1].Peek().transform.parent.name,
+                                               GameField[(Field)fieldIndex + 2].Peek().transform.parent.name);
+            }
+
+            fieldIndex += 3;            
         }
 
         fieldIndex = 0;
@@ -173,9 +180,15 @@ public class GameController : MonoBehaviour {
         // Check Vertical Winner
         while (winner == null && fieldIndex < 3)
         {
-            winner = ComparePlayerOnFields(GameField.ElementAt(fieldIndex).Value.Peek().tag,
-                                           GameField.ElementAt(fieldIndex + 3).Value.Peek().tag,
-                                           GameField.ElementAt(fieldIndex + 6).Value.Peek().tag);
+            // Check if fields are available (if they are they contain at least one token)
+            if (GameField.ContainsKey((Field)fieldIndex) && GameField.ContainsKey((Field)fieldIndex + 3) && GameField.ContainsKey((Field)fieldIndex + 6))
+            {
+                // Check the parent name (= Player Name) of the peek (= highest Token) on the Fields
+                winner = ComparePlayerOnFields(GameField[(Field)fieldIndex].Peek().transform.parent.name,
+                                               GameField[(Field)fieldIndex + 3].Peek().transform.parent.name,
+                                               GameField[(Field)fieldIndex + 6].Peek().transform.parent.name);
+            }
+
             fieldIndex++;
         }
 
