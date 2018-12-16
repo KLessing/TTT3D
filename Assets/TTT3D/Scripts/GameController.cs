@@ -8,7 +8,7 @@ using System.Linq;
 public class GameController : MonoBehaviour {
 
     // GameField: Each Field has a Stack of Tokens sorted by the TokenSize
-    // The largest Token is at the top of the stack
+    // The largest Token is at the top of the stack (Peek)
     public Dictionary<Field, Stack<GameObject>> GameField = new Dictionary<Field, Stack<GameObject>>();
 
     public void Reset()
@@ -130,14 +130,7 @@ public class GameController : MonoBehaviour {
     // Returns the Size for a Token
     private int GetTokenSize(GameObject token)
     {
-        switch (token.tag)
-        {
-            case "Small": return 1;
-            case "Medium": return 2;
-            case "Large": return 3;
-
-            default: return 0;
-        }
+        return (int) System.Enum.Parse(typeof(TokenSize), token.tag);
     }
 
     /***** Check Winner *****/
