@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TTT3DTypes;
+using UnityEngine.UI;
 
 public class UserInterfaceController : MonoBehaviour {
 
@@ -33,18 +34,13 @@ public class UserInterfaceController : MonoBehaviour {
     // The Winner to check if game was won
     private Player? Winner = null;
 
-    // Needed for new Game call?!
-    // public void Start();
 
+    // Reset the current Gamefield and start new Game
     public void NewGame()
     {
-        Debug.Log("Start new Game!");
-
+        GameControllerPrefab.Reset();
         WinnerShowcaseUI.SetActive(false);
         CrossTokenSelection.SetActive(true);
-
-        //TODO Logic for Gamefield reset in Gamecontroller
-
     }
 
     // Deactivates the current Token Selection UI and activates Field Selection Ui
@@ -115,6 +111,19 @@ public class UserInterfaceController : MonoBehaviour {
             } 
             else
             {
+                // Get the Text component to show the winner
+                Text winnerMsg = WinnerShowcaseUI.GetComponentInChildren<Text>();
+
+                // Set the winner text
+                if (Winner == Player.Cross)
+                {
+                    winnerMsg.text = "Kreuz gewinnt";
+                }
+                else if (Winner == Player.Circle)
+                {
+                    winnerMsg.text = "Kreis gewinnt";
+                }
+
                 // Show Winner Message UI
                 WinnerShowcaseUI.SetActive(true);
             }

@@ -11,6 +11,11 @@ public class GameController : MonoBehaviour {
     // The largest Token is at the top of the stack
     public Dictionary<Field, Stack<GameObject>> GameField = new Dictionary<Field, Stack<GameObject>>();
 
+    public void Reset()
+    {
+        GameField.Clear();
+    }
+
 
     // Sets a Token on a Field on the GameField
     // (The validation is handeld via button enabling)
