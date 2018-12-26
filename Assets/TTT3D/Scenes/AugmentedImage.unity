@@ -112,6 +112,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &81778029 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1373882873042318, guid: d58c42f1f5713fb439c94507bf2b414a,
+    type: 3}
+  m_PrefabInstance: {fileID: 786336562}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &332743836
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,6 +334,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AugmentedImageVisualizerPrefab: {fileID: 2037328527}
   FitToScanOverlay: {fileID: 332743836}
+  UserInterfaceCanvas: {fileID: 81778029}
 --- !u!4 &1180258054
 Transform:
   m_ObjectHideFlags: 0
