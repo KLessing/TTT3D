@@ -20,7 +20,11 @@ public class UserInterfaceController : MonoBehaviour {
 
     // The User Interface to show when the Game was won
     // Shows the winner and a Button for a new Game
-    public GameObject WinnerShowcaseUI;       
+    public GameObject WinnerShowcaseUI;
+
+    // The User Interface for the Player Count Selection
+    // Responsible for AI usage
+    public GameObject PlayerCountSelectionUI;
 
     // The Current Player (Cross or Circle)
     private Player CurrentPlayer = Player.Cross;
@@ -34,13 +38,25 @@ public class UserInterfaceController : MonoBehaviour {
     // The Winner to check if game was won
     private Player? Winner = null;
 
+    // AI Usage is true for Single Player Games
+    // and false for Mutliplayer    
+    private bool AIUsage = false;
+
+    // Select the count of Players at the beginning of the Game
+    // One Player means the second Player is played by an AI
+    public void SelectPlayerCount(bool useAI)
+    {
+        AIUsage = useAI;
+        PlayerCountSelectionUI.SetActive(false);
+        CrossTokenSelection.SetActive(true);
+    }
 
     // Reset the current Gamefield and start new Game
     public void NewGame()
     {
         GameControllerPrefab.Reset();
         WinnerShowcaseUI.SetActive(false);
-        CrossTokenSelection.SetActive(true);
+        PlayerCountSelectionUI.SetActive(true);
     }
 
     // Deactivates the current Token Selection UI and activates Field Selection Ui
@@ -97,17 +113,21 @@ public class UserInterfaceController : MonoBehaviour {
             // Continue game when no winner yet
             if (Winner == null)
             {
+                // Execute the next move of the AI for SinglePlayer Mode
+                if (AIUsage)
+                {
+                    // Change current Player
+                    CurrentPlayer = GetNextPlayer(CurrentPlayer);
+
+                    // call AI Controller with Gamefield and current Player
+                    // get the best move
+                    // execute the best move in GameController
+                }
+
                 // Change current Player and UI
-                if (CurrentPlayer == Player.Cross)
-                {
-                    CurrentPlayer = Player.Circle;
-                    CircleTokenSelection.SetActive(true);
-                }
-                else
-                {
-                    CurrentPlayer = Player.Cross;
-                    CrossTokenSelection.SetActive(true);
-                }
+                CurrentPlayer = GetNextPlayer(CurrentPlayer);
+                ActivateTokenUI(CurrentPlayer);
+                
             } 
             else
             {
@@ -155,5 +175,24 @@ public class UserInterfaceController : MonoBehaviour {
     private Field GetFieldEnumFromString(string fieldName)
     {
         return (Field)System.Enum.Parse(typeof(Field), fieldName);
+    }
+
+    // Return the next Player
+    private Player GetNextPlayer(Player current)
+    {
+        return current == Player.Cross ? Player.Circle : Player.Cross;
+    }
+
+    // Activate the Token Selection UI of the given Player
+    private void ActivateTokenUI(Player current)
+    {
+        if (current == Player.Cross)
+        {
+            CrossTokenSelection.SetActive(true);
+        }
+        else if (current == Player.Circle)
+        {
+            CircleTokenSelection.SetActive(true);
+        }
     }
 }
