@@ -13,8 +13,6 @@ public class TokenButtonController : MonoBehaviour {
     public Button[] TokenButtons;
     public GameObject[] TokenPrefabs;
 
-    public Toggle[] TokenToggles;
-
     void OnEnable()
     {
         // Iterate Buttons / Prefabs
