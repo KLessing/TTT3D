@@ -101,7 +101,7 @@ public class UserInterfaceController : MonoBehaviour {
     {
         if (SelectedToken != null && SelectedField != null)
         {
-            Winner = GameControllerPrefab.SetTokenOnField(SelectedToken, (Field) SelectedField);
+            Winner = GameControllerPrefab.SetTokenOnField(new Move(SelectedToken, (Field) SelectedField));
 
             // Reset Selection
             SelectedField = null;

@@ -11,4 +11,15 @@ namespace GG3DTypes
 
     // The different Token Sizes (The Index serves as comparison value)
     public enum TokenSize { Small, Medium, Large };
+
+    public struct Move
+    {
+        public GameObject Token;
+        public Field Field;
+        public Move(GameObject token, Field field)
+        {
+            Token = token;
+            Field = field;
+        }
+    }
 }

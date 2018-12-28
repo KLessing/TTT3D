@@ -20,32 +20,32 @@ public class GameController : MonoBehaviour {
     // Sets a Token on a Field on the GameField
     // (The validation is handeld via button enabling)
     // Return the winner or null
-    public Player? SetTokenOnField(GameObject token, Field field)
+    public Player? SetTokenOnField(Move move)
     {
         Player? winner = null;
 
         // Only do something when token is not covered        
-        if (!TokenIsCovered(token))
+        if (!TokenIsCovered(move.Token))
         {
             // Remove the Token if it's on an upper Field
-            RemoveTokenFromField(token);
+            RemoveTokenFromField(move.Token);
 
             // Check if the Field is empty
-            if (GameField.ContainsKey(field))
+            if (GameField.ContainsKey(move.Field))
             {
                 // Compare with the upper Token on the Field
-                if (GetTokenSize(token) > GetTokenSize(GameField[field].Peek()))
+                if (GetTokenSize(move.Token) > GetTokenSize(GameField[move.Field].Peek()))
                 {
                     // Place the Token on the highest position of the Field
-                    GameField[field].Push(token);
+                    GameField[move.Field].Push(move.Token);
                 }
             }
             else
             {
                 Stack<GameObject> tokenStack = new Stack<GameObject>();
-                tokenStack.Push(token);
+                tokenStack.Push(move.Token);
                 // Place the Token on the Field
-                GameField.Add(field, tokenStack);
+                GameField.Add(move.Field, tokenStack);
             }
 
             // Check if game is won
