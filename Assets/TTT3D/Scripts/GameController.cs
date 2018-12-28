@@ -9,7 +9,7 @@ public class GameController : MonoBehaviour {
 
     // GameField: Each Field has a Stack of Tokens sorted by the TokenSize
     // The largest Token is at the top of the stack (Peek)
-    public Dictionary<Field, Stack<GameObject>> GameField = new Dictionary<Field, Stack<GameObject>>();
+    public GameState GameField = new GameState();
 
     public void Reset()
     {

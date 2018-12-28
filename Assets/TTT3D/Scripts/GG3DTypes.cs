@@ -12,6 +12,11 @@ namespace GG3DTypes
     // The different Token Sizes (The Index serves as comparison value)
     public enum TokenSize { Small, Medium, Large };
 
+    // Typedef workaround for a GameState with Tokens on Gamefield
+    // (using works only in same file)
+    public class GameState : Dictionary<Field, Stack<GameObject>> { };
+
+    // A Move consists of a Token and a Field for the Placement
     public struct Move
     {
         public GameObject Token;

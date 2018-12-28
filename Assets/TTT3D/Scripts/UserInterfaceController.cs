@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GG3DTypes;
 using UnityEngine.UI;
+using GG3DTypes;
+using GG3DAI;
 
 public class UserInterfaceController : MonoBehaviour {
 
@@ -101,6 +102,7 @@ public class UserInterfaceController : MonoBehaviour {
     {
         if (SelectedToken != null && SelectedField != null)
         {
+            // Execute Move with selected options
             Winner = GameControllerPrefab.SetTokenOnField(new Move(SelectedToken, (Field) SelectedField));
 
             // Reset Selection
@@ -110,24 +112,26 @@ public class UserInterfaceController : MonoBehaviour {
             // Hide Game Field Selection UI
             GameFieldSelection.SetActive(false);
 
-            // Continue game when no winner yet
-            if (Winner == null)
+            // Execute the next move of the AI for SinglePlayer Mode
+            // when no winner yet
+            if (Winner == null && AIUsage)
             {
-                // Execute the next move of the AI for SinglePlayer Mode
-                if (AIUsage)
-                {
-                    // Change current Player
-                    CurrentPlayer = GetNextPlayer(CurrentPlayer);
+                // Change current Player
+                CurrentPlayer = GetNextPlayer(CurrentPlayer);
 
-                    // call AI Controller with Gamefield and current Player
-                    // get the best move
-                    // execute the best move in GameController
-                }
+                // get the best AI move for current Player and GameState
+                Move bestMove = AIController.GetBestMove(CurrentPlayer, GameControllerPrefab.GameField);
 
+                // Execute the best AI move in GameController
+                Winner = GameControllerPrefab.SetTokenOnField(bestMove);
+            }
+
+            // Continue when still no winner
+            if (Winner == null)
+            { 
                 // Change current Player and UI
                 CurrentPlayer = GetNextPlayer(CurrentPlayer);
-                ActivateTokenUI(CurrentPlayer);
-                
+                ActivateTokenUI(CurrentPlayer);                            
             } 
             else
             {
