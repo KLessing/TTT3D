@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TTT3DTypes;
+using GG3DTypes;
 using UnityEngine.UI;
 
 public class UserInterfaceController : MonoBehaviour {

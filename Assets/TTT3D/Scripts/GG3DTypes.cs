@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Extra Namespace to prevent conflicts with other type definitions
-namespace TTT3DTypes
+namespace GG3DTypes
 {
     public enum Player { Cross, Circle };
 

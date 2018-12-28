@@ -6,7 +6,7 @@ namespace AugmentedImage
     using GoogleARCore;
     using GoogleARCoreInternal;
     using UnityEngine;
-    using TTT3DTypes;
+    using GG3DTypes;
 
     public class AugmentedImageVisualizer : MonoBehaviour
     {
