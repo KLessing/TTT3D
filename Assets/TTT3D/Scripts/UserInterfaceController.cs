@@ -120,7 +120,7 @@ public class UserInterfaceController : MonoBehaviour {
                 CurrentPlayer = GetNextPlayer(CurrentPlayer);
 
                 // get the best AI move for current Player and GameState
-                Move bestMove = AIController.GetBestMove(CurrentPlayer, GameControllerPrefab.GameField);
+                Move bestMove = AIController.GetBestMove(GameControllerPrefab.GameField, CurrentPlayer);
 
                 // Execute the best AI move in GameController
                 Winner = GameControllerPrefab.SetTokenOnField(bestMove);

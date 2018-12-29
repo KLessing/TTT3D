@@ -21,6 +21,7 @@ namespace GG3DTypes
     {
         public GameObject Token;
         public Field Field;
+
         public Move(GameObject token, Field field)
         {
             Token = token;
