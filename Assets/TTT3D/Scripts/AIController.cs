@@ -4,7 +4,7 @@ using UnityEngine;
 using GG3DTypes;
 
 namespace GG3DAI
-{
+{    
     // Own MoveRating Struct for move and rating combination
     public struct MoveRating
     {
@@ -20,37 +20,63 @@ namespace GG3DAI
 
     public class AIController : MonoBehaviour
     {
-        public static Move GetBestMove(GameState state, Player player)
+        // All Cross Tokens
+        public List<GameObject> CrossTokens;
+
+        // All Circle Tokens
+        public List<GameObject> CircleTokens;
+
+        public Move GetBestMove(GameState state, Player player)
         {
             // Call Alpha Beta Search
 
-            GameObject[] availableTokens = GetAvailableTokensForGameState(state, player);
-            int tokenCount = availableTokens.Length;
+            List<GameObject> availableTokens = GetAvailableTokensForGameState(state, player);
+            int tokenCount = availableTokens.Count;
 
             // The Recursion depth depends on the count of available Tokens
-            // TODO TEST or use static depth
-            int depth = availableTokens.Length / 4;
+            // TODO TEST or use depth
+            int depth = availableTokens.Count / 4;
 
             return AlphaBetaSearch(state, player, depth, int.MinValue, int.MaxValue);
         }
 
+
+
         // Returns an Array of available player Tokens for the given Gamestate
         // = All Player Tokens including the Tokens on the Peek of the Fields
         // but without the covered Tokens
-        private static GameObject[] GetAvailableTokensForGameState(GameState state, Player player)
+        private List<GameObject> GetAvailableTokensForGameState(GameState state, Player player)
         {
-            // Init all
+            // Direct Init of all Tokens for the Player and the player String
+            List<GameObject> allTokens = player == Player.Cross ? CrossTokens : CircleTokens;
+            string playerString = player == Player.Cross ? "Cross" : "Circle";
 
             // Iterate through all Fields and remove the covered Tokens
+            foreach (var field in state)
+            {
+                // The Top Value will be ignored because it can still be used
+                field.Value.Pop();
 
-            return null;
+                // The Other values are covered and will therefore be removed from the available Tokens
+                // When covered Tokens Left
+                foreach (GameObject token in field.Value)
+                {
+                    // When the covered Token is a Token of the given Player
+                    if (token.transform.parent.name == playerString)
+                    {
+                        // Remove it
+                        allTokens.Remove(token);
+                    }                        
+                }
+            }
+            return allTokens;
         }
 
         // Returns an Array of available player Tokens for the given Gamestate
         // on a specific Field on the GameField
         // @param TokensForState All available Tokens for the GameState
         // @param TokenOnField The currently highest Token on the Field
-        private static GameObject[] GetAvailableTokensForField(GameObject[] TokensForState, GameObject TokenOnField)
+        private List<GameObject> GetAvailableTokensForField(List<GameObject> TokensForState, GameObject TokenOnField)
         {
             // Remove nothing if Field is Empty
             if (TokenOnField == null)
@@ -63,7 +89,7 @@ namespace GG3DAI
             return null;
         }
 
-        private static Move AlphaBetaSearch(GameState state, Player player, int depth, int a, int b)
+        private Move AlphaBetaSearch(GameState state, Player player, int depth, int a, int b)
         {
             // Recursion etc...
 
@@ -71,7 +97,7 @@ namespace GG3DAI
         }
 
         // Get Rating
-        private static MoveRating GetStateRating(GameState state, Player player)
+        private MoveRating GetStateRating(GameState state, Player player)
         {
             // If Player Win
             // return max int
@@ -86,7 +112,7 @@ namespace GG3DAI
         }
 
         // Calc Rating
-        private static int CalcStateRating(GameState state)
+        private int CalcStateRating(GameState state)
         {
             return 0;
         }
