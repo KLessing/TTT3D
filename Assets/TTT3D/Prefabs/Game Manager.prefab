@@ -443,6 +443,63 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 2 Spieler
+--- !u!1 &928397102
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 928397103}
+  - component: {fileID: 928397104}
+  m_Layer: 0
+  m_Name: ArtificialIntelligenceController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &928397103
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 928397102}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4949216883710990}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &928397104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 928397102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7479eda26587bab42a34960e377b0d02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CrossTokens:
+  - {fileID: 1040405027005078}
+  - {fileID: 1775381405640072}
+  - {fileID: 1314474332634132}
+  - {fileID: 1342674899630854}
+  - {fileID: 1105436037232680}
+  - {fileID: 1369888170170766}
+  CircleTokens:
+  - {fileID: 1172736118913238}
+  - {fileID: 1199155630516206}
+  - {fileID: 1399968908228348}
+  - {fileID: 1745922814079482}
+  - {fileID: 1886313779765948}
+  - {fileID: 1493178047454262}
 --- !u!1 &1654999578
 GameObject:
   m_ObjectHideFlags: 0
@@ -1278,6 +1335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GameControllerPrefab: {fileID: 114148556303822934}
+  AIControllerPrefab: {fileID: 928397104}
   CrossTokenSelection: {fileID: 1229633039010228}
   CircleTokenSelection: {fileID: 1184029898679016}
   GameFieldSelection: {fileID: 1273727460110072}
@@ -2191,6 +2249,7 @@ Transform:
   - {fileID: 4516364963299082}
   - {fileID: 4366496985775158}
   - {fileID: 224483073889494924}
+  - {fileID: 928397103}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

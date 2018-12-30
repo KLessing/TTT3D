@@ -13,6 +13,8 @@ public class TokenButtonController : MonoBehaviour {
     public Button[] TokenButtons;
     public GameObject[] TokenPrefabs;
 
+    // TODO use list instead of array?!
+
     void OnEnable()
     {
         // Iterate Buttons / Prefabs

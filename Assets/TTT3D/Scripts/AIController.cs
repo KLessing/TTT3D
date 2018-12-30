@@ -28,15 +28,15 @@ namespace GG3DAI
 
         public Move GetBestMove(GameState state, Player player)
         {
-            // Call Alpha Beta Search
-
             List<GameObject> availableTokens = GetAvailableTokensForGameState(state, player);
-            int tokenCount = availableTokens.Count;
+
+            Debug.Log("available Tokens: " + availableTokens);
 
             // The Recursion depth depends on the count of available Tokens
             // TODO TEST or use depth
             int depth = availableTokens.Count / 4;
 
+            // Call Alpha Beta Search and return the best Move
             return AlphaBetaSearch(state, player, depth, int.MinValue, int.MaxValue);
         }
 

@@ -7,8 +7,18 @@ using GG3DAI;
 
 public class UserInterfaceController : MonoBehaviour {
 
+    /***** Controller Prefabs *****/
+
     // The GameController which contains the Gamefield
     public GameController GameControllerPrefab;
+
+    // The AI Controller
+    public AIController AIControllerPrefab;
+
+    // TODO + The AI Level ?!
+
+
+    /***** User Interfaces *****/
 
     // The User Interface for Cross Token Selection
     public GameObject CrossTokenSelection;
@@ -27,6 +37,9 @@ public class UserInterfaceController : MonoBehaviour {
     // Responsible for AI usage
     public GameObject PlayerCountSelectionUI;
 
+
+    /***** Global Variables *****/
+
     // The Current Player (Cross or Circle)
     private Player CurrentPlayer = Player.Cross;
 
@@ -42,6 +55,7 @@ public class UserInterfaceController : MonoBehaviour {
     // AI Usage is true for Single Player Games
     // and false for Mutliplayer    
     private bool AIUsage = false;
+
 
     // Select the count of Players at the beginning of the Game
     // One Player means the second Player is played by an AI
@@ -120,7 +134,7 @@ public class UserInterfaceController : MonoBehaviour {
                 CurrentPlayer = GetNextPlayer(CurrentPlayer);
 
                 // get the best AI move for current Player and GameState
-                Move bestMove = AIController.GetBestMove(GameControllerPrefab.GameField, CurrentPlayer);
+                Move bestMove = AIControllerPrefab.GetBestMove(GameControllerPrefab.GameField, CurrentPlayer);
 
                 // Execute the best AI move in GameController
                 Winner = GameControllerPrefab.SetTokenOnField(bestMove);
