@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using GG3DTypes;
+using System.Linq;
 
 namespace GG3DAI
 {    
@@ -27,10 +29,6 @@ namespace GG3DAI
 
         public Move GetBestMove(GameState state, Player player)
         {
-            List<GameObject> availableTokens = GetAvailableTokensForGameState(state, Player.Cross);
-
-            List<GameObject> allowedTokens = GetAllowedTokensForField(state, Field.Middle, availableTokens);
-
             // The Recursion depth depends on the count of available Tokens
             // TODO TEST or use depth
             // int depth = availableTokens.Count / 4;
@@ -104,17 +102,26 @@ namespace GG3DAI
         {
             List<GameObject> allowedTokens = new List<GameObject>();
 
+            // Is already a Token on the Field?
             if (state.ContainsKey(field))
             {
+                // Iterate through available Tokens
                 foreach (GameObject token in availableTokens)
                 {
-                    if (System.Convert.ToInt32(token.tag) > System.Convert.ToInt32(state[field].Peek().tag))
+                    // Is the available Token "bigger" than the Token on the Field?
+                    if (Convert.ToInt32(token.tag) > Convert.ToInt32(state[field].Peek().tag))
                     {
+                        // Token is allowed
                         allowedTokens.Add(token);
                     }
                 }
-
             }
+            else
+            {
+                // No Token on the Field = all available Tokens are allowed
+                allowedTokens = availableTokens;
+            }
+
 
             Debug.Log("------------------");
 
@@ -125,14 +132,77 @@ namespace GG3DAI
 
             Debug.Log("------------------");
 
+
             return allowedTokens;
         }
 
-        private Move AlphaBetaSearch(GameState state, Player player, int depth, int a, int b)
-        {
-            // Recursion etc...
 
-            return new Move();
+        // The Alpha Beta Search Algorithm
+        // @param state The state simulation of the current recursion call
+        // @param player the AI Player for which the algorithm calculates the most valuable move
+        // @param currentPlayer the current Player of the current recursion call
+        // @param depth the current recursion depth
+        // @param a the alpha rating for the ai move
+        // @param b the beta rating for the oppenent move        
+        private Move AlphaBetaSearch(GameState state, Player player, Player currentPlayer, int depth, int a, int b)
+        {
+            Move result = new Move();
+
+            List<GameObject> availableTokens = GetAvailableTokensForGameState(state, currentPlayer);
+
+            // Iterate through all Fields of the Gamefield
+            foreach (Field field in Enum.GetValues(typeof(Field)))
+            {
+                // Get the allowed Tokens to place on this Field
+                List<GameObject> allowedTokens = GetAllowedTokensForField(state, field, availableTokens);
+
+                // Iterate through all allowed Tokens for this Field
+                foreach (GameObject token in allowedTokens)
+                {
+                    // COPY current state without reference
+                    GameState stateForToken = new GameState(state);
+
+                    // Simulate a new state with the allowed token on the Field:
+
+                    // If the field already has a token
+                    if (stateForToken.ContainsKey(field))
+                    {
+                        // Place the allowed Token above the old Token
+                        stateForToken[field].Push(token);
+                    }
+                    else
+                    {
+                        // Otherwise add the Field with a new Stack with the allowed Token
+                        Stack<GameObject> tokenStack = new Stack<GameObject>();
+                        tokenStack.Push(token);
+                        stateForToken.Add(field, tokenStack);
+                    }
+
+                    // Check the Rating for the state simulation
+                    MoveRating currentRating = GetStateRating(stateForToken, currentPlayer);
+
+                    // If the current Player is the ai player and the rating is higher than a
+                    if (currentPlayer == player && currentRating.Rating > a)
+                    {
+                        // Update a and the best move
+                        a = currentRating.Rating;
+                        result = currentRating.Move;
+                    }
+                    // If the current Player is the oppenent and the rating is lower than b
+                    else if (currentPlayer != player && currentRating.Rating < b)                        
+                    {
+                        // Update b and the best move
+                        b = currentRating.Rating;
+                        result = currentRating.Move;
+                    }
+
+
+                    // next search with the other player and lower recursion step
+                    return AlphaBetaSearch(stateForToken, player, currentPlayer == Player.Cross ? Player.Circle : Player.Cross, depth-1, a, b);                    
+                }
+            }
+
+            return result;
         }
 
         // Get Rating

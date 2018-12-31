@@ -13,8 +13,14 @@ namespace GG3DTypes
     public enum TokenSize { Small, Medium, Large };
 
     // Typedef workaround for a GameState with Tokens on Gamefield
-    // (using works only in same file)
-    public class GameState : Dictionary<Field, Stack<GameObject>> { };
+    public class GameState : Dictionary<Field, Stack<GameObject>>
+    {
+        // Empty Constructor without param
+        public GameState() { }
+
+        // Constructor with one param for copy without reference
+        public GameState(IDictionary<Field, Stack<GameObject>> dictionary) : base(dictionary) { }
+    }
 
     // A Move consists of a Token and a Field for the Placement
     public struct Move
