@@ -1,10 +1,7 @@
 namespace AugmentedImage
 {
     using System;
-    using System.Collections.Generic;
-    using System.Runtime.InteropServices;
     using GoogleARCore;
-    using GoogleARCoreInternal;
     using UnityEngine;
     using GG3DTypes;
 

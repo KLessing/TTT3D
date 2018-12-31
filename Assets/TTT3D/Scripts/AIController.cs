@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using GG3DTypes;
-using System.Linq;
+﻿namespace GG3DAI
+{
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using GG3DTypes;
 
-namespace GG3DAI
-{    
     // Own MoveRating Struct for move and rating combination
     public struct MoveRating
     {
@@ -38,7 +37,7 @@ namespace GG3DAI
             int depth = 4;
 
             // Call Alpha Beta Search and return the best Move
-            return AlphaBetaSearch(state, Player.Cross, depth, int.MinValue, int.MaxValue);
+            return AlphaBetaSearch(state, Player.Cross, Player.Cross, depth, int.MinValue, int.MaxValue);
         }
 
 
@@ -195,7 +194,6 @@ namespace GG3DAI
                         b = currentRating.Rating;
                         result = currentRating.Move;
                     }
-
 
                     // next search with the other player and lower recursion step
                     return AlphaBetaSearch(stateForToken, player, currentPlayer == Player.Cross ? Player.Circle : Player.Cross, depth-1, a, b);                    
