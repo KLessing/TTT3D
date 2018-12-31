@@ -1,9 +1,8 @@
-﻿using System.Collections;
+﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using GG3DTypes;
-using AugmentedImage;
-using System.Linq;
+
 
 public class GameController : MonoBehaviour {
 
@@ -34,7 +33,7 @@ public class GameController : MonoBehaviour {
             if (GameField.ContainsKey(move.Field))
             {
                 // Compare with the upper Token on the Field
-                if (GetTokenSize(move.Token) > GetTokenSize(GameField[move.Field].Peek()))
+                if (System.Convert.ToInt32(move.Token.tag) > System.Convert.ToInt32(GameField[move.Field].Peek().tag))
                 {
                     // Place the Token on the highest position of the Field
                     GameField[move.Field].Push(move.Token);
@@ -87,7 +86,7 @@ public class GameController : MonoBehaviour {
     // Return if the placement of a specific token on a specific field is possible
     public bool PlacementPossible(GameObject token, Field field)
     {      
-        return !GameField.ContainsKey(field) || GetTokenSize(GameField[field].Peek()) < GetTokenSize(token);                
+        return !GameField.ContainsKey(field) || System.Convert.ToInt32(GameField[field].Peek().tag) < System.Convert.ToInt32(token.tag);                
     }
 
     // Removes Token from upper Field (if possible)
@@ -127,17 +126,8 @@ public class GameController : MonoBehaviour {
         return res;
     }
 
-    // Returns the Size for a Token
-    private int GetTokenSize(GameObject token)
-    {
-        return (int) System.Enum.Parse(typeof(TokenSize), token.tag);
-    }
 
     /***** Check Winner *****/
-
-    // The number of fields
-    private int FIELD_COUNT = System.Enum.GetNames(typeof(Field)).Length;
-
 
     // Compares the player tag on the given Fields and return the winner or null
     private Player? ComparePlayerOnFields(string firstField, string secondField, string thirdField)
@@ -159,7 +149,7 @@ public class GameController : MonoBehaviour {
         Player? winner = null;
 
         // Check Horizontal Winner
-        while (winner == null && fieldIndex < FIELD_COUNT - 1)
+        while (winner == null && fieldIndex < 8)
         {
             // Check if fields are available (if they are they contain at least one token)
             if (GameField.ContainsKey((Field)fieldIndex) && GameField.ContainsKey((Field)fieldIndex + 1) && GameField.ContainsKey((Field)fieldIndex + 2))

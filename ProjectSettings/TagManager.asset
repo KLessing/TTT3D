@@ -18,6 +18,9 @@ TagManager:
   - BottomLeft
   - BottomMiddle
   - BottomRight
+  - 1
+  - 2
+  - 3
   layers:
   - Default
   - TransparentFX

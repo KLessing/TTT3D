@@ -850,7 +850,7 @@ GameObject:
   - component: {fileID: 95357254472830256}
   m_Layer: 0
   m_Name: SmallCross1
-  m_TagString: Small
+  m_TagString: 1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1075,7 +1075,7 @@ GameObject:
   - component: {fileID: 95008477605020658}
   m_Layer: 0
   m_Name: MediumCross2
-  m_TagString: Medium
+  m_TagString: 2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1355,7 +1355,7 @@ GameObject:
   - component: {fileID: 95499236686478046}
   m_Layer: 0
   m_Name: SmallCircle1
-  m_TagString: Small
+  m_TagString: 1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1641,7 +1641,7 @@ GameObject:
   - component: {fileID: 95544745213929656}
   m_Layer: 0
   m_Name: MediumCircle1
-  m_TagString: Medium
+  m_TagString: 2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2377,7 +2377,7 @@ GameObject:
   - component: {fileID: 95861723993546426}
   m_Layer: 0
   m_Name: LargeCross1
-  m_TagString: Large
+  m_TagString: 3
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2681,7 +2681,7 @@ GameObject:
   - component: {fileID: 95716697810534766}
   m_Layer: 0
   m_Name: SmallCross2
-  m_TagString: Small
+  m_TagString: 1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3035,7 +3035,7 @@ GameObject:
   - component: {fileID: 95366809516717534}
   m_Layer: 0
   m_Name: LargeCross2
-  m_TagString: Large
+  m_TagString: 3
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3236,7 +3236,7 @@ GameObject:
   - component: {fileID: 95073071789395854}
   m_Layer: 0
   m_Name: LargeCircle1
-  m_TagString: Large
+  m_TagString: 3
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3965,7 +3965,7 @@ GameObject:
   - component: {fileID: 95782905238508988}
   m_Layer: 0
   m_Name: LargeCircle2
-  m_TagString: Large
+  m_TagString: 3
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5512,7 +5512,7 @@ GameObject:
   - component: {fileID: 95124877562234346}
   m_Layer: 0
   m_Name: SmallCircle2
-  m_TagString: Small
+  m_TagString: 1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5816,7 +5816,7 @@ GameObject:
   - component: {fileID: 95598497006176924}
   m_Layer: 0
   m_Name: MediumCross1
-  m_TagString: Medium
+  m_TagString: 2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6399,7 +6399,7 @@ GameObject:
   - component: {fileID: 95534637685983366}
   m_Layer: 0
   m_Name: MediumCircle2
-  m_TagString: Medium
+  m_TagString: 2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

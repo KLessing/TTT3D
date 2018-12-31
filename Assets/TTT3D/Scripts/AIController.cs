@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using GG3DTypes;
 
@@ -30,6 +29,8 @@ namespace GG3DAI
         {
             List<GameObject> availableTokens = GetAvailableTokensForGameState(state, Player.Cross);
 
+            List<GameObject> allowedTokens = GetAllowedTokensForField(state, Field.Middle, availableTokens);
+
             // The Recursion depth depends on the count of available Tokens
             // TODO TEST or use depth
             // int depth = availableTokens.Count / 4;
@@ -44,7 +45,7 @@ namespace GG3DAI
 
 
 
-        // Returns an Array of available player Tokens for the given Gamestate
+        // Returns an Array of available player Tokens for the given Gamestate and Player
         // = All Player Tokens including the Tokens on the Peek of the Fields
         // but without the covered Tokens
         private List<GameObject> GetAvailableTokensForGameState(GameState state, Player player)
@@ -59,7 +60,7 @@ namespace GG3DAI
             // Iterate through all Fields with Tokens on the Gamefield
             foreach (Stack<GameObject> field in state.Values)
             {
-                // Iterate through all Tokens
+                // Iterate through all Tokens on the Field
                 foreach (GameObject token in field)
                 {
                     // When Token is not the highest Token on the Field
@@ -96,21 +97,35 @@ namespace GG3DAI
             return availableTokens;
         }
 
-        // Returns an Array of available player Tokens for the given Gamestate
-        // on a specific Field on the GameField
-        // @param TokensForState All available Tokens for the GameState
-        // @param TokenOnField The currently highest Token on the Field
-        private List<GameObject> GetAvailableTokensForField(List<GameObject> TokensForState, GameObject TokenOnField)
+        // Returns the allowed player Tokens for the given Gamestate on a specific Field on the GameField
+        // = The Tokens that are allowed to be placed on the Field which have to be Bigger than the current highest Token on the Field
+        // @param availableTokens All available tokens of the Player for the GameState
+        private List<GameObject> GetAllowedTokensForField(GameState state, Field field, List<GameObject> availableTokens)
         {
-            // Remove nothing if Field is Empty
-            if (TokenOnField == null)
+            List<GameObject> allowedTokens = new List<GameObject>();
+
+            if (state.ContainsKey(field))
             {
-                return TokensForState;
+                foreach (GameObject token in availableTokens)
+                {
+                    if (System.Convert.ToInt32(token.tag) > System.Convert.ToInt32(state[field].Peek().tag))
+                    {
+                        allowedTokens.Add(token);
+                    }
+                }
+
             }
 
-            // Remove lower and same level of Tokens if Field contains Token
+            Debug.Log("------------------");
 
-            return null;
+            foreach (GameObject token in allowedTokens)
+            {
+                Debug.Log("Allowed Token For Field: " + field + " Name: " + token.name);
+            }
+
+            Debug.Log("------------------");
+
+            return allowedTokens;
         }
 
         private Move AlphaBetaSearch(GameState state, Player player, int depth, int a, int b)
