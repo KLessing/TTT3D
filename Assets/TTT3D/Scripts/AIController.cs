@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using UnityEngine;
     using GG3DTypes;
+    using GGG3DWin;
 
     // Own MoveRating Struct for move and rating combination
     public struct MoveRating
@@ -178,25 +179,25 @@
                     }
 
                     // Check the Rating for the state simulation
-                    MoveRating currentRating = GetStateRating(stateForToken, currentPlayer);
+                    int currentRating = GetStateRating(stateForToken, currentPlayer, depth);
 
                     // If the current Player is the ai player and the rating is higher than a
-                    if (currentPlayer == player && currentRating.Rating > a)
+                    if (currentPlayer == player && currentRating > a)
                     {
                         // Update a and the best move
-                        a = currentRating.Rating;
-                        result = currentRating.Move;
+                        a = currentRating;
+                        result = new Move(token, field);
                     }
                     // If the current Player is the oppenent and the rating is lower than b
-                    else if (currentPlayer != player && currentRating.Rating < b)                        
+                    else if (currentPlayer != player && currentRating < b)                        
                     {
                         // Update b and the best move
-                        b = currentRating.Rating;
-                        result = currentRating.Move;
+                        b = currentRating;
+                        result = new Move(token, field);
                     }
 
                     // next search with the other player and lower recursion step
-                    return AlphaBetaSearch(stateForToken, player, currentPlayer == Player.Cross ? Player.Circle : Player.Cross, depth-1, a, b);                    
+                    return AlphaBetaSearch(stateForToken, player, GetOpponent(player), depth-1, a, b);                    
                 }
             }
 
@@ -204,26 +205,98 @@
         }
 
         // Get Rating
-        private MoveRating GetStateRating(GameState state, Player player)
+        private int GetStateRating(GameState state, Player player, int depth)
         {
+            Player? winner = WinDetection.CheckWinner(state);
+
             // If Player Win
-            // return max int
+            if (winner == player)
+            {
+                return int.MaxValue;
+            }
 
-            // If Other Player Win
-            // return min int
+            // If oppenent wins
+            if (winner != null)
+            {
+                return int.MinValue;
+            }
+            
+            // If no winner and depth is reached
+            if (depth <= 0)
+            {
+                return CalcStateRating(state, player) - CalcStateRating(state, GetOpponent(player));
+            }
 
-            // TOCHECK if statements?!
-            // return calcPlayerPoints - calcOtherPlayerPoints            
-
-            return new MoveRating();
+            return 0;            
         }
 
         // Calc Rating
-        private int CalcStateRating(GameState state)
+        private int CalcStateRating(GameState state, Player player)
         {
-            return 0;
+            // Easy Solution for testing for now: check how many wins are possible for 3 in a rows
+            return CheckThrees(state, player);
         }
 
+
+        // Count the GameField for Three same tokens in a Row
+        private int CheckThrees(GameState GameField, Player player)
+        {
+            string opponentString = player == Player.Cross ? "Circle" : "Cross";
+            int rating = 0;
+            int fieldIndex = 0;
+            Player? winner = null;
+
+            // Check Horizontal
+            while (winner == null && fieldIndex < 8)
+            {  
+                if (GameField[(Field)fieldIndex].Peek().transform.parent.name != opponentString &&
+                    GameField[(Field)fieldIndex + 1].Peek().transform.parent.name != opponentString &&
+                    GameField[(Field)fieldIndex + 2].Peek().transform.parent.name != opponentString)                                              
+                {
+                    rating++;
+                }                
+
+                fieldIndex += 3;
+            }
+
+            fieldIndex = 0;
+
+            // Check Vertical
+            while (winner == null && fieldIndex < 3)
+            {
+                if (GameField[(Field)fieldIndex].Peek().transform.parent.name != opponentString &&
+                    GameField[(Field)fieldIndex + 3].Peek().transform.parent.name != opponentString &&
+                    GameField[(Field)fieldIndex + 6].Peek().transform.parent.name != opponentString)
+                {
+                    rating++;
+                }
+
+                fieldIndex++;
+            }
+
+            // Check Diagonal
+            if (GameField[Field.TopLeft].Peek().transform.parent.name != opponentString &&
+                GameField[Field.Middle].Peek().transform.parent.name != opponentString &&
+                GameField[Field.BottomRight].Peek().transform.parent.name != opponentString)
+            {
+                rating++;
+            }
+            
+
+            if (GameField[Field.TopRight].Peek().transform.parent.name != opponentString &&
+                GameField[Field.Middle].Peek().transform.parent.name != opponentString &&
+                GameField[Field.BottomLeft].Peek().transform.parent.name != opponentString)
+            {
+                rating++;
+            }            
+            
+            return rating;
+        }
+
+        private Player GetOpponent(Player player)
+        {
+            return player == Player.Cross ? Player.Circle : Player.Cross;
+        }
 
     }
 
