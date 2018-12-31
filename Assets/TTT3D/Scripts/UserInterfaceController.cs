@@ -137,7 +137,7 @@ public class UserInterfaceController : MonoBehaviour {
                 Move bestMove = AIControllerPrefab.GetBestMove(GameControllerPrefab.GameField, CurrentPlayer);
 
                 // Execute the best AI move in GameController
-                Winner = GameControllerPrefab.SetTokenOnField(bestMove);
+                //Winner = GameControllerPrefab.SetTokenOnField(bestMove);
             }
 
             // Continue when still no winner

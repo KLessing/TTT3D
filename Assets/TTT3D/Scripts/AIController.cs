@@ -28,16 +28,18 @@ namespace GG3DAI
 
         public Move GetBestMove(GameState state, Player player)
         {
-            List<GameObject> availableTokens = GetAvailableTokensForGameState(state, player);
-
-            Debug.Log("available Tokens: " + availableTokens);
+            List<GameObject> availableTokens = GetAvailableTokensForGameState(state, Player.Cross);
 
             // The Recursion depth depends on the count of available Tokens
             // TODO TEST or use depth
-            int depth = availableTokens.Count / 4;
+            // int depth = availableTokens.Count / 4;
+
+            // Fixed Recursion depth for noew
+            // TODO Test variable otherwise constant for fixed
+            int depth = 4;
 
             // Call Alpha Beta Search and return the best Move
-            return AlphaBetaSearch(state, player, depth, int.MinValue, int.MaxValue);
+            return AlphaBetaSearch(state, Player.Cross, depth, int.MinValue, int.MaxValue);
         }
 
 
@@ -48,28 +50,50 @@ namespace GG3DAI
         private List<GameObject> GetAvailableTokensForGameState(GameState state, Player player)
         {
             // Direct Init of all Tokens for the Player and the player String
-            List<GameObject> allTokens = player == Player.Cross ? CrossTokens : CircleTokens;
             string playerString = player == Player.Cross ? "Cross" : "Circle";
+            List<GameObject> allTokens = player == Player.Cross ? CrossTokens : CircleTokens;
 
-            // Iterate through all Fields and remove the covered Tokens
-            foreach (var field in state)
+            List<GameObject> coveredTokens = new List<GameObject>();
+            List<GameObject> availableTokens = new List<GameObject>();
+
+            // Iterate through all Fields with Tokens on the Gamefield
+            foreach (Stack<GameObject> field in state.Values)
             {
-                // The Top Value will be ignored because it can still be used
-                field.Value.Pop();
-
-                // The Other values are covered and will therefore be removed from the available Tokens
-                // When covered Tokens Left
-                foreach (GameObject token in field.Value)
+                // Iterate through all Tokens
+                foreach (GameObject token in field)
                 {
-                    // When the covered Token is a Token of the given Player
-                    if (token.transform.parent.name == playerString)
+                    // When Token is not the highest Token on the Field
+                    if (token != field.Peek())
                     {
-                        // Remove it
-                        allTokens.Remove(token);
-                    }                        
+                        // The Token is covered
+                        coveredTokens.Add(token);
+                    }
                 }
             }
-            return allTokens;
+
+            // Iterate through all Tokens of the Player
+            foreach (GameObject token in allTokens)
+            {
+                // When Token is not covered
+                if (!coveredTokens.Contains(token))
+                {
+                    // The Token is available
+                    availableTokens.Add(token);                                        
+                }
+            }
+
+
+            Debug.Log("------------------");
+
+            foreach (GameObject token in availableTokens)
+            {
+                Debug.Log("Available Token Name: " + token.name);
+            }
+
+            Debug.Log("------------------");
+
+
+            return availableTokens;
         }
 
         // Returns an Array of available player Tokens for the given Gamestate
