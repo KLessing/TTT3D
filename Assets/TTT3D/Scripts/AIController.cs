@@ -81,17 +81,6 @@
                 }
             }
 
-
-            Debug.Log("------------------");
-
-            foreach (GameObject token in availableTokens)
-            {
-                Debug.Log("Available Token Name: " + token.name);
-            }
-
-            Debug.Log("------------------");
-
-
             return availableTokens;
         }
 
@@ -121,17 +110,6 @@
                 // No Token on the Field = all available Tokens are allowed
                 allowedTokens = availableTokens;
             }
-
-
-            Debug.Log("------------------");
-
-            foreach (GameObject token in allowedTokens)
-            {
-                Debug.Log("Allowed Token For Field: " + field + " Name: " + token.name);
-            }
-
-            Debug.Log("------------------");
-
 
             return allowedTokens;
         }
@@ -241,7 +219,7 @@
         // Count the GameField for Three same tokens in a Row
         private int CheckThrees(GameState GameField, Player player)
         {
-            string opponentString = player == Player.Cross ? "Circle" : "Cross";
+            string playerString = player == Player.Cross ? "Cross" : "Circle";
             int rating = 0;
             int fieldIndex = 0;
             Player? winner = null;
@@ -249,9 +227,12 @@
             // Check Horizontal
             while (winner == null && fieldIndex < 8)
             {  
-                if (GameField[(Field)fieldIndex].Peek().transform.parent.name != opponentString &&
-                    GameField[(Field)fieldIndex + 1].Peek().transform.parent.name != opponentString &&
-                    GameField[(Field)fieldIndex + 2].Peek().transform.parent.name != opponentString)                                              
+                if (!GameField.ContainsKey((Field)fieldIndex) ||
+                     GameField.ContainsKey((Field)fieldIndex) && GameField[(Field)fieldIndex].Peek().transform.parent.name != playerString &&
+                    !GameField.ContainsKey((Field)fieldIndex + 1) ||
+                     GameField.ContainsKey((Field)fieldIndex + 1) && GameField[(Field)fieldIndex + 1].Peek().transform.parent.name != playerString &&
+                    !GameField.ContainsKey((Field)fieldIndex + 2) ||
+                     GameField.ContainsKey((Field)fieldIndex + 2) && GameField[(Field)fieldIndex + 2].Peek().transform.parent.name != playerString)                                              
                 {
                     rating++;
                 }                
@@ -264,9 +245,12 @@
             // Check Vertical
             while (winner == null && fieldIndex < 3)
             {
-                if (GameField[(Field)fieldIndex].Peek().transform.parent.name != opponentString &&
-                    GameField[(Field)fieldIndex + 3].Peek().transform.parent.name != opponentString &&
-                    GameField[(Field)fieldIndex + 6].Peek().transform.parent.name != opponentString)
+                if (!GameField.ContainsKey((Field)fieldIndex) ||
+                     GameField.ContainsKey((Field)fieldIndex) && GameField[(Field)fieldIndex].Peek().transform.parent.name != playerString &&
+                    !GameField.ContainsKey((Field)fieldIndex + 3) ||
+                     GameField.ContainsKey((Field)fieldIndex + 3) && GameField[(Field)fieldIndex + 3].Peek().transform.parent.name != playerString &&
+                    !GameField.ContainsKey((Field)fieldIndex + 6) ||
+                     GameField.ContainsKey((Field)fieldIndex + 6) && GameField[(Field)fieldIndex + 6].Peek().transform.parent.name != playerString)
                 {
                     rating++;
                 }
@@ -275,21 +259,29 @@
             }
 
             // Check Diagonal
-            if (GameField[Field.TopLeft].Peek().transform.parent.name != opponentString &&
-                GameField[Field.Middle].Peek().transform.parent.name != opponentString &&
-                GameField[Field.BottomRight].Peek().transform.parent.name != opponentString)
+            if (!GameField.ContainsKey(Field.TopLeft) ||
+                 GameField.ContainsKey(Field.TopLeft) && GameField[Field.TopLeft].Peek().transform.parent.name != playerString &&
+                !GameField.ContainsKey(Field.Middle) ||
+                 GameField.ContainsKey(Field.Middle) && GameField[Field.Middle].Peek().transform.parent.name != playerString &&
+                !GameField.ContainsKey(Field.BottomRight) ||
+                 GameField.ContainsKey(Field.BottomRight) && GameField[Field.BottomRight].Peek().transform.parent.name != playerString)
             {
                 rating++;
             }
             
 
-            if (GameField[Field.TopRight].Peek().transform.parent.name != opponentString &&
-                GameField[Field.Middle].Peek().transform.parent.name != opponentString &&
-                GameField[Field.BottomLeft].Peek().transform.parent.name != opponentString)
+            if (!GameField.ContainsKey(Field.TopRight) ||
+                GameField.ContainsKey(Field.TopRight) && GameField[Field.TopRight].Peek().transform.parent.name != playerString &&
+                !GameField.ContainsKey(Field.Middle) ||
+                GameField.ContainsKey(Field.Middle) && GameField[Field.Middle].Peek().transform.parent.name != playerString &&
+                !GameField.ContainsKey(Field.BottomLeft) ||
+                GameField.ContainsKey(Field.BottomLeft) && GameField[Field.BottomLeft].Peek().transform.parent.name != playerString)
             {
                 rating++;
-            }            
-            
+            }
+
+            Debug.Log("Rating: " + rating);
+
             return rating;
         }
 
