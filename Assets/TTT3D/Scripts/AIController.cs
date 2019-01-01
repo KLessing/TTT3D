@@ -38,7 +38,7 @@
             int depth = 4;
 
             // Call Alpha Beta Search and return the best Move
-            return AlphaBetaSearch(state, Player.Cross, Player.Cross, depth, int.MinValue, int.MaxValue);
+            return AlphaBetaSearch(state, player, player, depth, int.MinValue, int.MaxValue).Move;
         }
 
 
@@ -101,7 +101,9 @@
                     if (Convert.ToInt32(token.tag) > Convert.ToInt32(state[field].Peek().tag))
                     {
                         // Token is allowed
-                        allowedTokens.Add(token);
+                        // allowedTokens.Add(token);
+
+                        // TODO SPECIAL CASE => When these Tokens get used the previous Token is on Top again
                     }
                 }
             }
@@ -122,12 +124,31 @@
         // @param depth the current recursion depth
         // @param a the alpha rating for the ai move
         // @param b the beta rating for the oppenent move        
-        private Move AlphaBetaSearch(GameState state, Player player, Player currentPlayer, int depth, int a, int b)
+        private MoveRating AlphaBetaSearch(GameState state, Player player, Player currentPlayer, int depth, int a, int b)
         {
-            Move result = new Move();
+            Debug.Log("depth: " + depth);
 
+            // Get all available tokens for the state and return nothing if none exist
             List<GameObject> availableTokens = GetAvailableTokensForGameState(state, currentPlayer);
 
+            // Check the Rating for the state and return it if it has a result (win or recursion end)
+            MoveRating? resultRating = GetStateRating(state, currentPlayer, depth, availableTokens);
+            if (resultRating != null)
+            {
+                return (MoveRating) resultRating;
+            }
+
+            // Get all available tokens for the state and return nothing if none exist
+            //List<GameObject> availableTokens = GetAvailableTokensForGameState(state, currentPlayer);
+            // Just checked in get State Rating...            
+            //if (availableTokens.Count == 0)
+            //{
+            //    return new MoveRating();
+            //}
+
+            // Start with the lowest possible values
+            MoveRating currentRating = new MoveRating(new Move(), currentPlayer == player ? int.MinValue : int.MaxValue);
+            
             // Iterate through all Fields of the Gamefield
             foreach (Field field in Enum.GetValues(typeof(Field)))
             {
@@ -156,56 +177,58 @@
                         stateForToken.Add(field, tokenStack);
                     }
 
-                    // Check the Rating for the state simulation
-                    int currentRating = GetStateRating(stateForToken, currentPlayer, depth);
+                    // Next recursion call
+                    MoveRating newRating = AlphaBetaSearch(stateForToken, player, GetOpponent(player), depth - 1, a, b);
 
-                    // If the current Player is the ai player and the rating is higher than a
-                    if (currentPlayer == player && currentRating > a)
+                    // Compare with current rating
+                    if ((currentPlayer == player && newRating.Rating > currentRating.Rating) ||
+                        (currentPlayer != player && newRating.Rating < currentRating.Rating))
                     {
-                        // Update a and the best move
-                        a = currentRating;
-                        result = new Move(token, field);
-                    }
-                    // If the current Player is the oppenent and the rating is lower than b
-                    else if (currentPlayer != player && currentRating < b)                        
-                    {
-                        // Update b and the best move
-                        b = currentRating;
-                        result = new Move(token, field);
+                        currentRating = newRating;
                     }
 
-                    // next search with the other player and lower recursion step
-                    return AlphaBetaSearch(stateForToken, player, GetOpponent(player), depth-1, a, b);                    
+                    // Alpha Beta special: just return if alpha beta are exceeded
+                    if ((currentPlayer == player && currentRating.Rating >= b ) ||
+                        (currentPlayer != player && currentRating.Rating <= a))
+                    {
+                        return currentRating;
+                    }
+
+                    // Update alpha beta values (dependent on the player and if the new value is higher / lower)
+                    a = currentPlayer == player ? GetMax(a, currentRating.Rating) : a;
+                    b = currentPlayer != player ? GetMin(b, currentRating.Rating) : b;
                 }
             }
 
-            return result;
+            // Return the best found rating
+            return currentRating;
         }
 
         // Get Rating
-        private int GetStateRating(GameState state, Player player, int depth)
+        private MoveRating? GetStateRating(GameState state, Player player, int depth, List<GameObject> availableTokens)
         {
             Player? winner = WinDetection.CheckWinner(state);
 
             // If Player Win
             if (winner == player)
             {
-                return int.MaxValue;
+                return new MoveRating(new Move(), int.MaxValue);
             }
 
             // If oppenent wins
-            if (winner != null)
+            if (winner == GetOpponent(player))
             {
-                return int.MinValue;
+                return new MoveRating(new Move(), int.MinValue);
             }
             
-            // If no winner and depth is reached
-            if (depth <= 0)
+            // If no winner and depth is reached or no more available tokens
+            if (depth <= 0 || availableTokens.Count == 0)
             {
-                return CalcStateRating(state, player) - CalcStateRating(state, GetOpponent(player));
+                return new MoveRating(new Move(), CalcStateRating(state, player) - CalcStateRating(state, GetOpponent(player)));
             }
 
-            return 0;            
+            // Otherwise if no termination return null
+            return null;            
         }
 
         // Calc Rating
@@ -280,15 +303,20 @@
                 rating++;
             }
 
-            Debug.Log("Rating: " + rating);
-
             return rating;
         }
+
+        /***** Helper Functions *****/
 
         private Player GetOpponent(Player player)
         {
             return player == Player.Cross ? Player.Circle : Player.Cross;
         }
+
+        public int GetMax(int a, int b) { return a >= b ? a : b; }
+
+        public int GetMin(int a, int b) { return a <= b ? a : b; }
+
 
     }
 
