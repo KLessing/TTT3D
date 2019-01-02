@@ -29,16 +29,27 @@
 
         public Move GetBestMove(GameState state, Player player)
         {
+            Debug.Log("middle field: " + state[Field.Middle].Peek().name);
+            Debug.Log("ai called for player: " + player.ToString());
+
             // The Recursion depth depends on the count of available Tokens
             // TODO TEST or use depth
             // int depth = availableTokens.Count / 4;
 
             // Fixed Recursion depth for noew
             // TODO Test variable otherwise constant for fixed
-            int depth = 4;
+            int depth = 3;
 
             // Call Alpha Beta Search and return the best Move
-            return AlphaBetaSearch(state, player, player, depth, int.MinValue, int.MaxValue).Move;
+            //return AlphaBetaSearch(state, player, player, depth, int.MinValue, int.MaxValue).Move;
+            MoveRating res = AlphaBetaSearch(new Move(), state, Player.Cross, Player.Cross, depth, int.MinValue, int.MaxValue);
+
+            Debug.Log("main function call terminated!");
+            Debug.Log("rating: " + res.Rating);
+            Debug.Log("move token: " + res.Move.Token.name);
+            Debug.Log("move field: " + res.Move.Field.ToString());
+
+            return res.Move;
         }
 
 
@@ -124,15 +135,16 @@
         // @param depth the current recursion depth
         // @param a the alpha rating for the ai move
         // @param b the beta rating for the oppenent move        
-        private MoveRating AlphaBetaSearch(GameState state, Player player, Player currentPlayer, int depth, int a, int b)
+        private MoveRating AlphaBetaSearch(Move move, GameState state, Player player, Player currentPlayer, int depth, int a, int b)
         {
-            Debug.Log("depth: " + depth);
+            //Debug.Log("depth: " + depth);
 
             // Get all available tokens for the state and return nothing if none exist
             List<GameObject> availableTokens = GetAvailableTokensForGameState(state, currentPlayer);
 
             // Check the Rating for the state and return it if it has a result (win or recursion end)
-            MoveRating? resultRating = GetStateRating(state, currentPlayer, depth, availableTokens);
+            // TO NOTE HAS NO MOVE
+            MoveRating? resultRating = GetStateRating(move, state, currentPlayer, depth, availableTokens);
             if (resultRating != null)
             {
                 return (MoveRating) resultRating;
@@ -140,13 +152,13 @@
 
             // Get all available tokens for the state and return nothing if none exist
             //List<GameObject> availableTokens = GetAvailableTokensForGameState(state, currentPlayer);
-            // Just checked in get State Rating...            
-            //if (availableTokens.Count == 0)
-            //{
-            //    return new MoveRating();
-            //}
+            //Just checked in get State Rating...
+            if (availableTokens.Count == 0)
+            {
+                return new MoveRating();
+            }
 
-            // Start with the lowest possible values
+            // Start with the lowest possible values and no move
             MoveRating currentRating = new MoveRating(new Move(), currentPlayer == player ? int.MinValue : int.MaxValue);
             
             // Iterate through all Fields of the Gamefield
@@ -178,7 +190,7 @@
                     }
 
                     // Next recursion call
-                    MoveRating newRating = AlphaBetaSearch(stateForToken, player, GetOpponent(player), depth - 1, a, b);
+                    MoveRating newRating = AlphaBetaSearch(new Move(token, field), stateForToken, player, GetOpponent(player), depth - 1, a, b);
 
                     // Compare with current rating
                     if ((currentPlayer == player && newRating.Rating > currentRating.Rating) ||
@@ -205,26 +217,26 @@
         }
 
         // Get Rating
-        private MoveRating? GetStateRating(GameState state, Player player, int depth, List<GameObject> availableTokens)
+        private MoveRating? GetStateRating(Move move, GameState state, Player player, int depth, List<GameObject> availableTokens)
         {
             Player? winner = WinDetection.CheckWinner(state);
 
             // If Player Win
             if (winner == player)
             {
-                return new MoveRating(new Move(), int.MaxValue);
+                return new MoveRating(move, int.MaxValue);
             }
 
             // If oppenent wins
             if (winner == GetOpponent(player))
             {
-                return new MoveRating(new Move(), int.MinValue);
+                return new MoveRating(move, int.MinValue);
             }
             
             // If no winner and depth is reached or no more available tokens
             if (depth <= 0 || availableTokens.Count == 0)
             {
-                return new MoveRating(new Move(), CalcStateRating(state, player) - CalcStateRating(state, GetOpponent(player)));
+                return new MoveRating(move, CalcStateRating(state, player) - CalcStateRating(state, GetOpponent(player)));
             }
 
             // Otherwise if no termination return null
