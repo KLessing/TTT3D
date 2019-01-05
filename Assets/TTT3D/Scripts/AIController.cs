@@ -61,7 +61,6 @@
         private List<GameObject> GetAvailableTokensForGameState(GameState state, Player player)
         {
             // Direct Init of all Tokens for the Player and the player String
-            string playerString = player == Player.Cross ? "Cross" : "Circle";
             List<GameObject> allTokens = player == Player.Cross ? CrossTokens : CircleTokens;
 
             List<GameObject> coveredTokens = new List<GameObject>();
@@ -113,9 +112,7 @@
                     if (Convert.ToInt32(token.tag) > Convert.ToInt32(state[field].Peek().tag))
                     {
                         // Token is allowed
-                        //allowedTokens.Add(token);
-
-                        // TODO SPECIAL CASE => When these Tokens get used the previous Token is on Top again
+                        // allowedTokens.Add(token);  !!! THIS LINE BREAKS EVERYTHING???!!!
                     }
                 }
             }
@@ -126,6 +123,40 @@
             }
 
             return allowedTokens;
+        }
+
+        
+        // Returns a Gamestate without the given Token
+        // Removes the Token from the given GameState if it is on the Gamestate
+        // otherwise the given GameState will be returned
+        // (only has to check the peeks because the covered Tokens are ignored by GetAvailableTokensForGameState)
+        private GameState RemoveTokenFromGameState(GameState state, GameObject token)
+        {
+            // COPY the given state without reference
+            GameState resultState = new GameState(state);
+
+            // iterate through all available fields of the state
+            foreach (var field in state)
+            {
+                // check if the token is on the peek of the field
+                if (field.Value.Peek().name == token.name)
+                {
+                    // when the field has more than one token
+                    if (field.Value.Count > 1)
+                    {
+                        // remove the highest token from the field
+                        resultState[field.Key].Pop();
+                    }
+                    // when the token is the only token on the field
+                    else
+                    {
+                        // remove the field from the state
+                        resultState.Remove(field.Key);
+                    }
+                }
+            }
+            
+            return resultState;
         }
 
 
@@ -156,7 +187,7 @@
             //Just checked in get State Rating...
             if (availableTokens.Count == 0)
             {
-                Debug.Log("available Token count 0 exists!!!");
+                Debug.Log("available Token count 0 exists!!!"); // Test ob überhaubt möglich... (eigtl nicht, da rot zumindest immer umgesetzt werden kann weil nicht verdeckt)
                 return new MoveRating();
             }
 
@@ -175,7 +206,12 @@
                     // COPY current state without reference
                     GameState stateForToken = new GameState(state);
 
-                    // Simulate a new state with the allowed token on the Field:
+                    // Simulate a new state with the allowed token on the current Field:
+
+                    // Remove the token from the previous field
+                    stateForToken = RemoveTokenFromGameState(stateForToken, token);
+
+                    // TODO CHECK IF THE FIELD IS NOT THE PREVIOUS FIELD??
 
                     // If the field already has a token
                     if (stateForToken.ContainsKey(field))
@@ -209,15 +245,15 @@
                     }
 
                     // Alpha Beta special: just return if alpha beta are exceeded
-                    //if ((currentPlayer == player && bestRating.Rating >= b ) ||
-                    //    (currentPlayer != player && bestRating.Rating <= a))
-                    //{
-                    //    return bestRating;
-                    //}
+                    if ((currentPlayer == player && bestRating.Rating >= b) ||
+                        (currentPlayer != player && bestRating.Rating <= a))
+                    {
+                        return bestRating;
+                    }
 
                     // Update alpha beta values (dependent on the player and if the new value is higher / lower)
-                    //a = currentPlayer == player ? GetMax(a, bestRating.Rating) : a;
-                    //b = currentPlayer != player ? GetMin(b, bestRating.Rating) : b;
+                    a = currentPlayer == player ? GetMax(a, bestRating.Rating) : a;
+                    b = currentPlayer != player ? GetMin(b, bestRating.Rating) : b;
                 }
             }
 
