@@ -29,25 +29,26 @@
 
         public Move GetBestMove(GameState state, Player player)
         {
-            Debug.Log("middle field: " + state[Field.Middle].Peek().name);
             Debug.Log("ai called for player: " + player.ToString());
-
+            
             // The Recursion depth depends on the count of available Tokens
             // TODO TEST or use depth
             // int depth = availableTokens.Count / 4;
 
             // Fixed Recursion depth for noew
             // TODO Test variable otherwise constant for fixed
-            int depth = 3;
+            //int depth = 3;
+            int depth = 1;
+
 
             // Call Alpha Beta Search and return the best Move
             //return AlphaBetaSearch(state, player, player, depth, int.MinValue, int.MaxValue).Move;
-            MoveRating res = AlphaBetaSearch(new Move(), state, Player.Cross, Player.Cross, depth, int.MinValue, int.MaxValue);
+            MoveRating res = AlphaBetaSearch(new Move(), state, player, player, depth, int.MinValue, int.MaxValue);
 
-            Debug.Log("main function call terminated!");
-            Debug.Log("rating: " + res.Rating);
-            Debug.Log("move token: " + res.Move.Token.name);
-            Debug.Log("move field: " + res.Move.Field.ToString());
+            //Debug.Log("main function call terminated!");
+            //Debug.Log("rating: " + res.Rating);
+            //Debug.Log("move token: " + res.Move.Token.name);
+            //Debug.Log("move field: " + res.Move.Field.ToString());
 
             return res.Move;
         }
@@ -112,7 +113,7 @@
                     if (Convert.ToInt32(token.tag) > Convert.ToInt32(state[field].Peek().tag))
                     {
                         // Token is allowed
-                        // allowedTokens.Add(token);
+                        //allowedTokens.Add(token);
 
                         // TODO SPECIAL CASE => When these Tokens get used the previous Token is on Top again
                     }
@@ -143,8 +144,8 @@
             List<GameObject> availableTokens = GetAvailableTokensForGameState(state, currentPlayer);
 
             // Check the Rating for the state and return it if it has a result (win or recursion end)
-            // TO NOTE HAS NO MOVE
-            MoveRating? resultRating = GetStateRating(move, state, currentPlayer, depth, availableTokens);
+            // Needs to get called with oppenent of current Player for the LAST MOVE
+            MoveRating? resultRating = GetStateRating(move, state, GetOpponent(currentPlayer), depth, availableTokens);
             if (resultRating != null)
             {
                 return (MoveRating) resultRating;
@@ -155,11 +156,12 @@
             //Just checked in get State Rating...
             if (availableTokens.Count == 0)
             {
+                Debug.Log("available Token count 0 exists!!!");
                 return new MoveRating();
             }
 
             // Start with the lowest possible values and no move
-            MoveRating currentRating = new MoveRating(new Move(), currentPlayer == player ? int.MinValue : int.MaxValue);
+            MoveRating bestRating = new MoveRating(new Move(), currentPlayer == player ? int.MinValue : int.MaxValue);
             
             // Iterate through all Fields of the Gamefield
             foreach (Field field in Enum.GetValues(typeof(Field)))
@@ -190,30 +192,43 @@
                     }
 
                     // Next recursion call
-                    MoveRating newRating = AlphaBetaSearch(new Move(token, field), stateForToken, player, GetOpponent(player), depth - 1, a, b);
+                    MoveRating newRating = AlphaBetaSearch(new Move(token, field), stateForToken, player, GetOpponent(currentPlayer), depth - 1, a, b);
+
+                    //Debug.Log("-----------------");
+                    //Debug.Log("newRating: " + newRating.Rating);
+                    //Debug.Log("newRating move token: " + newRating.Move.Token.name);
+                    //Debug.Log("newRating move field: " + newRating.Move.Field.ToString());
+                    //Debug.Log("-----------------");
 
                     // Compare with current rating
-                    if ((currentPlayer == player && newRating.Rating > currentRating.Rating) ||
-                        (currentPlayer != player && newRating.Rating < currentRating.Rating))
+                    if ((currentPlayer == player && newRating.Rating > bestRating.Rating) ||
+                        (currentPlayer != player && newRating.Rating < bestRating.Rating))
                     {
-                        currentRating = newRating;
+                        bestRating.Rating = newRating.Rating;
+                        bestRating.Move = newRating.Move;
                     }
 
                     // Alpha Beta special: just return if alpha beta are exceeded
-                    if ((currentPlayer == player && currentRating.Rating >= b ) ||
-                        (currentPlayer != player && currentRating.Rating <= a))
-                    {
-                        return currentRating;
-                    }
+                    //if ((currentPlayer == player && bestRating.Rating >= b ) ||
+                    //    (currentPlayer != player && bestRating.Rating <= a))
+                    //{
+                    //    return bestRating;
+                    //}
 
                     // Update alpha beta values (dependent on the player and if the new value is higher / lower)
-                    a = currentPlayer == player ? GetMax(a, currentRating.Rating) : a;
-                    b = currentPlayer != player ? GetMin(b, currentRating.Rating) : b;
+                    //a = currentPlayer == player ? GetMax(a, bestRating.Rating) : a;
+                    //b = currentPlayer != player ? GetMin(b, bestRating.Rating) : b;
                 }
             }
 
+            Debug.Log("-----------------");
+            Debug.Log("bestRating: " + bestRating.Rating);
+            Debug.Log("bestRating move token: " + bestRating.Move.Token.name);
+            Debug.Log("bestRating move field: " + bestRating.Move.Field.ToString());
+            Debug.Log("-----------------");
+
             // Return the best found rating
-            return currentRating;
+            return bestRating;
         }
 
         // Get Rating
@@ -236,6 +251,13 @@
             // If no winner and depth is reached or no more available tokens
             if (depth <= 0 || availableTokens.Count == 0)
             {
+                Debug.Log("-----------------");
+                Debug.Log("move token: " + move.Token.name);
+                Debug.Log("move field: " + move.Field.ToString());
+                Debug.Log("player Rating: " + CalcStateRating(state, player));
+                Debug.Log("------");
+                Debug.Log("opponent Rating: " + CalcStateRating(state, GetOpponent(player)));
+                Debug.Log("------");
                 return new MoveRating(move, CalcStateRating(state, player) - CalcStateRating(state, GetOpponent(player)));
             }
 
@@ -255,6 +277,7 @@
         private int CheckThrees(GameState GameField, Player player)
         {
             string playerString = player == Player.Cross ? "Cross" : "Circle";
+            Debug.Log("playerString: " + playerString);
             int rating = 0;
             int fieldIndex = 0;
             Player? winner = null;
@@ -262,13 +285,14 @@
             // Check Horizontal
             while (winner == null && fieldIndex < 8)
             {  
-                if (!GameField.ContainsKey((Field)fieldIndex) ||
-                     GameField.ContainsKey((Field)fieldIndex) && GameField[(Field)fieldIndex].Peek().transform.parent.name != playerString &&
-                    !GameField.ContainsKey((Field)fieldIndex + 1) ||
-                     GameField.ContainsKey((Field)fieldIndex + 1) && GameField[(Field)fieldIndex + 1].Peek().transform.parent.name != playerString &&
-                    !GameField.ContainsKey((Field)fieldIndex + 2) ||
-                     GameField.ContainsKey((Field)fieldIndex + 2) && GameField[(Field)fieldIndex + 2].Peek().transform.parent.name != playerString)                                              
+                if ((!GameField.ContainsKey((Field)fieldIndex) ||
+                     GameField.ContainsKey((Field)fieldIndex) && GameField[(Field)fieldIndex].Peek().transform.parent.name == playerString) &&
+                    (!GameField.ContainsKey((Field)fieldIndex + 1) ||
+                     GameField.ContainsKey((Field)fieldIndex + 1) && GameField[(Field)fieldIndex + 1].Peek().transform.parent.name == playerString) &&
+                    (!GameField.ContainsKey((Field)fieldIndex + 2) ||
+                     GameField.ContainsKey((Field)fieldIndex + 2) && GameField[(Field)fieldIndex + 2].Peek().transform.parent.name == playerString))
                 {
+                    Debug.Log("horizontal with fieldIndex " + fieldIndex);
                     rating++;
                 }                
 
@@ -280,13 +304,14 @@
             // Check Vertical
             while (winner == null && fieldIndex < 3)
             {
-                if (!GameField.ContainsKey((Field)fieldIndex) ||
-                     GameField.ContainsKey((Field)fieldIndex) && GameField[(Field)fieldIndex].Peek().transform.parent.name != playerString &&
-                    !GameField.ContainsKey((Field)fieldIndex + 3) ||
-                     GameField.ContainsKey((Field)fieldIndex + 3) && GameField[(Field)fieldIndex + 3].Peek().transform.parent.name != playerString &&
-                    !GameField.ContainsKey((Field)fieldIndex + 6) ||
-                     GameField.ContainsKey((Field)fieldIndex + 6) && GameField[(Field)fieldIndex + 6].Peek().transform.parent.name != playerString)
+                if ((!GameField.ContainsKey((Field)fieldIndex) ||
+                     GameField.ContainsKey((Field)fieldIndex) && GameField[(Field)fieldIndex].Peek().transform.parent.name == playerString) &&
+                    (!GameField.ContainsKey((Field)fieldIndex + 3) ||
+                     GameField.ContainsKey((Field)fieldIndex + 3) && GameField[(Field)fieldIndex + 3].Peek().transform.parent.name == playerString) &&
+                    (!GameField.ContainsKey((Field)fieldIndex + 6) ||
+                     GameField.ContainsKey((Field)fieldIndex + 6) && GameField[(Field)fieldIndex + 6].Peek().transform.parent.name == playerString))
                 {
+                    Debug.Log("vertical with fieldIndex " + fieldIndex);
                     rating++;
                 }
 
@@ -294,24 +319,26 @@
             }
 
             // Check Diagonal
-            if (!GameField.ContainsKey(Field.TopLeft) ||
-                 GameField.ContainsKey(Field.TopLeft) && GameField[Field.TopLeft].Peek().transform.parent.name != playerString &&
-                !GameField.ContainsKey(Field.Middle) ||
-                 GameField.ContainsKey(Field.Middle) && GameField[Field.Middle].Peek().transform.parent.name != playerString &&
-                !GameField.ContainsKey(Field.BottomRight) ||
-                 GameField.ContainsKey(Field.BottomRight) && GameField[Field.BottomRight].Peek().transform.parent.name != playerString)
+            if ((!GameField.ContainsKey(Field.TopLeft) ||
+                 GameField.ContainsKey(Field.TopLeft) && GameField[Field.TopLeft].Peek().transform.parent.name == playerString) &&
+                (!GameField.ContainsKey(Field.Middle) ||
+                 GameField.ContainsKey(Field.Middle) && GameField[Field.Middle].Peek().transform.parent.name == playerString) &&
+                (!GameField.ContainsKey(Field.BottomRight) ||
+                 GameField.ContainsKey(Field.BottomRight) && GameField[Field.BottomRight].Peek().transform.parent.name == playerString))
             {
+                Debug.Log("diagonal top left");
                 rating++;
             }
             
 
-            if (!GameField.ContainsKey(Field.TopRight) ||
-                GameField.ContainsKey(Field.TopRight) && GameField[Field.TopRight].Peek().transform.parent.name != playerString &&
-                !GameField.ContainsKey(Field.Middle) ||
-                GameField.ContainsKey(Field.Middle) && GameField[Field.Middle].Peek().transform.parent.name != playerString &&
-                !GameField.ContainsKey(Field.BottomLeft) ||
-                GameField.ContainsKey(Field.BottomLeft) && GameField[Field.BottomLeft].Peek().transform.parent.name != playerString)
+            if ((!GameField.ContainsKey(Field.TopRight) ||
+                GameField.ContainsKey(Field.TopRight) && GameField[Field.TopRight].Peek().transform.parent.name == playerString) &&
+                (!GameField.ContainsKey(Field.Middle) ||
+                GameField.ContainsKey(Field.Middle) && GameField[Field.Middle].Peek().transform.parent.name == playerString) &&
+                (!GameField.ContainsKey(Field.BottomLeft) ||
+                GameField.ContainsKey(Field.BottomLeft) && GameField[Field.BottomLeft].Peek().transform.parent.name == playerString))
             {
+                Debug.Log("diagonal top right");
                 rating++;
             }
 
