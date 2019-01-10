@@ -46,10 +46,10 @@
             //return AlphaBetaSearch(state, player, player, depth, int.MinValue, int.MaxValue).Move;
             MoveRating res = AlphaBetaSearch(new Move(), state, player, player, depth, int.MinValue, int.MaxValue);
 
-            //Debug.Log("main function call terminated!");
-            //Debug.Log("rating: " + res.Rating);
-            //Debug.Log("move token: " + res.Move.Token.name);
-            //Debug.Log("move field: " + res.Move.Field.ToString());
+            Debug.Log("main function call terminated!");
+            Debug.Log("rating: " + res.Rating);
+            Debug.Log("move token: " + res.Move.Token.name);
+            Debug.Log("move field: " + res.Move.Field.ToString());
 
             //Debug.Log("state bottom left: " + state[Field.BottomLeft].Pop());
             //Debug.Log("state bottom left under: " + state[Field.BottomLeft].Peek());
@@ -151,11 +151,11 @@
         // otherwise the given GameState will be returned
         // (only has to check the peeks because the covered Tokens are ignored by GetAvailableTokensForGameState)
         private GameState RemoveTokenFromGameState(GameState state, GameObject token)
-        {
+        {           
             // COPY the given state without reference
-            GameState resultState = new GameState(state);
+            GameState resultState = state.DeepCopy(state); // new GameState(state);
 
-            
+            Debug.Log("Deep Copy happend in remove");
 
             // iterate through all available fields of the state
             foreach (var field in resultState)
@@ -244,7 +244,10 @@
                 foreach (GameObject token in allowedTokens)
                 {
                     // COPY current state without reference
-                    GameState stateForToken = new GameState(state);
+                    GameState stateForToken = state.DeepCopy(state); //new GameState(state);
+
+                    Debug.Log("Deep Copy happend in search");
+
 
                     // Simulate a new state with the allowed token on the current Field:
 

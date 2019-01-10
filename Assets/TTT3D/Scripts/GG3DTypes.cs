@@ -18,6 +18,33 @@
 
         // Constructor with one param for copy without reference
         public GameState(IDictionary<Field, Stack<GameObject>> dictionary) : base(dictionary) { }
+
+        // Deep Copy Function
+        public GameState DeepCopy(GameState oldState)
+        {
+            GameState newState = new GameState();
+
+            foreach (var field in oldState)
+            {
+                Stack<GameObject> tokenStack = new Stack<GameObject>();
+
+                foreach (GameObject token in field.Value)
+                {
+                    Debug.Log("old " + token.name);
+
+                    tokenStack.Push(GameObject.Instantiate<GameObject>(token)); // falsche Reihenfolge?
+                }
+
+                foreach (GameObject token in tokenStack)
+                {
+                    Debug.Log("new " + token.name);
+                }
+
+                newState.Add(field.Key, tokenStack);
+            }
+
+            return newState;
+        }
     }
 
     // A Move consists of a Token and a Field for the Placement
