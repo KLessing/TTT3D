@@ -10,6 +10,9 @@
     // The different Token Sizes (The Index serves as comparison value)
     public enum TokenSize { Small, Medium, Large };
 
+    // Typedef workaround for constants
+    public static class Constants { public const int AI_DEPTH = 1; };
+
     // Typedef workaround for a GameState with Tokens on Gamefield
     public class GameState : Dictionary<Field, Stack<GameObject>> {}
 
