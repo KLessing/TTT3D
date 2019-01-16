@@ -6,27 +6,9 @@
     using GG3DTypes;
     using GGG3DWin;
 
-    // Own MoveRating Struct for move and rating combination
-    public struct MoveRating
-    {
-        public Move Move;
-        public int Rating;
-
-        public MoveRating(Move move, int rating)
-        {
-            Move = move;
-            Rating = rating;
-        }
-    }
 
     public class AIController : MonoBehaviour
     {
-        // All Cross Tokens
-        public List<GameObject> CrossTokens;
-
-        // All Circle Tokens
-        public List<GameObject> CircleTokens;
-
         public Move GetBestMove(GameState state, Player player)
         {
             Debug.Log("ai called for player: " + player.ToString());
