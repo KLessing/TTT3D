@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using GG3DTypes;
-using GG3DAI;
+//using GG3DAI;
 
 public class UserInterfaceController : MonoBehaviour {
 
@@ -11,7 +11,7 @@ public class UserInterfaceController : MonoBehaviour {
     public GameController GameControllerPrefab;
 
     // The AI Controller
-    public AIController AIControllerPrefab;
+    //public AIController AIControllerPrefab;
 
     // TODO + The AI Level ?!
 
@@ -132,10 +132,10 @@ public class UserInterfaceController : MonoBehaviour {
                 CurrentPlayer = GetNextPlayer(CurrentPlayer);
 
                 // get the best AI move for current Player and GameState
-                Move bestMove = AIControllerPrefab.GetBestMove(GameControllerPrefab.GameField, CurrentPlayer);
+               // Move bestMove = AIControllerPrefab.GetBestMove(GameControllerPrefab.GameField, CurrentPlayer);
 
                 // Execute the best AI move in GameController
-                Winner = GameControllerPrefab.SetTokenOnField(bestMove);
+               // Winner = GameControllerPrefab.SetTokenOnField(bestMove);
             }
 
             // Continue when still no winner

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GG3DTypes;
 using GGG3DWin;
+using GGG3DConverter;
 
 
 public class GameController : MonoBehaviour {
@@ -48,8 +49,8 @@ public class GameController : MonoBehaviour {
                 GameField.Add(move.Field, tokenStack);
             }
 
-            // Check if game is won
-            winner = WinDetection.CheckWinner(GameField);
+            // Check if game is won with the converted state of string tokens
+            winner = WinDetection.CheckWinner(TypeConverter.ConvertState(GameField));
         }        
 
         return winner;

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using UnityEngine;
 
+    // Not static class with the Token objects for the Move
     public class MoveConverter
     {
         // The Tokens to visualize above the Augmented Image of the GameField
@@ -28,6 +29,7 @@
         }
     }
 
+    // Static class for easy access without global variables
     public static class TypeConverter
     {
         // Converts the given GameState with GameObjects to a StringState with Strings
@@ -66,7 +68,5 @@
         {
             return tokenName.Contains("Small") ? 1 : tokenName.Contains("Middle") ? 2 : 3;
         }
-
-
     }
 }
