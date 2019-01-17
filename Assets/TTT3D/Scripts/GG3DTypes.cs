@@ -18,7 +18,13 @@
 
     // Game state with strings instead of Token 
     // (needed for AI for Intance Problem workaround)
-    public class StringState : Dictionary<Field, Stack<string>> {};
+    public class StringState : Dictionary<Field, Stack<string>> {
+        // Empty Constructor without param 
+        public StringState() { }
+
+        // Constructor with one param for copy without reference 
+        public StringState(IDictionary<Field, Stack<string>> dictionary) : base(dictionary) { }
+    };
 
 
     // A Move consists of a Token and a Field for the Placement
