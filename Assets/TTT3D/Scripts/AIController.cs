@@ -10,17 +10,18 @@
 
     public static class AIController
     {        
-        private static readonly List<string> CrossTokenNames = new List<string> { "SmallCross1", "SmallCross2",  "MediumCross1", "MediumCross2", "LargeCross1", "LargeCross1" };
+        private static readonly List<string> CrossTokenNames = new List<string> { "SmallCross1", "SmallCross2",  "MediumCross1", "MediumCross2", "LargeCross1", "LargeCross2" };
 
-        private static readonly List<string> CircleTokenNames = new List<string> { "SmallCircle1", "SmallCircle2", "MediumCircle1", "MediumCircle2", "LargeCircle1", "LargeCircle1" };
+        private static readonly List<string> CircleTokenNames = new List<string> { "SmallCircle1", "SmallCircle2", "MediumCircle1", "MediumCircle2", "LargeCircle1", "LargeCircle2" };
 
         public static MoveString GetBestMove(StringState state, Player player)
         {
-            //// Call Alpha Beta Search and return the best Move
-            //MoveRating res = new MoveRating(new MoveString("SmallCircle2", Field.BottomRight), int.MaxValue);            
-
-            //// Return the MoveString
-            //return res.Move;
+            Debug.Log("-------------");
+            foreach (var field in state)
+            {
+                Debug.Log("field: " + field.Key);
+                Debug.Log("peek token: " + field.Value.Peek());
+            }
 
             // Execute the Alpha Beta Search with the appropriate params and return the Move String directly
             return AlphaBetaSearch(new MoveString(), state, player, player, Constants.AI_DEPTH, int.MinValue, int.MaxValue).Move;
@@ -77,6 +78,13 @@
                 }
             }
 
+            Debug.Log("-------------");
+
+            foreach (string token in availableTokens)
+            {
+                Debug.Log("available token: " + token);
+            }
+
             return availableTokens;
         }
 
@@ -95,8 +103,16 @@
                 // Iterate through available Tokens
                 foreach (string token in availableTokens)
                 {
-                    //Debug.Log("token: " + token.name);
-                    //Debug.Log("token lvl" + Convert.ToInt32(token.tag));
+                    Debug.Log("------------");
+
+                    if (field == Field.Middle)
+                    {
+                        Debug.Log("token: " + token);
+                        Debug.Log("token lvl" + TypeConverter.GetValueForTokenName(token));
+
+                        Debug.Log("peek: " + state[field].Peek());
+                        Debug.Log("token lvl" + TypeConverter.GetValueForTokenName(state[field].Peek()));
+                    }
 
                     // Is the available Token "bigger" than the Token on the Field?
                     if (TypeConverter.GetValueForTokenName(token) > TypeConverter.GetValueForTokenName(state[field].Peek()))
@@ -107,12 +123,14 @@
                     }
                 }
 
-                //Debug.Log("-------------");
+                Debug.Log("-------------");
 
-                //foreach(GameObject token in allowedTokens)
-                //{
-                //    Debug.Log("allowed token: " + token.name);
-                //}
+                Debug.Log("allowed on Field: " + field);
+
+                foreach (string token in allowedTokens)
+                {
+                    Debug.Log("allowed token: " + token);
+                }
 
             }
             else
@@ -132,9 +150,7 @@
         private static StringState RemoveTokenFromGameState(StringState state, string token)
         {
             // COPY the given state without reference
-            StringState resultState = new StringState(state); // TEST REFERENCE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-            Debug.Log("Deep Copy happend in remove");
+            StringState resultState = new StringState(state);
 
             // iterate through all available fields of the state
             foreach (var field in state)
@@ -147,12 +163,6 @@
                     {
                         // remove the highest token from the field
                         resultState[field.Key].Pop();
-
-                        Debug.Log("result state: " + resultState[field.Key].Peek());
-                        Debug.Log("original state: " + state[field.Key].Peek());
-
-
-                        // REFERENZFEHLER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     }
                     // when the token is the only token on the field
                     else
@@ -179,6 +189,7 @@
 
             // Check the Rating for the state and return it if it has a result (win or recursion end)
             // Needs to get called with oppenent of current Player for the LAST MOVE
+            // First call oppenent will be checked (doesn't matter because no move yet)
             MoveRating? resultRating = GetStateRating(move, state, GetOpponent(currentPlayer), depth);
             if (resultRating != null)
             {
@@ -223,10 +234,7 @@
                 foreach (string token in allowedTokens)
                 {
                     // COPY current state without reference
-                    StringState stateForToken = new StringState(state); // TODO TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-                    Debug.Log("Deep Copy happend in search");
-
+                    StringState stateForToken = new StringState(state);
 
                     // Simulate a new state with the allowed token on the current Field:
 
@@ -242,9 +250,6 @@
                         // Place the allowed Token above the old Token
                         stateForToken.Remove(field);
                         stateForToken.Add(field, tokenStack);
-
-
-                        // HIER FEHLER??????
                     }
                     else
                     {
@@ -253,8 +258,7 @@
                         tokenStack.Push(token);
                         stateForToken.Add(field, tokenStack);
                     }
-
-
+                    
                     MoveString currentMove = new MoveString(token, field);
 
                     // Next recursion call

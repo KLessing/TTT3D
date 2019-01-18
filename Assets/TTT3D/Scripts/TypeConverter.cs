@@ -42,7 +42,7 @@
         // Returns the value for the Size of the given tokenName
         public static int GetValueForTokenName(string tokenName)
         {
-            return tokenName.Contains("Small") ? 1 : tokenName.Contains("Middle") ? 2 : 3;
+            return tokenName.Contains("Small") ? 1 : (tokenName.Contains("Medium") ? 2 : 3);
         }
     }
 }
