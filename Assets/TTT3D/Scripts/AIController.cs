@@ -10,9 +10,9 @@
 
     public static class AIController
     {        
-        private static readonly List<string> CrossTokenNames = new List<string> { "SmallCross1", "SmallCross2",  "MiddleCross1", "MiddleCross2", "LargeCross1", "LargeCross1" };
+        private static readonly List<string> CrossTokenNames = new List<string> { "SmallCross1", "SmallCross2",  "MediumCross1", "MediumCross2", "LargeCross1", "LargeCross1" };
 
-        private static readonly List<string> CircleTokenNames = new List<string> { "SmallCircle1", "SmallCircle2", "MiddleCircle1", "MiddleCircle2", "LargeCircle1", "LargeCircle1" };
+        private static readonly List<string> CircleTokenNames = new List<string> { "SmallCircle1", "SmallCircle2", "MediumCircle1", "MediumCircle2", "LargeCircle1", "LargeCircle1" };
 
         public static MoveString GetBestMove(StringState state, Player player)
         {
@@ -132,12 +132,12 @@
         private static StringState RemoveTokenFromGameState(StringState state, string token)
         {
             // COPY the given state without reference
-            StringState resultState = state; //new StringState(state); // TEST REFERENCE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            StringState resultState = new StringState(state); // TEST REFERENCE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             Debug.Log("Deep Copy happend in remove");
 
             // iterate through all available fields of the state
-            foreach (var field in resultState)
+            foreach (var field in state)
             {
                 // check if the token is on the peek of the field
                 if (field.Value.Peek() == token)
@@ -223,7 +223,7 @@
                 foreach (string token in allowedTokens)
                 {
                     // COPY current state without reference
-                    StringState stateForToken = state; //new StringState(state); // TODO TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    StringState stateForToken = new StringState(state); // TODO TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                     Debug.Log("Deep Copy happend in search");
 
@@ -299,12 +299,18 @@
             // If Player Win
             if (winner == player)
             {
+                Debug.Log("checking player wins");
+                Debug.Log("token: " + move.Token);
+                Debug.Log("field: " + move.Field);
                 return new MoveRating(move, int.MaxValue);
             }
 
             // If oppenent wins
             if (winner == GetOpponent(player))
             {
+                Debug.Log("checking player looses");
+                Debug.Log("token: " + move.Token);
+                Debug.Log("field: " + move.Field);
                 return new MoveRating(move, int.MinValue);
             }
 
