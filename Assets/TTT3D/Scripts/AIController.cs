@@ -24,7 +24,8 @@
             }
 
             // Execute the Alpha Beta Search with the appropriate params and return the Move String directly
-            return AlphaBetaSearch(new MoveString(), state, player, player, Constants.AI_DEPTH, int.MinValue, int.MaxValue).Move;
+            // start with current opponent because it will be switch after rating
+            return AlphaBetaSearch(new MoveString(), state, player, GetOpponent(player), Constants.AI_DEPTH, int.MinValue, int.MaxValue).Move;
         }
 
 
@@ -78,12 +79,12 @@
                 }
             }
 
-            Debug.Log("-------------");
+            //Debug.Log("-------------");
 
-            foreach (string token in availableTokens)
-            {
-                Debug.Log("available token: " + token);
-            }
+            //foreach (string token in availableTokens)
+            //{
+            //    Debug.Log("available token: " + token);
+            //}
 
             return availableTokens;
         }
@@ -103,17 +104,6 @@
                 // Iterate through available Tokens
                 foreach (string token in availableTokens)
                 {
-                    Debug.Log("------------");
-
-                    if (field == Field.Middle)
-                    {
-                        Debug.Log("token: " + token);
-                        Debug.Log("token lvl" + TypeConverter.GetValueForTokenName(token));
-
-                        Debug.Log("peek: " + state[field].Peek());
-                        Debug.Log("token lvl" + TypeConverter.GetValueForTokenName(state[field].Peek()));
-                    }
-
                     // Is the available Token "bigger" than the Token on the Field?
                     if (TypeConverter.GetValueForTokenName(token) > TypeConverter.GetValueForTokenName(state[field].Peek()))
                     {
@@ -123,14 +113,14 @@
                     }
                 }
 
-                Debug.Log("-------------");
+                //Debug.Log("-------------");
 
-                Debug.Log("allowed on Field: " + field);
+                //Debug.Log("allowed on Field: " + field);
 
-                foreach (string token in allowedTokens)
-                {
-                    Debug.Log("allowed token: " + token);
-                }
+                //foreach (string token in allowedTokens)
+                //{
+                //    Debug.Log("allowed token: " + token);
+                //}
 
             }
             else
@@ -188,34 +178,29 @@
         {
 
             // Check the Rating for the state and return it if it has a result (win or recursion end)
-            // Needs to get called with oppenent of current Player for the LAST MOVE
-            // First call oppenent will be checked (doesn't matter because no move yet)
-            MoveRating? resultRating = GetStateRating(move, state, GetOpponent(currentPlayer), depth);
-            if (resultRating != null)
+            MoveRating? resultRating = GetStateRating(move, state, player, depth);
+            if (resultRating.HasValue)
             {
-                //foreach (var field in state)
-                //{
-                //    Debug.Log("field: " + field.Key.ToString());
-                //    Debug.Log("token: " + field.Value.Peek().name);
-                //}
+                Debug.Log("---------------");
+                Debug.Log("currentPlayer = " + currentPlayer);
+                Debug.Log("move field: " + move.Field);
+                Debug.Log("move token: " + move.Token);
+                Debug.Log("rating (not negated): " + resultRating.Value.Rating);
 
-                return (MoveRating)resultRating;
+                if (currentPlayer == player)
+                {
+                    return resultRating.Value;
+                }
+                else
+                {
+                    // return negative rating for opponent
+                    return new MoveRating(move, -resultRating.Value.Rating);
+                }
+                
             }
 
-            //Debug.Log("depth: " + depth);
-
-
-            //Debug.Log("current player: " + currentPlayer.ToString());
-
-
-            // Get all available tokens for the state and return nothing if none exist
-            //List<GameObject> availableTokens = GetAvailableTokensForGameState(state, currentPlayer);
-            //Just checked in get State Rating...
-            //if (availableTokens.Count == 0)
-            //{
-            //    Debug.Log("available Token count 0 exists!!!"); // Test ob überhaubt möglich... (eigtl nicht, da rot zumindest immer umgesetzt werden kann weil nicht verdeckt)
-            //    return new MoveRating();
-            //}
+            // switch player
+            currentPlayer = GetOpponent(currentPlayer);
 
 
             // Get all available tokens for the state
@@ -258,24 +243,28 @@
                         tokenStack.Push(token);
                         stateForToken.Add(field, tokenStack);
                     }
-                    
-                    MoveString currentMove = new MoveString(token, field);
+
+                    // only use the move for the first function call (otherwise passed on move param which was the first)
+                    // Note: the state will be updated by the new move but we only need the first move for the end result
+                    MoveString firstMove = depth == Constants.AI_DEPTH ? new MoveString(token, field) : move;
 
                     // Next recursion call
-                    MoveRating newRating = AlphaBetaSearch(currentMove, stateForToken, player, GetOpponent(currentPlayer), depth - 1, a, b);
+                    MoveRating newRating = AlphaBetaSearch(firstMove, stateForToken, player, currentPlayer, depth - 1, a, b);
 
-                    // Compare with current rating
+                    // Compare with current best rating
                     if ((currentPlayer == player && newRating.Rating > bestRating.Rating) ||
                         (currentPlayer != player && newRating.Rating < bestRating.Rating))
                     {
+                        // update best if better
                         bestRating.Rating = newRating.Rating;
-                        bestRating.Move = currentMove;
+                        bestRating.Move = firstMove;
                     }
 
                     // Alpha Beta special: just return if alpha beta are exceeded
                     if ((currentPlayer == player && bestRating.Rating >= b) ||
                         (currentPlayer != player && bestRating.Rating <= a))
                     {
+                        Debug.Log("alpha beta pruning!!!!!!!!!!");
                         return bestRating;
                     }
 
@@ -296,6 +285,8 @@
         }
 
         // Get Rating
+        // needs to returnoptional value to distinguish between calced value and not?
+        // TOCHECK: 0 RESULT POSSIBLE? => use int result instead of unnecessary MoveRating
         private static MoveRating? GetStateRating(MoveString move, StringState state, Player player, int depth)
         {
             Player? winner = WinDetection.CheckWinner(state);
