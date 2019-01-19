@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using GG3DTypes;
 using GG3DAI;
@@ -63,7 +63,10 @@ public class UserInterfaceController : MonoBehaviour {
     {
         AIUsage = useAI;
         PlayerCountSelectionUI.SetActive(false);
+
+        CurrentPlayer = Player.Cross;
         CrossTokenSelection.SetActive(true);
+        CircleTokenSelection.SetActive(false);
     }
 
     // Reset the current Gamefield and start new Game
