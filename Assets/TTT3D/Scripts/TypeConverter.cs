@@ -1,4 +1,4 @@
-﻿namespace GGG3DConverter
+﻿namespace GG3DConverter
 {
     using GG3DTypes;
     using System.Collections.Generic;

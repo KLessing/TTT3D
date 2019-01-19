@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GG3DTypes;
-using GGG3DWin;
-using GGG3DConverter;
+using GG3DWin;
+using GG3DConverter;
 
 
 public class GameController : MonoBehaviour {

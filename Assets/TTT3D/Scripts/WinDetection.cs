@@ -1,7 +1,7 @@
-﻿namespace GGG3DWin
+﻿namespace GG3DWin
 {
     using GG3DTypes;
-    using GGG3DConverter;
+    using GG3DConverter;
 
     public static class WinDetection
     {
