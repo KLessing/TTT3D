@@ -33,6 +33,31 @@
             return stringState;
         }
 
+        // Converts the given GameState with GameObjects to a StringState with Strings
+        public static StringState DeepCloneState(StringState gameState)
+        {
+            StringState stringState = new StringState();
+
+            foreach (var field in gameState)
+            {
+                Stack<string> tokenStringStack = new Stack<string>();
+
+                // Convert Stack to Array to access not only the peek or pop the peek
+                // NOTE: the stack may not be destructed (reference to current GameState)
+                string[] tokenGameObjectArray = field.Value.ToArray();
+
+                // Iterate backwards to push in the right order
+                for (int i = tokenGameObjectArray.Length - 1; i >= 0; i--)
+                {
+                    tokenStringStack.Push(tokenGameObjectArray[i]);
+                }
+
+                stringState.Add(field.Key, tokenStringStack);
+            }
+
+            return stringState;
+        }
+
         // Returns the Player enum for the given tokenName
         public static Player GetPlayerForTokenName(string tokenName)
         {

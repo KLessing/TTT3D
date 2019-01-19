@@ -150,7 +150,7 @@
         private static StringState RemoveTokenFromGameState(StringState state, string token)
         {
             // COPY the given state without reference
-            StringState resultState = new StringState(state);
+            StringState resultState = TypeConverter.DeepCloneState(state);
 
             // iterate through all available fields of the state
             foreach (var field in state)
@@ -234,7 +234,7 @@
                 foreach (string token in allowedTokens)
                 {
                     // COPY current state without reference
-                    StringState stateForToken = new StringState(state);
+                    StringState stateForToken = TypeConverter.DeepCloneState(state);
 
                     // Simulate a new state with the allowed token on the current Field:
 
