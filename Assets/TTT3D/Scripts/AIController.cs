@@ -18,7 +18,9 @@ namespace GG3DAI
         {
             // Execute the Alpha Beta Search with the appropriate params and return the Move String directly
             // start with current opponent because it will be switch after rating
-            return AlphaBetaSearch(new MoveString(), state, player, GetOpponent(player), Constants.AI_DEPTH, int.MinValue, int.MaxValue).Move;
+            //return AlphaBetaSearch(new MoveString(), WinPriority(), player, GetOpponent(player), Constants.AI_DEPTH, int.MinValue, int.MaxValue).Move;
+
+            return AlphaBetaRoot(Constants.AI_DEPTH, WinPriority(), player);
         }
 
 
@@ -258,8 +260,8 @@ namespace GG3DAI
                     MoveRating newRating = AlphaBetaSearch(firstMove, stateForToken, player, currentPlayer, depth - 1, a, b);
 
                     // Compare with current best rating
-                    if ((currentPlayer == player && newRating.Rating > bestRating.Rating) ||
-                        (currentPlayer != player && newRating.Rating < bestRating.Rating))
+                    if ((currentPlayer == player && newRating.Rating >= bestRating.Rating) ||
+                        (currentPlayer != player && newRating.Rating <= bestRating.Rating))
                     {
                         Debug.Log("--------------------------------");
                         Debug.Log("previous best rating: " + bestRating.Rating);
@@ -275,20 +277,25 @@ namespace GG3DAI
                         Debug.Log("current best move field: " + bestRating.Move.Token);
                     }
 
-                    // Alpha Beta special: just return if alpha beta are exceeded
-                    if ((currentPlayer == player && bestRating.Rating >= b) ||
-                        (currentPlayer != player && bestRating.Rating <= a))
-                    {
-                        Debug.Log("-----------");
-                        Debug.Log("alpha beta pruning!!!!!!!!!!");
-                        Debug.Log("a: " + a);
-                        Debug.Log("b: " + b);
-                        return bestRating;
-                    }
+                    //// Alpha Beta special: just return if alpha beta are exceeded
+                    //if ((currentPlayer == player && bestRating.Rating >= b) ||
+                    //    (currentPlayer != player && bestRating.Rating <= a))
+                    //{
+                    //    Debug.Log("-----------");
+                    //    Debug.Log("alpha beta pruning!!!!!!!!!!");
+                    //    Debug.Log("a: " + a);
+                    //    Debug.Log("b: " + b);
+                    //    return bestRating;
+                    //}
 
                     // Update alpha beta values (dependent on the player and if the new value is higher / lower)
                     a = currentPlayer == player ? GetMax(a, bestRating.Rating) : a;
                     b = currentPlayer != player ? GetMin(b, bestRating.Rating) : b;
+
+                    if (b <= a)
+                    {
+                        return bestRating;
+                    }
                 }
 
 
@@ -516,6 +523,140 @@ namespace GG3DAI
 
             return testState;
         }
+
+
+        /***** NEW TRY *****/
+
+        // returns all possible moves for the player and the state
+        public static List<MoveString> GetPossibleMoves(StringState state, Player player)
+        {
+            List<MoveString> result = new List<MoveString>();
+
+            // Get all available tokens for the state
+            List<string> availableTokens = GetAvailableTokensForGameState(state, player);
+
+            // Iterate through all Fields of the Gamefield
+            foreach (Field field in Enum.GetValues(typeof(Field)))
+            {
+                // Get the allowed Tokens to place on this Field
+                List<string> allowedTokens = GetAllowedTokensForField(state, field, availableTokens);
+
+                // Iterate through all allowed Tokens for this Field
+                foreach (string token in allowedTokens)
+                {
+                    result.Add(new MoveString(token, field));
+                }
+            }
+
+            return result;
+        }
+
+
+        // iterates through all possible root moves
+        public static MoveString AlphaBetaRoot(int depth, StringState state, Player player)
+        {
+            // start with the lowest possible value
+            int bestValue = int.MinValue;
+            // the best move result
+            MoveString bestMove = new MoveString();
+
+            // get all first moves
+            List<MoveString> possibleMoves = GetPossibleMoves(state, player);
+
+            foreach (MoveString move in possibleMoves)
+            {
+                Debug.Log("move token: " + move.Token);
+                Debug.Log("move field: " + move.Field);
+
+                int value = AlphaBeta(depth - 1, state, GetOpponent(player), int.MinValue, int.MaxValue);
+
+                Debug.Log("value: " + value);
+
+                if (value >= bestValue)
+                {
+                    Debug.Log("new best value");
+
+                    bestValue = value;
+                    bestMove = move;
+                }
+            }
+
+            return bestMove;
+        }
+
+
+        public static int AlphaBeta(int depth, StringState state, Player player, int alpha, int beta)
+        {
+            if (depth == 0)
+            {
+                return Evaluate(state, player);
+            }
+
+            List<MoveString> possibleMoves = GetPossibleMoves(state, player);
+
+            if (player == Constants.AI_PLAYER)
+            {
+                int bestValue = int.MinValue + 1; // TODO test if + 1 necessary
+
+                foreach (MoveString move in possibleMoves)
+                {
+                    // Get State with move
+                    StringState moveState = TypeConverter.DeepCloneState(state);
+
+                    bestValue = Math.Max(bestValue, AlphaBeta(depth - 1, moveState, GetOpponent(player), alpha, beta));
+
+                    alpha = Math.Max(alpha, bestValue);
+                    if (beta <= alpha)
+                    {
+                        return bestValue;
+                    }
+                }
+            }
+            else
+            {
+                int bestValue = int.MaxValue - 1; // TODO test if - 1 necessary
+
+                foreach (MoveString move in possibleMoves)
+                {
+                    // Get State with move
+                    StringState moveState = TypeConverter.DeepCloneState(state);
+
+                    bestValue = Math.Min(bestValue, AlphaBeta(depth - 1, moveState, GetOpponent(player), alpha, beta));
+
+                    beta = Math.Min(beta, bestValue);
+                    if (beta <= alpha)
+                    {
+                        return bestValue;
+                    }
+                }
+            }
+
+            return 0; // TODO better solution?
+        }
+
+ 
+        private static int Evaluate(StringState state, Player player)
+        {
+            Player? winner = WinDetection.CheckWinner(state);
+
+            // If Player Win
+            if (winner == player)
+            {
+                return int.MaxValue;
+            }
+
+            // If oppenent wins
+            if (winner == GetOpponent(player))
+            {
+                return int.MinValue;
+            }
+
+            // If no winner and depth is reached
+            return CalcStateRating(state, player) - CalcStateRating(state, GetOpponent(player));
+
+            // TODO optimize : alles zusammen: in einer reihe zählen, nicht extra win
+        }
+
     }
 
 }
