@@ -13,11 +13,10 @@ public class TokenButtonController : MonoBehaviour {
     public Button[] TokenButtons;
     public GameObject[] TokenPrefabs;
 
-    // TODO use list instead of array?!
-
     void OnEnable()
     {
-        // Iterate Buttons / Prefabs
+        // Iterate Buttons / Prefabs 
+        // (traditionel for to use the index)
         for (int i = 0; i < TokenButtons.Length; i++)
         {
             // Test if Token for the Button is Covered
@@ -28,7 +27,22 @@ public class TokenButtonController : MonoBehaviour {
             }
             else
             {
-                TokenButtons[i].interactable = true;
+                var colors = TokenButtons[i].colors;
+
+                // Test if token is on the peek of a field on the gamefield
+                if (GameControllerPrefab.TokenIsOnPeek(TokenPrefabs[i]))
+                {
+                    // use yellow color
+                    colors.normalColor = Color.yellow;
+                }
+                else
+                {
+                    // Token is not on the gamefield and can be used freely
+                    // use lower opacity to distinguish between selection
+                    colors.normalColor = new Color(1, 1, 1, 0.5f);
+                }                
+
+                TokenButtons[i].colors = colors;
             }
         }
     }

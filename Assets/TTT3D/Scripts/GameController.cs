@@ -85,6 +85,30 @@ public class GameController : MonoBehaviour {
         return res;
     }
 
+    // Return if the given token is on a peek of a field on the gamefield
+    // Needed for Button coloring in Token Button Controller
+    public bool TokenIsOnPeek(GameObject token)
+    {
+        bool res = false;
+        int index = 0;
+
+        // check all used GameField Fields till 
+        // Token found on Peek
+        // or detected that Token is covered 
+        while (!res && index < GameField.Count)
+        {
+            if (GameField.ElementAt(index).Value.Peek().name == token.name)
+            {
+                // Token is on peek
+                return true;
+            }
+
+            index++;
+        }
+
+        return res;
+    }
+
     // Return if the placement of a specific token on a specific field is possible
     public bool PlacementPossible(GameObject token, Field field)
     {      

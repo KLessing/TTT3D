@@ -1,4 +1,4 @@
-﻿namespace GG3DAI
+namespace GG3DAI
 {
     using System;
     using System.Collections.Generic;
@@ -482,7 +482,10 @@
         // instead of the prevention of the opponent win.
         // Expected: Move Large Circle 2 to Top Right Field (previous peek MediumCross1)
         // Previous Behaviour: Move Large Circle 2 to Top Middle Field
-        // Used ai depth: 3 (depth 1 works...)
+        // Used ai depth: 3 (depth 1 & 2 works...) !!!
+        // LX1   -   MX1 => LO2
+        // LX2  LO1  LO2 => -
+        // MO1   -    -
         private static StringState WinPriority()
         {
             StringState testState = new StringState();
