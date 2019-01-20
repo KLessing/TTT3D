@@ -16,12 +16,37 @@
 
         public static MoveString GetBestMove(StringState state, Player player)
         {
-            Debug.Log("-------------");
-            foreach (var field in state)
-            {
-                Debug.Log("field: " + field.Key);
-                Debug.Log("peek token: " + field.Value.Peek());
-            }
+
+            //// NICHT LÖSCHEN!!!!!!!!!!!!! AUSLAGERN!!!!!!!!!!!!!!!!!! BEWEIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            //// The Test state error (Top left wird erkannt aber kein Token verfügbar, obwohl beide RO umgesetzt werden könnten)
+            //// LargeCircle1 von middleLeft sollte umgesetzt werden
+            //StringState testState = new StringState();
+
+            //Stack<string> stringStack = new Stack<string>();
+            //stringStack.Push("MediumCross1");
+            //testState.Add(Field.TopLeft, stringStack);
+
+            //Stack<string> stringStack2 = new Stack<string>();            
+            //stringStack2.Push("LargeCross1");
+            //testState.Add(Field.Middle, stringStack2);
+
+            //Stack<string> stringStack3 = new Stack<string>();
+            //stringStack3.Push("LargeCross2");
+            //testState.Add(Field.TopRight, stringStack3);
+
+            //Stack<string> stringStack4 = new Stack<string>();
+            //stringStack4.Push("MediumCross2");
+            //stringStack4.Push("LargeCircle1");
+            //testState.Add(Field.MiddleLeft, stringStack4);
+
+            //Stack<string> stringStack5 = new Stack<string>();
+            //stringStack5.Push("LargeCircle2");
+            //testState.Add(Field.BottomLeft, stringStack5);
+
+            //Debug.Log("testState after init: ");
+            //DebugState(testState);
+
 
             // Execute the Alpha Beta Search with the appropriate params and return the Move String directly
             // start with current opponent because it will be switch after rating
@@ -109,7 +134,7 @@
                     {
                         //Debug.Log("bigger");
                         // Token is allowed
-                        allowedTokens.Add(token);  //!!! THIS LINE BREAKS EVERYTHING???!!!                        
+                        allowedTokens.Add(token);                      
                     }
                 }
 
@@ -139,6 +164,10 @@
         // (only has to check the peeks because the covered Tokens are ignored by GetAvailableTokensForGameState)
         private static StringState RemoveTokenFromGameState(StringState state, string token)
         {
+            //Debug.Log("---------------");
+            //Debug.Log("previous state");
+            //DebugState(state);
+
             // COPY the given state without reference
             StringState resultState = TypeConverter.DeepCloneState(state);
 
@@ -163,6 +192,14 @@
                 }
             }
 
+            // DER VORIGE REMOVTE KEY NOCH DA ABER KEIN VALUE => REFERENCE ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            //Debug.Log("removed Token: " + token);
+            //Debug.Log("result without token?");
+            //DebugState(resultState);
+            //Debug.Log("---------------");
+
+
             return resultState;
         }
 
@@ -176,16 +213,15 @@
         // @param b the beta rating for the oppenent move        
         private static MoveRating AlphaBetaSearch(MoveString move, StringState state, Player player, Player currentPlayer, int depth, int a, int b)
         {
-
             // Check the Rating for the state and return it if it has a result (win or recursion end)
             MoveRating? resultRating = GetStateRating(move, state, player, depth);
             if (resultRating.HasValue)
             {
-                Debug.Log("---------------");
-                Debug.Log("currentPlayer = " + currentPlayer);
-                Debug.Log("move field: " + move.Field);
-                Debug.Log("move token: " + move.Token);
-                Debug.Log("rating (not negated): " + resultRating.Value.Rating);
+                //Debug.Log("---------------");
+                //Debug.Log("currentPlayer = " + currentPlayer);
+                //Debug.Log("move field: " + move.Field);
+                //Debug.Log("move token: " + move.Token);
+                //Debug.Log("rating (not negated): " + resultRating.Value.Rating);
 
                 if (currentPlayer == player)
                 {
@@ -226,6 +262,8 @@
                     // Remove the token from the previous field (if already placed)
                     stateForToken = RemoveTokenFromGameState(stateForToken, token);
 
+                    // TODO DIRECT state for token with remove
+
                     // If the field already has a token
                     if (stateForToken.ContainsKey(field))
                     {
@@ -255,16 +293,28 @@
                     if ((currentPlayer == player && newRating.Rating > bestRating.Rating) ||
                         (currentPlayer != player && newRating.Rating < bestRating.Rating))
                     {
+                        Debug.Log("--------------------------------");
+                        Debug.Log("previous best rating: " + bestRating.Rating);
+                        Debug.Log("previous best move field: " + bestRating.Move.Field);
+                        Debug.Log("previous best move field: " + bestRating.Move.Token);
+
                         // update best if better
                         bestRating.Rating = newRating.Rating;
                         bestRating.Move = firstMove;
+
+                        Debug.Log("current best rating: " + bestRating.Rating);
+                        Debug.Log("current best move field: " + bestRating.Move.Field);
+                        Debug.Log("current best move field: " + bestRating.Move.Token);
                     }
 
                     // Alpha Beta special: just return if alpha beta are exceeded
                     if ((currentPlayer == player && bestRating.Rating >= b) ||
                         (currentPlayer != player && bestRating.Rating <= a))
                     {
+                        Debug.Log("-----------");
                         Debug.Log("alpha beta pruning!!!!!!!!!!");
+                        Debug.Log("a: " + a);
+                        Debug.Log("b: " + b);
                         return bestRating;
                     }
 
@@ -272,6 +322,8 @@
                     a = currentPlayer == player ? GetMax(a, bestRating.Rating) : a;
                     b = currentPlayer != player ? GetMin(b, bestRating.Rating) : b;
                 }
+
+
             }
 
             Debug.Log("-----------------");
@@ -282,6 +334,7 @@
 
             // Return the best found rating
             return bestRating;
+
         }
 
         // Get Rating
@@ -405,6 +458,17 @@
             }
 
             return rating;
+        }
+
+
+        private static void DebugState(StringState state)
+        {
+            Debug.Log("-------------");
+            foreach (var field in state)
+            {
+                Debug.Log("field: " + field.Key);
+                Debug.Log("peek token: " + field.Value.Peek());
+            }
         }
 
 

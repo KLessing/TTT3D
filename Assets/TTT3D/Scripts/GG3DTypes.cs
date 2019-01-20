@@ -11,7 +11,7 @@
     public enum TokenSize { Small, Medium, Large };
 
     // Typedef workaround for constants
-    public static class Constants { public const int AI_DEPTH = 2; };
+    public static class Constants { public const int AI_DEPTH = 3; };
 
     // Typedef workaround for a GameState with Tokens on Gamefield
     public class GameState : Dictionary<Field, Stack<GameObject>> {}

@@ -139,10 +139,24 @@ public class UserInterfaceController : MonoBehaviour {
                 // get the best AI move for current Player and GameState
                 MoveString moveString = AIController.GetBestMove(TypeConverter.ConvertState(GameControllerPrefab.GameField), CurrentPlayer);
 
-                Move move = MoveConverterPrefab.ConvertMove(moveString);
+                Debug.Log("movestring token in UI Interface: " + moveString.Token);
 
-                // Execute the best AI move in GameController
-                Winner = GameControllerPrefab.SetTokenOnField(move);
+                // did the ai calculate a move?
+                if (moveString.Token != null)
+                {
+                    Debug.Log("not empty????????????????????");
+
+                    Move move = MoveConverterPrefab.ConvertMove(moveString);
+
+                    // Execute the best AI move in GameController
+                    Winner = GameControllerPrefab.SetTokenOnField(move);
+                }
+                else
+                {
+                    // otherwise the player has won because no matter what the ai does the player wins
+                    Winner = GetNextPlayer(CurrentPlayer);
+                }
+                
             }
 
             // Continue when still no winner
