@@ -140,12 +140,12 @@ public class UserInterfaceController : MonoBehaviour {
                 MoveString moveString = AIController.GetBestMove(TypeConverter.ConvertState(GameControllerPrefab.GameField), CurrentPlayer);
 
                 Debug.Log("movestring token in UI Interface: " + moveString.Token);
+                Debug.Log("movestring field in UI Interface: " + moveString.Field);
 
                 // did the ai calculate a move?
                 if (moveString.Token != null)
                 {
-                    Debug.Log("not empty????????????????????");
-
+                    // Convert string to token
                     Move move = MoveConverterPrefab.ConvertMove(moveString);
 
                     // Execute the best AI move in GameController

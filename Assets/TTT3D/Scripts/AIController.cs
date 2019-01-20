@@ -16,41 +16,9 @@
 
         public static MoveString GetBestMove(StringState state, Player player)
         {
-
-            //// NICHT LÖSCHEN!!!!!!!!!!!!! AUSLAGERN!!!!!!!!!!!!!!!!!! BEWEIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-            //// The Test state error (Top left wird erkannt aber kein Token verfügbar, obwohl beide RO umgesetzt werden könnten)
-            //// LargeCircle1 von middleLeft sollte umgesetzt werden
-            //StringState testState = new StringState();
-
-            //Stack<string> stringStack = new Stack<string>();
-            //stringStack.Push("MediumCross1");
-            //testState.Add(Field.TopLeft, stringStack);
-
-            //Stack<string> stringStack2 = new Stack<string>();            
-            //stringStack2.Push("LargeCross1");
-            //testState.Add(Field.Middle, stringStack2);
-
-            //Stack<string> stringStack3 = new Stack<string>();
-            //stringStack3.Push("LargeCross2");
-            //testState.Add(Field.TopRight, stringStack3);
-
-            //Stack<string> stringStack4 = new Stack<string>();
-            //stringStack4.Push("MediumCross2");
-            //stringStack4.Push("LargeCircle1");
-            //testState.Add(Field.MiddleLeft, stringStack4);
-
-            //Stack<string> stringStack5 = new Stack<string>();
-            //stringStack5.Push("LargeCircle2");
-            //testState.Add(Field.BottomLeft, stringStack5);
-
-            //Debug.Log("testState after init: ");
-            //DebugState(testState);
-
-
             // Execute the Alpha Beta Search with the appropriate params and return the Move String directly
             // start with current opponent because it will be switch after rating
-            return AlphaBetaSearch(new MoveString(), state, player, GetOpponent(player), Constants.AI_DEPTH, int.MinValue, int.MaxValue).Move;
+            return AlphaBetaSearch(new MoveString(), WinPriority(), player, GetOpponent(player), Constants.AI_DEPTH, int.MinValue, int.MaxValue).Move;
         }
 
 
@@ -472,6 +440,79 @@
         }
 
 
+        /***** TEST CASES *****/
+
+        // The following functions serve as Test Cases for Special states
+        // Usement: call in first alpha beta call instead of param
+
+
+        // The User win is inevitable no matter which move the ai uses
+        // Expected: There will be no move result. 
+        //           The UI Controller shows player win announcment directly
+        // Previous Behaviour: Exception
+        private static StringState UserWinInevitable()
+        {
+            StringState testState = new StringState();
+
+            Stack<string> stringStack1 = new Stack<string>();
+            stringStack1.Push("MediumCross1");
+            testState.Add(Field.TopLeft, stringStack1);
+
+            Stack<string> stringStack2 = new Stack<string>();
+            stringStack2.Push("LargeCross1");
+            testState.Add(Field.Middle, stringStack2);
+
+            Stack<string> stringStack3 = new Stack<string>();
+            stringStack3.Push("LargeCross2");
+            testState.Add(Field.TopRight, stringStack3);
+
+            Stack<string> stringStack4 = new Stack<string>();
+            stringStack4.Push("MediumCross2");
+            stringStack4.Push("LargeCircle1");
+            testState.Add(Field.MiddleLeft, stringStack4);
+
+            Stack<string> stringStack5 = new Stack<string>();
+            stringStack5.Push("LargeCircle2");
+            testState.Add(Field.BottomLeft, stringStack5);
+
+            return testState;
+        }
+
+        // The ai is able to win with the next move and should prioritize this 
+        // instead of the prevention of the opponent win.
+        // Expected: Move Large Circle 2 to Top Right Field (previous peek MediumCross1)
+        // Previous Behaviour: Move Large Circle 2 to Top Middle Field
+        // Used ai depth: 3 (depth 1 works...)
+        private static StringState WinPriority()
+        {
+            StringState testState = new StringState();
+
+            Stack<string> stringStack1 = new Stack<string>();
+            stringStack1.Push("LargeCross1");
+            testState.Add(Field.TopLeft, stringStack1);
+
+            Stack<string> stringStack2 = new Stack<string>();
+            stringStack2.Push("LargeCross2");
+            testState.Add(Field.MiddleLeft, stringStack2);
+
+            Stack<string> stringStack3 = new Stack<string>();
+            stringStack3.Push("MediumCircle1");
+            testState.Add(Field.BottomLeft, stringStack3);
+
+            Stack<string> stringStack4 = new Stack<string>();            
+            stringStack4.Push("LargeCircle1");
+            testState.Add(Field.Middle, stringStack4);
+
+            Stack<string> stringStack5 = new Stack<string>();
+            stringStack5.Push("LargeCircle2");
+            testState.Add(Field.MiddleRight, stringStack5);
+
+            Stack<string> stringStack6 = new Stack<string>();
+            stringStack6.Push("MediumCross1");
+            testState.Add(Field.TopRight, stringStack6);
+
+            return testState;
+        }
     }
 
 }
