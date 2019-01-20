@@ -230,18 +230,19 @@ namespace GG3DAI
 
             foreach (MoveString move in possibleMoves)
             {
-                //Debug.Log("move token: " + move.Token);
-                //Debug.Log("move field: " + move.Field);
+                Debug.Log("----------");
+                Debug.Log("move token: " + move.Token);
+                Debug.Log("move field: " + move.Field);
 
                 StringState moveState = GetStateWithMove(state, move);
 
-                int value = AlphaBeta(depth - 1, moveState, GetOpponent(player), int.MinValue, int.MaxValue);
+                int value = AlphaBeta(depth - 1, moveState, player, int.MinValue, int.MaxValue);
 
-                //Debug.Log("value: " + value);
+                Debug.Log("value: " + value);
 
                 if (value >= bestValue)
                 {
-                    //Debug.Log("new best value");
+                    Debug.Log("new best value");
 
                     bestValue = value;
                     bestMove = move;
@@ -261,7 +262,10 @@ namespace GG3DAI
                 return res;                
             }
 
-            List<MoveString> possibleMoves = GetPossibleMoves(state, player);
+            // switch player after eval
+            player = GetOpponent(player);
+
+            List<MoveString> possibleMoves = GetPossibleMoves(state, player);            
 
             if (player == Constants.AI_PLAYER)
             {
@@ -272,7 +276,7 @@ namespace GG3DAI
                 {
                     StringState moveState = GetStateWithMove(state, move);
 
-                    bestValue = Math.Max(bestValue, AlphaBeta(depth - 1, moveState, GetOpponent(player), alpha, beta));
+                    bestValue = Math.Max(bestValue, AlphaBeta(depth - 1, moveState, player, alpha, beta));
 
                     alpha = Math.Max(alpha, bestValue);
                     if (beta <= alpha)
@@ -290,7 +294,7 @@ namespace GG3DAI
                 {
                     StringState moveState = GetStateWithMove(state, move);
 
-                    bestValue = Math.Min(bestValue, AlphaBeta(depth - 1, moveState, GetOpponent(player), alpha, beta));
+                    bestValue = Math.Min(bestValue, AlphaBeta(depth - 1, moveState, player, alpha, beta));
 
                     beta = Math.Min(beta, bestValue);
                     if (beta <= alpha)
@@ -300,7 +304,7 @@ namespace GG3DAI
                 }
             }
 
-            return 0; // TODO better solution?
+            return 0; // TODO REKURSION GIBT IMMER 0 ZURÜCK
         }
 
  

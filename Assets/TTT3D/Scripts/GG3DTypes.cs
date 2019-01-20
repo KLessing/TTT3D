@@ -13,7 +13,7 @@
     // Typedef workaround for constants
     public static class Constants {
         // The ai depth determines the count of calculated moves for the ai algrorithm
-        public const int AI_DEPTH = 1;
+        public const int AI_DEPTH = 3;
         // The player which is controlled by the ai for singlePlayer modus
         // (not yet fully implemented in current ui structure; 
         // only used in ai controller for now)
