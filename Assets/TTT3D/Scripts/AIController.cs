@@ -230,7 +230,7 @@ namespace GG3DAI
 
             foreach (MoveString move in possibleMoves)
             {
-                Debug.Log("----------");
+                Debug.Log("-------------------------------------------------------------------------");
                 Debug.Log("move token: " + move.Token);
                 Debug.Log("move field: " + move.Field);
 
@@ -238,12 +238,8 @@ namespace GG3DAI
 
                 int value = AlphaBeta(depth - 1, moveState, player, int.MinValue, int.MaxValue);
 
-                Debug.Log("value: " + value);
-
                 if (value >= bestValue)
                 {
-                    Debug.Log("new best value");
-
                     bestValue = value;
                     bestMove = move;
                 }
@@ -281,9 +277,11 @@ namespace GG3DAI
                     alpha = Math.Max(alpha, bestValue);
                     if (beta <= alpha)
                     {
-                        return bestValue;
+                        break;        
                     }
                 }
+
+                return bestValue;
             }
             else
             {
@@ -299,12 +297,12 @@ namespace GG3DAI
                     beta = Math.Min(beta, bestValue);
                     if (beta <= alpha)
                     {
-                        return bestValue;
+                        break;
                     }
                 }
-            }
 
-            return 0; // TODO REKURSION GIBT IMMER 0 ZURÜCK
+                return bestValue;
+            }
         }
 
  
@@ -315,15 +313,16 @@ namespace GG3DAI
             // If Player Win
             if (winner == player)
             {
-                //Debug.Log("checking player wins");
-                return int.MaxValue;
+                Debug.Log("checking player wins");
+                DebugState(state);
+                return 10000;
             }
 
             // If oppenent wins
             if (winner == GetOpponent(player))
             {
                 //Debug.Log("checking player looses");
-                return int.MinValue;
+                return -10000;
             }
 
             //Debug.Log("player Rating: " + CalcStateRating(state, player));
