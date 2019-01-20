@@ -18,7 +18,7 @@
         {
             // Execute the Alpha Beta Search with the appropriate params and return the Move String directly
             // start with current opponent because it will be switch after rating
-            return AlphaBetaSearch(new MoveString(), WinPriority(), player, GetOpponent(player), Constants.AI_DEPTH, int.MinValue, int.MaxValue).Move;
+            return AlphaBetaSearch(new MoveString(), state, player, GetOpponent(player), Constants.AI_DEPTH, int.MinValue, int.MaxValue).Move;
         }
 
 
