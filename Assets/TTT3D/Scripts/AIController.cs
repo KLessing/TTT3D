@@ -37,7 +37,7 @@ namespace GG3DAI
 
 
 
-        // Returns an Array of available player Tokens for the given Gamestate and Player
+        // Returns a List of available player Tokens for the given Gamestate and Player
         // = All Player Tokens including the Tokens on the Peek of the Fields
         // but without the covered Tokens
         private static List<string> GetAvailableTokensForGameState(StringState state, Player player)
@@ -74,15 +74,9 @@ namespace GG3DAI
                 }
             }
 
-            //Debug.Log("-------------");
-
-            //foreach (string token in availableTokens)
-            //{
-            //    Debug.Log("available token: " + token);
-            //}
-
             return availableTokens;
         }
+
 
         // Returns the allowed player Tokens for the given Gamestate on a specific Field on the GameField
         // = The Tokens that are allowed to be placed on the Field which have to be Bigger than the current highest Token on the Field
@@ -94,8 +88,6 @@ namespace GG3DAI
             // Is already a Token on the Field?
             if (state.ContainsKey(field))
             {
-                //Debug.Log("on field lvl"+Convert.ToInt32(state[field].Peek().tag));
-
                 // Iterate through available Tokens
                 foreach (string token in availableTokens)
                 {
@@ -108,15 +100,6 @@ namespace GG3DAI
                     }
                 }
 
-                //Debug.Log("-------------");
-
-                //Debug.Log("allowed on Field: " + field);
-
-                //foreach (string token in allowedTokens)
-                //{
-                //    Debug.Log("allowed token: " + token);
-                //}
-
             }
             else
             {
@@ -125,6 +108,31 @@ namespace GG3DAI
             }
 
             return allowedTokens;
+        }
+
+
+        // returns all possible moves for the player and the state
+        public static List<MoveString> GetPossibleMoves(StringState state, Player player)
+        {
+            List<MoveString> result = new List<MoveString>();
+
+            // Get all available tokens for the state
+            List<string> availableTokens = GetAvailableTokensForGameState(state, player);
+
+            // Iterate through all Fields of the Gamefield
+            foreach (Field field in Enum.GetValues(typeof(Field)))
+            {
+                // Get the allowed Tokens to place on this Field
+                List<string> allowedTokens = GetAllowedTokensForField(state, field, availableTokens);
+
+                // Iterate through all allowed Tokens for this Field
+                foreach (string token in allowedTokens)
+                {
+                    result.Add(new MoveString(token, field));
+                }
+            }
+
+            return result;
         }
 
 
@@ -174,6 +182,252 @@ namespace GG3DAI
         }
 
 
+        // Return a new state with the move on the state (with other reference)
+        public static StringState GetStateWithMove(StringState state, MoveString move)
+        {
+            // Deep clone previous state
+            StringState resultState = TypeConverter.DeepCloneState(state);
+
+            // Remove the token from the previous field (if already placed)
+            resultState = RemoveTokenFromGameState(resultState, move.Token);
+
+            // TODO DIRECT init of state with token remove function?
+
+            // If the field already has a token
+            if (resultState.ContainsKey(move.Field))
+            {
+                Stack<string> tokenStack = new Stack<string>(resultState[move.Field]);
+                tokenStack.Push(move.Token);
+
+                // Place the allowed Token above the old Token
+                resultState.Remove(move.Field);
+                resultState.Add(move.Field, tokenStack);
+            }
+            else
+            {
+                // Otherwise add the Field with a new Stack with the allowed Token
+                Stack<string> tokenStack = new Stack<string>();
+                tokenStack.Push(move.Token);
+                resultState.Add(move.Field, tokenStack);
+            }
+
+            return resultState;
+        }
+
+
+        /***** ALPHA BETA *****/
+
+        // iterates through all possible root moves
+        public static MoveString AlphaBetaRoot(int depth, StringState state, Player player)
+        {
+            // start with the lowest possible value
+            int bestValue = int.MinValue;
+            // the best move result
+            MoveString bestMove = new MoveString();
+
+            // get all first moves
+            List<MoveString> possibleMoves = GetPossibleMoves(state, player);
+
+            foreach (MoveString move in possibleMoves)
+            {
+                //Debug.Log("move token: " + move.Token);
+                //Debug.Log("move field: " + move.Field);
+
+                StringState moveState = GetStateWithMove(state, move);
+
+                int value = AlphaBeta(depth - 1, moveState, GetOpponent(player), int.MinValue, int.MaxValue);
+
+                //Debug.Log("value: " + value);
+
+                if (value >= bestValue)
+                {
+                    //Debug.Log("new best value");
+
+                    bestValue = value;
+                    bestMove = move;
+                }
+            }
+
+            return bestMove;
+        }
+
+
+        public static int AlphaBeta(int depth, StringState state, Player player, int alpha, int beta)
+        {
+            if (depth == 0)
+            {
+                int res = Evaluate(state, player);
+                //Debug.Log("eval res: " + res);
+                return res;                
+            }
+
+            List<MoveString> possibleMoves = GetPossibleMoves(state, player);
+
+            if (player == Constants.AI_PLAYER)
+            {
+                // start with lowest possible value
+                int bestValue = int.MinValue + 1; // TODO test if + 1 necessary
+
+                foreach (MoveString move in possibleMoves)
+                {
+                    StringState moveState = GetStateWithMove(state, move);
+
+                    bestValue = Math.Max(bestValue, AlphaBeta(depth - 1, moveState, GetOpponent(player), alpha, beta));
+
+                    alpha = Math.Max(alpha, bestValue);
+                    if (beta <= alpha)
+                    {
+                        return bestValue;
+                    }
+                }
+            }
+            else
+            {
+                // start with highest possible value
+                int bestValue = int.MaxValue - 1; // TODO test if - 1 necessary
+
+                foreach (MoveString move in possibleMoves)
+                {
+                    StringState moveState = GetStateWithMove(state, move);
+
+                    bestValue = Math.Min(bestValue, AlphaBeta(depth - 1, moveState, GetOpponent(player), alpha, beta));
+
+                    beta = Math.Min(beta, bestValue);
+                    if (beta <= alpha)
+                    {
+                        return bestValue;
+                    }
+                }
+            }
+
+            return 0; // TODO better solution?
+        }
+
+ 
+        private static int Evaluate(StringState state, Player player)
+        {
+            Player? winner = WinDetection.CheckWinner(state);
+
+            // If Player Win
+            if (winner == player)
+            {
+                //Debug.Log("checking player wins");
+                return int.MaxValue;
+            }
+
+            // If oppenent wins
+            if (winner == GetOpponent(player))
+            {
+                //Debug.Log("checking player looses");
+                return int.MinValue;
+            }
+
+            //Debug.Log("player Rating: " + CalcStateRating(state, player));
+            //Debug.Log("------");
+            //Debug.Log("opponent Rating: " + CalcStateRating(state, GetOpponent(player)));
+            //Debug.Log("------");
+
+            // If no winner and depth is reached
+            return CheckThrees(state, player) - CheckThrees(state, GetOpponent(player));
+
+            // TODO optimize : alles zusammen: in einer reihe zählen, nicht extra win
+        }
+
+
+        /***** DEBUG *****/
+
+        private static void DebugState(StringState state)
+        {
+            Debug.Log("-------------");
+            foreach (var field in state)
+            {
+                Debug.Log("field: " + field.Key);
+                Debug.Log("peek token: " + field.Value.Peek());
+            }
+        }
+
+
+        /***** TEST CASES *****/
+
+        // The following functions serves as Test Case for Special states
+        // Usement: call in first alpha beta call instead of param
+
+
+        // The User win is inevitable no matter which move the ai uses
+        // Expected: There will be no move result. 
+        //           The UI Controller shows player win announcment directly
+        // Previous Behaviour: Exception
+        private static StringState UserWinInevitable()
+        {
+            StringState testState = new StringState();
+
+            Stack<string> stringStack1 = new Stack<string>();
+            stringStack1.Push("MediumCross1");
+            testState.Add(Field.TopLeft, stringStack1);
+
+            Stack<string> stringStack2 = new Stack<string>();
+            stringStack2.Push("LargeCross1");
+            testState.Add(Field.Middle, stringStack2);
+
+            Stack<string> stringStack3 = new Stack<string>();
+            stringStack3.Push("LargeCross2");
+            testState.Add(Field.TopRight, stringStack3);
+
+            Stack<string> stringStack4 = new Stack<string>();
+            stringStack4.Push("MediumCross2");
+            stringStack4.Push("LargeCircle1");
+            testState.Add(Field.MiddleLeft, stringStack4);
+
+            Stack<string> stringStack5 = new Stack<string>();
+            stringStack5.Push("LargeCircle2");
+            testState.Add(Field.BottomLeft, stringStack5);
+
+            return testState;
+        }
+
+        // The ai is able to win with the next move and should prioritize this 
+        // instead of the prevention of the opponent win.
+        // Expected: Move Large Circle 2 to Top Right Field (previous peek MediumCross1)
+        // Previous Behaviour: Move Large Circle 2 to Top Middle Field
+        // Used ai depth: 3 (depth 1 & 2 works...) !!!
+        // LX1   -   MX1 => LO2
+        // LX2  LO1  LO2 => -
+        // MO1   -    -
+        private static StringState WinPriority()
+        {
+            StringState testState = new StringState();
+
+            Stack<string> stringStack1 = new Stack<string>();
+            stringStack1.Push("LargeCross1");
+            testState.Add(Field.TopLeft, stringStack1);
+
+            Stack<string> stringStack2 = new Stack<string>();
+            stringStack2.Push("LargeCross2");
+            testState.Add(Field.MiddleLeft, stringStack2);
+
+            Stack<string> stringStack3 = new Stack<string>();
+            stringStack3.Push("MediumCircle1");
+            testState.Add(Field.BottomLeft, stringStack3);
+
+            Stack<string> stringStack4 = new Stack<string>();
+            stringStack4.Push("LargeCircle1");
+            testState.Add(Field.Middle, stringStack4);
+
+            Stack<string> stringStack5 = new Stack<string>();
+            stringStack5.Push("LargeCircle2");
+            testState.Add(Field.MiddleRight, stringStack5);
+
+            Stack<string> stringStack6 = new Stack<string>();
+            stringStack6.Push("MediumCross1");
+            testState.Add(Field.TopRight, stringStack6);
+
+            return testState;
+        }
+
+
+        /***** First Implementation (CheckThrees is still in use but will be replaced for better evaluation *****/
+
+
         // The Alpha Beta Search Algorithm
         // @param state The state simulation of the current recursion call
         // @param player the AI Player for which the algorithm calculates the most valuable move
@@ -202,7 +456,7 @@ namespace GG3DAI
                     // return negative rating for opponent
                     return new MoveRating(move, -resultRating.Value.Rating);
                 }
-                
+
             }
 
             // switch player
@@ -433,228 +687,6 @@ namespace GG3DAI
             }
 
             return rating;
-        }
-
-
-        private static void DebugState(StringState state)
-        {
-            Debug.Log("-------------");
-            foreach (var field in state)
-            {
-                Debug.Log("field: " + field.Key);
-                Debug.Log("peek token: " + field.Value.Peek());
-            }
-        }
-
-
-        /***** TEST CASES *****/
-
-        // The following functions serve as Test Cases for Special states
-        // Usement: call in first alpha beta call instead of param
-
-
-        // The User win is inevitable no matter which move the ai uses
-        // Expected: There will be no move result. 
-        //           The UI Controller shows player win announcment directly
-        // Previous Behaviour: Exception
-        private static StringState UserWinInevitable()
-        {
-            StringState testState = new StringState();
-
-            Stack<string> stringStack1 = new Stack<string>();
-            stringStack1.Push("MediumCross1");
-            testState.Add(Field.TopLeft, stringStack1);
-
-            Stack<string> stringStack2 = new Stack<string>();
-            stringStack2.Push("LargeCross1");
-            testState.Add(Field.Middle, stringStack2);
-
-            Stack<string> stringStack3 = new Stack<string>();
-            stringStack3.Push("LargeCross2");
-            testState.Add(Field.TopRight, stringStack3);
-
-            Stack<string> stringStack4 = new Stack<string>();
-            stringStack4.Push("MediumCross2");
-            stringStack4.Push("LargeCircle1");
-            testState.Add(Field.MiddleLeft, stringStack4);
-
-            Stack<string> stringStack5 = new Stack<string>();
-            stringStack5.Push("LargeCircle2");
-            testState.Add(Field.BottomLeft, stringStack5);
-
-            return testState;
-        }
-
-        // The ai is able to win with the next move and should prioritize this 
-        // instead of the prevention of the opponent win.
-        // Expected: Move Large Circle 2 to Top Right Field (previous peek MediumCross1)
-        // Previous Behaviour: Move Large Circle 2 to Top Middle Field
-        // Used ai depth: 3 (depth 1 & 2 works...) !!!
-        // LX1   -   MX1 => LO2
-        // LX2  LO1  LO2 => -
-        // MO1   -    -
-        private static StringState WinPriority()
-        {
-            StringState testState = new StringState();
-
-            Stack<string> stringStack1 = new Stack<string>();
-            stringStack1.Push("LargeCross1");
-            testState.Add(Field.TopLeft, stringStack1);
-
-            Stack<string> stringStack2 = new Stack<string>();
-            stringStack2.Push("LargeCross2");
-            testState.Add(Field.MiddleLeft, stringStack2);
-
-            Stack<string> stringStack3 = new Stack<string>();
-            stringStack3.Push("MediumCircle1");
-            testState.Add(Field.BottomLeft, stringStack3);
-
-            Stack<string> stringStack4 = new Stack<string>();            
-            stringStack4.Push("LargeCircle1");
-            testState.Add(Field.Middle, stringStack4);
-
-            Stack<string> stringStack5 = new Stack<string>();
-            stringStack5.Push("LargeCircle2");
-            testState.Add(Field.MiddleRight, stringStack5);
-
-            Stack<string> stringStack6 = new Stack<string>();
-            stringStack6.Push("MediumCross1");
-            testState.Add(Field.TopRight, stringStack6);
-
-            return testState;
-        }
-
-
-        /***** NEW TRY *****/
-
-        // returns all possible moves for the player and the state
-        public static List<MoveString> GetPossibleMoves(StringState state, Player player)
-        {
-            List<MoveString> result = new List<MoveString>();
-
-            // Get all available tokens for the state
-            List<string> availableTokens = GetAvailableTokensForGameState(state, player);
-
-            // Iterate through all Fields of the Gamefield
-            foreach (Field field in Enum.GetValues(typeof(Field)))
-            {
-                // Get the allowed Tokens to place on this Field
-                List<string> allowedTokens = GetAllowedTokensForField(state, field, availableTokens);
-
-                // Iterate through all allowed Tokens for this Field
-                foreach (string token in allowedTokens)
-                {
-                    result.Add(new MoveString(token, field));
-                }
-            }
-
-            return result;
-        }
-
-
-        // iterates through all possible root moves
-        public static MoveString AlphaBetaRoot(int depth, StringState state, Player player)
-        {
-            // start with the lowest possible value
-            int bestValue = int.MinValue;
-            // the best move result
-            MoveString bestMove = new MoveString();
-
-            // get all first moves
-            List<MoveString> possibleMoves = GetPossibleMoves(state, player);
-
-            foreach (MoveString move in possibleMoves)
-            {
-                Debug.Log("move token: " + move.Token);
-                Debug.Log("move field: " + move.Field);
-
-                int value = AlphaBeta(depth - 1, state, GetOpponent(player), int.MinValue, int.MaxValue);
-
-                Debug.Log("value: " + value);
-
-                if (value >= bestValue)
-                {
-                    Debug.Log("new best value");
-
-                    bestValue = value;
-                    bestMove = move;
-                }
-            }
-
-            return bestMove;
-        }
-
-
-        public static int AlphaBeta(int depth, StringState state, Player player, int alpha, int beta)
-        {
-            if (depth == 0)
-            {
-                return Evaluate(state, player);
-            }
-
-            List<MoveString> possibleMoves = GetPossibleMoves(state, player);
-
-            if (player == Constants.AI_PLAYER)
-            {
-                int bestValue = int.MinValue + 1; // TODO test if + 1 necessary
-
-                foreach (MoveString move in possibleMoves)
-                {
-                    // Get State with move
-                    StringState moveState = TypeConverter.DeepCloneState(state);
-
-                    bestValue = Math.Max(bestValue, AlphaBeta(depth - 1, moveState, GetOpponent(player), alpha, beta));
-
-                    alpha = Math.Max(alpha, bestValue);
-                    if (beta <= alpha)
-                    {
-                        return bestValue;
-                    }
-                }
-            }
-            else
-            {
-                int bestValue = int.MaxValue - 1; // TODO test if - 1 necessary
-
-                foreach (MoveString move in possibleMoves)
-                {
-                    // Get State with move
-                    StringState moveState = TypeConverter.DeepCloneState(state);
-
-                    bestValue = Math.Min(bestValue, AlphaBeta(depth - 1, moveState, GetOpponent(player), alpha, beta));
-
-                    beta = Math.Min(beta, bestValue);
-                    if (beta <= alpha)
-                    {
-                        return bestValue;
-                    }
-                }
-            }
-
-            return 0; // TODO better solution?
-        }
-
- 
-        private static int Evaluate(StringState state, Player player)
-        {
-            Player? winner = WinDetection.CheckWinner(state);
-
-            // If Player Win
-            if (winner == player)
-            {
-                return int.MaxValue;
-            }
-
-            // If oppenent wins
-            if (winner == GetOpponent(player))
-            {
-                return int.MinValue;
-            }
-
-            // If no winner and depth is reached
-            return CalcStateRating(state, player) - CalcStateRating(state, GetOpponent(player));
-
-            // TODO optimize : alles zusammen: in einer reihe zählen, nicht extra win
         }
 
     }
