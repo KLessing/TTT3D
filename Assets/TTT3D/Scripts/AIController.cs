@@ -296,45 +296,56 @@ namespace GG3DAI
             // Check Horizontal
             for (fieldIndex = 0; fieldIndex < 8; fieldIndex += 3)
             {
-                res += EvaluateThreeFields(state, player, (Field)fieldIndex, (Field)fieldIndex + 1, (Field)fieldIndex + 2);
+                res += EvaluateThreeFields(state, player, new Field[] { (Field)fieldIndex, (Field)fieldIndex + 1, (Field)fieldIndex + 2 });
             }
 
             // Check Vertical
             for (fieldIndex = 0; fieldIndex < 3; fieldIndex++)
             {
-                res += EvaluateThreeFields(state, player, (Field)fieldIndex, (Field)fieldIndex + 3, (Field)fieldIndex + 6);
+                res += EvaluateThreeFields(state, player, new Field[] { (Field)fieldIndex, (Field)fieldIndex + 3, (Field)fieldIndex + 6 });
             }
 
             // Check Diagonal
-            res += EvaluateThreeFields(state, player, Field.TopLeft, Field.Middle, Field.BottomRight);
-            res += EvaluateThreeFields(state, player, Field.TopRight, Field.Middle, Field.BottomLeft);
+            res += EvaluateThreeFields(state, player, new Field[] { Field.TopLeft, Field.Middle, Field.BottomRight });
+            res += EvaluateThreeFields(state, player, new Field[] { Field.TopRight, Field.Middle, Field.BottomLeft });
 
             return res;
         }
 
         // Returns the evaluation value for three Fields on the given State for the given Player        
-        private static int EvaluateThreeFields(StringState state, Player player, Field firstField, Field secondField, Field thirdField)
+        private static int EvaluateThreeFields(StringState state, Player player, Field[] fields) // array for iteration
         {
             int res = 0;
             // Count of the tokens of the player
-            int tokenCounter = 0;
-            
-            // Get The tokens or empty string for the fields
-            string firstToken = state.ContainsKey(firstField) ? state[firstField].Peek() : "";
-            string secondToken = state.ContainsKey(secondField) ? state[secondField].Peek() : "";
-            string thirdToken = state.ContainsKey(thirdField) ? state[thirdField].Peek() : "";
+            int playerTokenCounter = 0;
+            int opponentTokenCounter = 0;
 
-            
-            // Evaluate the tokens on the field
-            res += EvaluateToken(player, firstToken);
-            res += EvaluateToken(player, secondToken);
-            res += EvaluateToken(player, thirdToken);
+            int currentValue = 0;
 
+            foreach (Field field in fields)
+            {
+                string tokenString = state.ContainsKey(field) ? state[field].Peek() : "";
 
-            // TODO multiple fro two tokens on the field
-            // (3 tokens the game would already been won because the winning check is before the eval)
-
-
+                // Evaluate the tokens on the field
+                currentValue = EvaluateToken(player, tokenString);
+                // the result is positive for player token
+                if (currentValue > 0)
+                {
+                    // inc player counter
+                    playerTokenCounter++;
+                    res += currentValue * (playerTokenCounter + 1);
+                }
+                // the result is negative for opponent token
+                else if (currentValue < 0)
+                {
+                    // inc opponent counter
+                    opponentTokenCounter++;
+                    // add current Value * opponent counter
+                    res += currentValue * (opponentTokenCounter + 1);
+                }
+                // Otherwise no change of res
+            }
+           
             return res;
         }
 
