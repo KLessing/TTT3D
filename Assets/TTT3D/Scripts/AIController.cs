@@ -20,7 +20,7 @@ namespace GG3DAI
             // start with current opponent because it will be switch after rating
             //return AlphaBetaSearch(new MoveString(), WinPriority(), player, GetOpponent(player), Constants.AI_DEPTH, int.MinValue, int.MaxValue).Move;
 
-            return AlphaBetaRoot(Constants.AI_DEPTH, WinPriority(), player);
+            return AlphaBetaRoot(Constants.AI_DEPTH, state, player);
         }
 
 
@@ -251,11 +251,23 @@ namespace GG3DAI
 
         public static int AlphaBeta(int depth, StringState state, Player player, int alpha, int beta)
         {
+            // not necessary to look any further if win or loose
+            // the earlier the better
+            Player? winner = WinDetection.CheckWinner(state);
+
+            if (winner == Constants.AI_PLAYER)
+            {
+                return 1000 * (Constants.AI_DEPTH + 1);
+            }
+            if (winner == GetOpponent(Constants.AI_PLAYER))
+            {
+                return -1000 * (Constants.AI_DEPTH + 1);
+            }
+
+            // eval if leaf
             if (depth == 0)
             {
-                int res = Evaluate(state, player);
-                //Debug.Log("eval res: " + res);
-                return res;                
+                return Evaluate(state, player);             
             }
 
             // switch player after eval
@@ -305,35 +317,13 @@ namespace GG3DAI
             }
         }
 
- 
+        
         private static int Evaluate(StringState state, Player player)
-        {
-            Player? winner = WinDetection.CheckWinner(state);
-
-            // If Player Win
-            if (winner == player)
-            {
-                Debug.Log("checking player wins");
-                DebugState(state);
-                return 10000;
-            }
-
-            // If oppenent wins
-            if (winner == GetOpponent(player))
-            {
-                //Debug.Log("checking player looses");
-                return -10000;
-            }
-
-            //Debug.Log("player Rating: " + CalcStateRating(state, player));
-            //Debug.Log("------");
-            //Debug.Log("opponent Rating: " + CalcStateRating(state, GetOpponent(player)));
-            //Debug.Log("------");
-
+        {            
             // If no winner and depth is reached
             return CheckThrees(state, player) - CheckThrees(state, GetOpponent(player));
 
-            // TODO optimize : alles zusammen: in einer reihe zählen, nicht extra win
+            // TODO optimize : alles zusammen: in einer reihe zählen, nicht extra win (wurde schon vorher überprüft)
         }
 
 
