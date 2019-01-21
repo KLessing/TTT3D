@@ -234,7 +234,7 @@ namespace GG3DAI
             // eval if leaf
             if (depth == 0)
             {
-                return Evaluate(state, player);             
+                return EvaluateState(state, player);
             }
 
             // Switch player after win detection
@@ -287,12 +287,6 @@ namespace GG3DAI
         }
 
         
-        private static int Evaluate(StringState state, Player player)
-        {            
-            // If no winner and depth is reached
-            return EvaluateState(state, player) - EvaluateState(state, TypeConverter.GetOpponent(player));
-        }
-
         // Evaluate the given State for the given Player
         private static int EvaluateState(StringState state, Player player)
         {
@@ -322,17 +316,44 @@ namespace GG3DAI
         private static int EvaluateThreeFields(StringState state, Player player, Field firstField, Field secondField, Field thirdField)
         {
             int res = 0;
+            // Count of the tokens of the player
+            int tokenCounter = 0;
+            
+            // Get The tokens or empty string for the fields
+            string firstToken = state.ContainsKey(firstField) ? state[firstField].Peek() : "";
+            string secondToken = state.ContainsKey(secondField) ? state[secondField].Peek() : "";
+            string thirdToken = state.ContainsKey(thirdField) ? state[thirdField].Peek() : "";
 
-            // Check if Field is empty or Field has token of the Player on the peek
-            // (Direct check for != opponent not possible because we first need to check if field is available)
-            if ((!state.ContainsKey(firstField) ||
-                state.ContainsKey(firstField) && TypeConverter.GetPlayerForTokenName(state[firstField].Peek()) == player) &&
-                (!state.ContainsKey(secondField) ||
-                state.ContainsKey(secondField) && TypeConverter.GetPlayerForTokenName(state[secondField].Peek()) == player) &&
-                (!state.ContainsKey(thirdField) ||
-                state.ContainsKey(thirdField) && TypeConverter.GetPlayerForTokenName(state[thirdField].Peek()) == player))
-            {
-                res++;
+            
+            // Evaluate the tokens on the field
+            res += EvaluateToken(player, firstToken);
+            res += EvaluateToken(player, secondToken);
+            res += EvaluateToken(player, thirdToken);
+
+
+            // TODO multiple fro two tokens on the field
+            // (3 tokens the game would already been won because the winning check is before the eval)
+
+
+            return res;
+        }
+
+        private static int EvaluateToken(Player player, string tokenString)
+        {
+            int res = 0;
+
+            // is there a token on the field? (otherwise the value is 0)
+            if (tokenString != "")
+            {               
+                // Get the value for the token (currently 1 - 3 for small - large)
+                res = TypeConverter.GetValueForTokenName(tokenString);
+
+                // is the token from the opponent?
+                if (TypeConverter.GetPlayerForTokenName(tokenString) != player)
+                {
+                    // invert the value
+                    res *= -1;
+                }
             }
 
             return res;
