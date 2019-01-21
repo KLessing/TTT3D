@@ -238,6 +238,8 @@ namespace GG3DAI
 
                 int value = AlphaBeta(depth - 1, moveState, player, int.MinValue, int.MaxValue);
 
+                Debug.Log("value: " + value);
+
                 if (value >= bestValue)
                 {
                     bestValue = value;
@@ -289,7 +291,7 @@ namespace GG3DAI
                     alpha = Math.Max(alpha, bestValue);
                     if (beta <= alpha)
                     {
-                        break;        
+                        return bestValue;
                     }
                 }
 
@@ -309,7 +311,7 @@ namespace GG3DAI
                     beta = Math.Min(beta, bestValue);
                     if (beta <= alpha)
                     {
-                        break;
+                        return bestValue;
                     }
                 }
 

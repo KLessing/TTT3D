@@ -43,6 +43,7 @@ public class TokenButtonController : MonoBehaviour {
                 }                
 
                 TokenButtons[i].colors = colors;
+                TokenButtons[i].interactable = true;
             }
         }
     }
