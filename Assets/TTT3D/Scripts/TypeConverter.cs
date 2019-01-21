@@ -58,6 +58,12 @@
             return stringState;
         }
 
+        // Returns the opponent of the given player (the other player)
+        public static Player GetOpponent(Player player)
+        {
+            return player == Player.Cross ? Player.Circle : Player.Cross;
+        }
+
         // Returns the Player enum for the given tokenName
         public static Player GetPlayerForTokenName(string tokenName)
         {

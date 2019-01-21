@@ -16,26 +16,10 @@ namespace GG3DAI
 
         public static MoveString GetBestMove(StringState state, Player player)
         {
-            // Execute the Alpha Beta Search with the appropriate params and return the Move String directly
-            // start with current opponent because it will be switch after rating
-            //return AlphaBetaSearch(new MoveString(), WinPriority(), player, GetOpponent(player), Constants.AI_DEPTH, int.MinValue, int.MaxValue).Move;
-
+            // Execute the Alpha Beta Search with the appropriate params and return the best move directly as a MoveString
             return AlphaBetaRoot(Constants.AI_DEPTH, state, player);
         }
-
-
-        /***** Helper Functions *****/
-
-        private static Player GetOpponent(Player player)
-        {
-            return player == Player.Cross ? Player.Circle : Player.Cross;
-        }
-
-        private static int GetMax(int a, int b) { return a >= b ? a : b; }
-
-        private static int GetMin(int a, int b) { return a <= b ? a : b; }
-
-
+        
 
         // Returns a List of available player Tokens for the given Gamestate and Player
         // = All Player Tokens including the Tokens on the Peek of the Fields
@@ -99,7 +83,6 @@ namespace GG3DAI
                         allowedTokens.Add(token);                      
                     }
                 }
-
             }
             else
             {
@@ -142,10 +125,6 @@ namespace GG3DAI
         // (only has to check the peeks because the covered Tokens are ignored by GetAvailableTokensForGameState)
         private static StringState RemoveTokenFromGameState(StringState state, string token)
         {
-            //Debug.Log("---------------");
-            //Debug.Log("previous state");
-            //DebugState(state);
-
             // COPY the given state without reference
             StringState resultState = TypeConverter.DeepCloneState(state);
 
@@ -169,14 +148,6 @@ namespace GG3DAI
                     }
                 }
             }
-
-            // DER VORIGE REMOVTE KEY NOCH DA ABER KEIN VALUE => REFERENCE ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-            //Debug.Log("removed Token: " + token);
-            //Debug.Log("result without token?");
-            //DebugState(resultState);
-            //Debug.Log("---------------");
-
 
             return resultState;
         }
@@ -230,15 +201,9 @@ namespace GG3DAI
 
             foreach (MoveString move in possibleMoves)
             {
-                Debug.Log("-------------------------------------------------------------------------");
-                Debug.Log("move token: " + move.Token);
-                Debug.Log("move field: " + move.Field);
-
                 StringState moveState = GetStateWithMove(state, move);
 
                 int value = AlphaBeta(depth - 1, moveState, player, int.MinValue, int.MaxValue);
-
-                Debug.Log("value: " + value);
 
                 if (value >= bestValue)
                 {
@@ -261,7 +226,7 @@ namespace GG3DAI
             {
                 return 1000 * (Constants.AI_DEPTH + 1);
             }
-            if (winner == GetOpponent(Constants.AI_PLAYER))
+            if (winner == TypeConverter.GetOpponent(Constants.AI_PLAYER))
             {
                 return -1000 * (Constants.AI_DEPTH + 1);
             }
@@ -272,8 +237,10 @@ namespace GG3DAI
                 return Evaluate(state, player);             
             }
 
-            // switch player after eval
-            player = GetOpponent(player);
+            // Switch player after win detection
+            // after evaluation this won't be necessary anymore
+            // but eval has to be calculated for the previous player
+            player = TypeConverter.GetOpponent(player);
 
             List<MoveString> possibleMoves = GetPossibleMoves(state, player);            
 
@@ -323,9 +290,52 @@ namespace GG3DAI
         private static int Evaluate(StringState state, Player player)
         {            
             // If no winner and depth is reached
-            return CheckThrees(state, player) - CheckThrees(state, GetOpponent(player));
+            return EvaluateState(state, player) - EvaluateState(state, TypeConverter.GetOpponent(player));
+        }
 
-            // TODO optimize : alles zusammen: in einer reihe zählen, nicht extra win (wurde schon vorher überprüft)
+        // Evaluate the given State for the given Player
+        private static int EvaluateState(StringState state, Player player)
+        {
+            int res = 0;
+            int fieldIndex = 0;
+
+            // Check Horizontal
+            for (fieldIndex = 0; fieldIndex < 8; fieldIndex += 3)
+            {
+                res += EvaluateThreeFields(state, player, (Field)fieldIndex, (Field)fieldIndex + 1, (Field)fieldIndex + 2);
+            }
+
+            // Check Vertical
+            for (fieldIndex = 0; fieldIndex < 3; fieldIndex++)
+            {
+                res += EvaluateThreeFields(state, player, (Field)fieldIndex, (Field)fieldIndex + 3, (Field)fieldIndex + 6);
+            }
+
+            // Check Diagonal
+            res += EvaluateThreeFields(state, player, Field.TopLeft, Field.Middle, Field.BottomRight);
+            res += EvaluateThreeFields(state, player, Field.TopRight, Field.Middle, Field.BottomLeft);
+
+            return res;
+        }
+
+        // Returns the evaluation value for three Fields on the given State for the given Player        
+        private static int EvaluateThreeFields(StringState state, Player player, Field firstField, Field secondField, Field thirdField)
+        {
+            int res = 0;
+
+            // Check if Field is empty or Field has token of the Player on the peek
+            // (Direct check for != opponent not possible because we first need to check if field is available)
+            if ((!state.ContainsKey(firstField) ||
+                state.ContainsKey(firstField) && TypeConverter.GetPlayerForTokenName(state[firstField].Peek()) == player) &&
+                (!state.ContainsKey(secondField) ||
+                state.ContainsKey(secondField) && TypeConverter.GetPlayerForTokenName(state[secondField].Peek()) == player) &&
+                (!state.ContainsKey(thirdField) ||
+                state.ContainsKey(thirdField) && TypeConverter.GetPlayerForTokenName(state[thirdField].Peek()) == player))
+            {
+                res++;
+            }
+
+            return res;
         }
 
 
@@ -333,12 +343,17 @@ namespace GG3DAI
 
         private static void DebugState(StringState state)
         {
-            Debug.Log("-------------");
             foreach (var field in state)
             {
                 Debug.Log("field: " + field.Key);
                 Debug.Log("peek token: " + field.Value.Peek());
             }
+        }
+
+        private static void DebugMove(MoveString move)
+        {
+            Debug.Log("field: " + move.Field);
+            Debug.Log("token: " + move.Token);
         }
 
 
@@ -417,271 +432,6 @@ namespace GG3DAI
             testState.Add(Field.TopRight, stringStack6);
 
             return testState;
-        }
-
-
-        /***** First Implementation (CheckThrees is still in use but will be replaced for better evaluation *****/
-
-
-        // The Alpha Beta Search Algorithm
-        // @param state The state simulation of the current recursion call
-        // @param player the AI Player for which the algorithm calculates the most valuable move
-        // @param currentPlayer the current Player of the current recursion call
-        // @param depth the current recursion depth
-        // @param a the alpha rating for the ai move
-        // @param b the beta rating for the oppenent move        
-        private static MoveRating AlphaBetaSearch(MoveString move, StringState state, Player player, Player currentPlayer, int depth, int a, int b)
-        {
-            // Check the Rating for the state and return it if it has a result (win or recursion end)
-            MoveRating? resultRating = GetStateRating(move, state, player, depth);
-            if (resultRating.HasValue)
-            {
-                //Debug.Log("---------------");
-                //Debug.Log("currentPlayer = " + currentPlayer);
-                //Debug.Log("move field: " + move.Field);
-                //Debug.Log("move token: " + move.Token);
-                //Debug.Log("rating (not negated): " + resultRating.Value.Rating);
-
-                if (currentPlayer == player)
-                {
-                    return resultRating.Value;
-                }
-                else
-                {
-                    // return negative rating for opponent
-                    return new MoveRating(move, -resultRating.Value.Rating);
-                }
-
-            }
-
-            // switch player
-            currentPlayer = GetOpponent(currentPlayer);
-
-
-            // Get all available tokens for the state
-            List<string> availableTokens = GetAvailableTokensForGameState(state, currentPlayer);
-
-            // Start with the lowest possible values and no move
-            MoveRating bestRating = new MoveRating(new MoveString(), currentPlayer == player ? int.MinValue : int.MaxValue);
-
-            // Iterate through all Fields of the Gamefield
-            foreach (Field field in Enum.GetValues(typeof(Field)))
-            {
-                // Get the allowed Tokens to place on this Field
-                List<string> allowedTokens = GetAllowedTokensForField(state, field, availableTokens);
-
-                // Iterate through all allowed Tokens for this Field
-                foreach (string token in allowedTokens)
-                {
-                    // COPY current state without reference
-                    StringState stateForToken = TypeConverter.DeepCloneState(state);
-
-                    // Simulate a new state with the allowed token on the current Field:
-
-                    // Remove the token from the previous field (if already placed)
-                    stateForToken = RemoveTokenFromGameState(stateForToken, token);
-
-                    // TODO DIRECT state for token with remove
-
-                    // If the field already has a token
-                    if (stateForToken.ContainsKey(field))
-                    {
-                        Stack<string> tokenStack = new Stack<string>(stateForToken[field]);
-                        tokenStack.Push(token);
-
-                        // Place the allowed Token above the old Token
-                        stateForToken.Remove(field);
-                        stateForToken.Add(field, tokenStack);
-                    }
-                    else
-                    {
-                        // Otherwise add the Field with a new Stack with the allowed Token
-                        Stack<string> tokenStack = new Stack<string>();
-                        tokenStack.Push(token);
-                        stateForToken.Add(field, tokenStack);
-                    }
-
-                    // only use the move for the first function call (otherwise passed on move param which was the first)
-                    // Note: the state will be updated by the new move but we only need the first move for the end result
-                    MoveString firstMove = depth == Constants.AI_DEPTH ? new MoveString(token, field) : move;
-
-                    // Next recursion call
-                    MoveRating newRating = AlphaBetaSearch(firstMove, stateForToken, player, currentPlayer, depth - 1, a, b);
-
-                    // Compare with current best rating
-                    if ((currentPlayer == player && newRating.Rating >= bestRating.Rating) ||
-                        (currentPlayer != player && newRating.Rating <= bestRating.Rating))
-                    {
-                        Debug.Log("--------------------------------");
-                        Debug.Log("previous best rating: " + bestRating.Rating);
-                        Debug.Log("previous best move field: " + bestRating.Move.Field);
-                        Debug.Log("previous best move field: " + bestRating.Move.Token);
-
-                        // update best if better
-                        bestRating.Rating = newRating.Rating;
-                        bestRating.Move = firstMove;
-
-                        Debug.Log("current best rating: " + bestRating.Rating);
-                        Debug.Log("current best move field: " + bestRating.Move.Field);
-                        Debug.Log("current best move field: " + bestRating.Move.Token);
-                    }
-
-                    //// Alpha Beta special: just return if alpha beta are exceeded
-                    //if ((currentPlayer == player && bestRating.Rating >= b) ||
-                    //    (currentPlayer != player && bestRating.Rating <= a))
-                    //{
-                    //    Debug.Log("-----------");
-                    //    Debug.Log("alpha beta pruning!!!!!!!!!!");
-                    //    Debug.Log("a: " + a);
-                    //    Debug.Log("b: " + b);
-                    //    return bestRating;
-                    //}
-
-                    // Update alpha beta values (dependent on the player and if the new value is higher / lower)
-                    a = currentPlayer == player ? GetMax(a, bestRating.Rating) : a;
-                    b = currentPlayer != player ? GetMin(b, bestRating.Rating) : b;
-
-                    if (b <= a)
-                    {
-                        return bestRating;
-                    }
-                }
-
-
-            }
-
-            Debug.Log("-----------------");
-            Debug.Log("bestRating: " + bestRating.Rating);
-            Debug.Log("bestRating move token: " + bestRating.Move.Token);
-            Debug.Log("bestRating move field: " + bestRating.Move.Field.ToString());
-            Debug.Log("-----------------");
-
-            // Return the best found rating
-            return bestRating;
-
-        }
-
-        // Get Rating
-        // needs to returnoptional value to distinguish between calced value and not?
-        // TOCHECK: 0 RESULT POSSIBLE? => use int result instead of unnecessary MoveRating
-        private static MoveRating? GetStateRating(MoveString move, StringState state, Player player, int depth)
-        {
-            Player? winner = WinDetection.CheckWinner(state);
-
-            // If Player Win
-            if (winner == player)
-            {
-                Debug.Log("checking player wins");
-                Debug.Log("token: " + move.Token);
-                Debug.Log("field: " + move.Field);
-                return new MoveRating(move, int.MaxValue);
-            }
-
-            // If oppenent wins
-            if (winner == GetOpponent(player))
-            {
-                Debug.Log("checking player looses");
-                Debug.Log("token: " + move.Token);
-                Debug.Log("field: " + move.Field);
-                return new MoveRating(move, int.MinValue);
-            }
-
-            // If no winner and depth is reached
-            if (depth <= 0)
-            {
-                //Debug.Log("-----------------");
-                //Debug.Log("move token: " + move.Token.name);
-                //Debug.Log("move field: " + move.Field.ToString());
-                //Debug.Log("player Rating: " + CalcStateRating(state, player));
-                //Debug.Log("------");
-                //Debug.Log("opponent Rating: " + CalcStateRating(state, GetOpponent(player)));
-                //Debug.Log("------");
-
-                return new MoveRating(move, CalcStateRating(state, player) - CalcStateRating(state, GetOpponent(player)));
-            }
-
-            // Otherwise if no termination return null
-            return null;
-        }
-
-        // Calc Rating
-        private static int CalcStateRating(StringState state, Player player)
-        {
-            // Easy Solution for testing for now: check how many wins are possible for 3 in a rows
-            return CheckThrees(state, player);
-
-            // TODO MORE CHECKS!!!
-        }
-
-
-        // Count the GameField for Three same tokens in a Row
-        private static int CheckThrees(StringState GameField, Player player)
-        {
-            int rating = 0;
-            int fieldIndex = 0;
-            Player? winner = null;
-
-            // Check Horizontal
-            while (winner == null && fieldIndex < 8)
-            {
-                if ((!GameField.ContainsKey((Field)fieldIndex) ||
-                     GameField.ContainsKey((Field)fieldIndex) && TypeConverter.GetPlayerForTokenName(GameField[(Field)fieldIndex].Peek()) == player) &&
-                    (!GameField.ContainsKey((Field)fieldIndex + 1) ||
-                     GameField.ContainsKey((Field)fieldIndex + 1) && TypeConverter.GetPlayerForTokenName(GameField[(Field)fieldIndex + 1].Peek()) == player) &&
-                    (!GameField.ContainsKey((Field)fieldIndex + 2) ||
-                     GameField.ContainsKey((Field)fieldIndex + 2) && TypeConverter.GetPlayerForTokenName(GameField[(Field)fieldIndex + 2].Peek()) == player))
-                {
-                    //Debug.Log("horizontal with fieldIndex " + fieldIndex);
-                    rating++;
-                }
-
-                fieldIndex += 3;
-            }
-
-            fieldIndex = 0;
-
-            // Check Vertical
-            while (winner == null && fieldIndex < 3)
-            {
-                if ((!GameField.ContainsKey((Field)fieldIndex) ||
-                     GameField.ContainsKey((Field)fieldIndex) && TypeConverter.GetPlayerForTokenName(GameField[(Field)fieldIndex].Peek()) == player) &&
-                    (!GameField.ContainsKey((Field)fieldIndex + 3) ||
-                     GameField.ContainsKey((Field)fieldIndex + 3) && TypeConverter.GetPlayerForTokenName(GameField[(Field)fieldIndex + 3].Peek()) == player) &&
-                    (!GameField.ContainsKey((Field)fieldIndex + 6) ||
-                     GameField.ContainsKey((Field)fieldIndex + 6) && TypeConverter.GetPlayerForTokenName(GameField[(Field)fieldIndex + 6].Peek()) == player))
-                {
-                    //Debug.Log("vertical with fieldIndex " + fieldIndex);
-                    rating++;
-                }
-
-                fieldIndex++;
-            }
-
-            // Check Diagonal
-            if ((!GameField.ContainsKey(Field.TopLeft) ||
-                 GameField.ContainsKey(Field.TopLeft) && TypeConverter.GetPlayerForTokenName(GameField[Field.TopLeft].Peek()) == player) &&
-                (!GameField.ContainsKey(Field.Middle) ||
-                 GameField.ContainsKey(Field.Middle) && TypeConverter.GetPlayerForTokenName(GameField[Field.Middle].Peek()) == player) &&
-                (!GameField.ContainsKey(Field.BottomRight) ||
-                 GameField.ContainsKey(Field.BottomRight) && TypeConverter.GetPlayerForTokenName(GameField[Field.BottomRight].Peek()) == player))
-            {
-                //Debug.Log("diagonal top left");
-                rating++;
-            }
-
-
-            if ((!GameField.ContainsKey(Field.TopRight) ||
-                GameField.ContainsKey(Field.TopRight) && TypeConverter.GetPlayerForTokenName(GameField[Field.TopRight].Peek()) == player) &&
-                (!GameField.ContainsKey(Field.Middle) ||
-                GameField.ContainsKey(Field.Middle) && TypeConverter.GetPlayerForTokenName(GameField[Field.Middle].Peek()) == player) &&
-                (!GameField.ContainsKey(Field.BottomLeft) ||
-                GameField.ContainsKey(Field.BottomLeft) && TypeConverter.GetPlayerForTokenName(GameField[Field.BottomLeft].Peek()) == player))
-            {
-                // Debug.Log("diagonal top right");
-                rating++;
-            }
-
-            return rating;
         }
 
     }
