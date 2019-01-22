@@ -7,7 +7,7 @@ using GG3DTypes;
 public class TokenButtonController : MonoBehaviour {
 
     // The Game Controller with the Gamefield
-    public GameController GameControllerPrefab;
+    public GameFieldController GameFieldControllerPrefab;
 
     // The Buttons and the associated Prefabs and textFields
     // (The same indices are relevant)
@@ -26,7 +26,7 @@ public class TokenButtonController : MonoBehaviour {
 
             // Test if Token for the Button is Covered
             // and enable / disable the button accordingly
-            if (GameControllerPrefab.TokenIsCovered(TokenPrefabs[i]))
+            if (GameFieldControllerPrefab.TokenIsCovered(TokenPrefabs[i]))
             {
                 TokenButtons[i].interactable = false;
                 // Set Field text as not available to apply the Gobblit Gobblers Rules
@@ -38,7 +38,7 @@ public class TokenButtonController : MonoBehaviour {
                 var colors = TokenButtons[i].colors;
 
                 // Test if token is on the peek of a field on the Gamefield
-                if (GameControllerPrefab.TokenIsOnPeek(TokenPrefabs[i]))
+                if (GameFieldControllerPrefab.TokenIsOnPeek(TokenPrefabs[i]))
                 {
                     // Use yellow color
                     colors.normalColor = Color.yellow;
@@ -64,7 +64,7 @@ public class TokenButtonController : MonoBehaviour {
     private string GetFieldInitials(GameObject token)
     {
         // Get the field for the peek token
-        Field? field = GameControllerPrefab.GetFieldForPeekToken(token);
+        Field? field = GameFieldControllerPrefab.GetFieldForPeekToken(token);
         
         // Return the initals
         switch (field)

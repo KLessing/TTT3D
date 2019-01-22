@@ -10,9 +10,9 @@ namespace AugmentedImage
         /// The AugmentedImage to visualize.
         public AugmentedImage Image;
 
-        // The GameController which contains the Gamefield for the Tokens
+        // The GameFieldController which contains the Gamefield for the Tokens
         // to visualize above the Augmented Image of the GameField
-        public GameController GameControllerPrefab;
+        public GameFieldController GameFieldControllerPrefab;
 
         // The Tokens to visualize above the Augmented Image of the GameField
         public GameObject[] Tokens;
@@ -56,7 +56,7 @@ namespace AugmentedImage
                 float centerY = Image.ExtentZ / 3;
 
                 // Iterate GameField Fields with Tokens
-                foreach (var placement in GameControllerPrefab.GameField)
+                foreach (var placement in GameFieldControllerPrefab.GameField)
                 {
                     // Get the index of the highest Token (Peek) from the GameField Field for the prefab array
                     // (select by name; GameObject comparison doesn't work)

@@ -9,8 +9,8 @@ public class UserInterfaceController : MonoBehaviour {
 
     /***** Controller Prefabs *****/
 
-    // The GameController which contains the Gamefield
-    public GameController GameControllerPrefab;
+    // The GameFieldController which contains the Gamefield
+    public GameFieldController GameFieldControllerPrefab;
 
     // The MoveController to convert a moveString from the AI Result to an actual move with a Token
     public MoveConverter MoveConverterPrefab;
@@ -94,7 +94,7 @@ public class UserInterfaceController : MonoBehaviour {
     public void NewGame()
     {
         // Reset Gamefield and current Player
-        GameControllerPrefab.Reset();
+        GameFieldControllerPrefab.Reset();
         CurrentPlayer = Constants.START_PLAYER;
 
         // Hide possible open UIs and show the first UI
@@ -171,7 +171,7 @@ public class UserInterfaceController : MonoBehaviour {
     // Needs to get called from here because the selected token is needed
     public bool PlacementOnFieldPossible(string fieldName)
     {
-        return GameControllerPrefab.PlacementPossible(SelectedToken, GetFieldEnumFromString(fieldName));
+        return GameFieldControllerPrefab.PlacementPossible(SelectedToken, GetFieldEnumFromString(fieldName));
     }
 
 
@@ -183,7 +183,7 @@ public class UserInterfaceController : MonoBehaviour {
         // Is ai used and is the current Player controlled by the ai?
         if (AIUsage && CurrentPlayer == Constants.AI_PLAYER) {
             // Get the best AI Move for the state
-            MoveString moveString = AIController.GetBestMove(TypeConverter.ConvertState(GameControllerPrefab.GameField));
+            MoveString moveString = AIController.GetBestMove(TypeConverter.ConvertState(GameFieldControllerPrefab.GameField));
             // Convert MoveString to Move with Token GameObject
             Move move = MoveConverterPrefab.ConvertMove(moveString);
             // Execute the best ai move directly
@@ -200,7 +200,7 @@ public class UserInterfaceController : MonoBehaviour {
     // Otherwise starts a new move for the next Player
     private void ExecuteMove (Move move) {
         // Execute the Move
-        Player? winner = GameControllerPrefab.SetTokenOnField(move);
+        Player? winner = GameFieldControllerPrefab.SetTokenOnField(move);
 
         // When no winner yet switch player and start next move
         if (winner == null) {

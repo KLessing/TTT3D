@@ -3000,7 +3000,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09411c2f10ccd2c4e98f53c86942edc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameControllerPrefab: {fileID: 114148556303822934}
+  GameFieldControllerPrefab: {fileID: 114148556303822934}
   MoveConverterPrefab: {fileID: 566723631}
   CrossTokenSelection: {fileID: 1229633039010228}
   CircleTokenSelection: {fileID: 1184029898679016}
@@ -3195,7 +3195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40934a756772c2b43b1a29ae0cdf2f4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameControllerPrefab: {fileID: 114148556303822934}
+  GameFieldControllerPrefab: {fileID: 114148556303822934}
   TokenButtons:
   - {fileID: 114635582527272854}
   - {fileID: 114895797761179906}
@@ -3498,7 +3498,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40934a756772c2b43b1a29ae0cdf2f4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameControllerPrefab: {fileID: 114148556303822934}
+  GameFieldControllerPrefab: {fileID: 114148556303822934}
   TokenButtons:
   - {fileID: 114353461796746692}
   - {fileID: 114042382718062964}
@@ -5612,7 +5612,7 @@ GameObject:
   - component: {fileID: 4366496985775158}
   - component: {fileID: 114148556303822934}
   m_Layer: 0
-  m_Name: GameController
+  m_Name: GameFieldController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6136,7 +6136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b157be061a7e86046a790ed83cefb412, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameControllerPrefab: {fileID: 114148556303822934}
+  GameFieldControllerPrefab: {fileID: 114148556303822934}
   Tokens:
   - {fileID: 1040405027005078}
   - {fileID: 1775381405640072}

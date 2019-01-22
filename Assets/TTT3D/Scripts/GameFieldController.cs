@@ -6,7 +6,7 @@ using GG3DWin;
 using GG3DConverter;
 
 
-public class GameController : MonoBehaviour {
+public class GameFieldController : MonoBehaviour {
 
     // GameField: Each Field has a Stack of Tokens sorted by the TokenSize
     // The largest Token is at the top of the stack (Peek)

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class FieldButtonController : MonoBehaviour {
 
     // The UI Controller which holds the selected Token
-    // and calls the GameController
+    // and calls the GameFieldController
     public UserInterfaceController UserInterfaceControllerPrefab;
 
     // The Buttons
