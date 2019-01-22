@@ -17,7 +17,7 @@
         // The player which is controlled by the ai for singlePlayer modus
         // (not yet fully implemented in current ui structure; 
         // only used in ai controller for now)
-        public const Player AI_PLAYER = Player.Cross;
+        public const Player AI_PLAYER = Player.Circle;
         // The Player that starts the game
         // who makes the first move
         public const Player START_PLAYER = Player.Circle;

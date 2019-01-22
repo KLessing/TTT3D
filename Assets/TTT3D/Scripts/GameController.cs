@@ -109,6 +109,22 @@ public class GameController : MonoBehaviour {
         return res;
     }
 
+    // Returns the field for the given peek token
+    // Returns null if the token is not on the peek of a field on the Gamefield
+    // Gets called from Token Button Controller for peek tokens
+    public Field? GetFieldForPeekToken(GameObject token)
+    {
+        foreach(var fieldStack in GameField)
+        {
+            if (fieldStack.Value.Peek() == token)
+            {
+                return fieldStack.Key;
+            }
+        }
+
+        return null;
+    }
+
     // Return if the placement of a specific token on a specific field is possible
     public bool PlacementPossible(GameObject token, Field field)
     {      
