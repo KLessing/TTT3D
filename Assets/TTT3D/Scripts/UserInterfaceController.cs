@@ -35,6 +35,10 @@ public class UserInterfaceController : MonoBehaviour {
     // Responsible for AI usage
     public GameObject PlayerCountSelectionUI;
 
+    // The User Interface for the New Game Confirmation
+    // Starts a new game or returns to the previous Token Selection
+    public GameObject NewGameConfirmationUI;
+
 
     /***** Global Variables *****/
 
@@ -68,14 +72,35 @@ public class UserInterfaceController : MonoBehaviour {
         StartNewMove();
     }
 
+    // Toggles the NewGameConfirmationUI
+    // start = True => show (New Game button pressed in TokenSelectionUI)
+    // start = false => hide (Cancel button pressed in NewGameConfirmationUI)
+    public void ToggleNewGameConfirmation(bool start)
+    {
+        if (start)
+        {
+            ToggleTokenUI(CurrentPlayer, false);
+            NewGameConfirmationUI.SetActive(true);
+        }
+        else
+        {
+            NewGameConfirmationUI.SetActive(false);
+            ToggleTokenUI(CurrentPlayer, true);            
+        }
+    }
+
     // Reset the current Game and start new Game by enabling the first UI
-    // Gets called by the appropriate WinnerShowcaseUI
+    // Gets called by the appropriate WinnerShowcaseUI and NewGameConfirmationUI
     public void NewGame()
     {
+        // Reset Gamefield and current Player
         GameControllerPrefab.Reset();
-        WinnerShowcaseUI.SetActive(false);
-        PlayerCountSelectionUI.SetActive(true);
         CurrentPlayer = Constants.START_PLAYER;
+
+        // Hide possible open UIs and show the first UI
+        NewGameConfirmationUI.SetActive(false);
+        WinnerShowcaseUI.SetActive(false);
+        PlayerCountSelectionUI.SetActive(true);           
     }
 
     // Deactivates the current Token Selection UI and activates the Field Selection UI
@@ -86,7 +111,7 @@ public class UserInterfaceController : MonoBehaviour {
         if (SelectedToken != null)
         {
             // Switch UI
-            ToggleTokenUI(false);
+            ToggleTokenUI(CurrentPlayer, false);
             GameFieldSelection.SetActive(true);
         }
     }
@@ -101,7 +126,7 @@ public class UserInterfaceController : MonoBehaviour {
 
         // Switch UI
         GameFieldSelection.SetActive(false);
-        ToggleTokenUI(true);
+        ToggleTokenUI(CurrentPlayer, true);
     }
 
     // Executes the move with the selected Options and changes the current Player
@@ -166,7 +191,7 @@ public class UserInterfaceController : MonoBehaviour {
         }
         else {
             // Otherwise start a normal move for the CurrentPlayer
-            ToggleTokenUI(true);
+            ToggleTokenUI(CurrentPlayer, true);
         }
     }
 
@@ -231,13 +256,13 @@ public class UserInterfaceController : MonoBehaviour {
     }
 
     // Enable or disable the TokenUI for the current Player based on the given param
-    private void ToggleTokenUI(bool enable) 
+    private void ToggleTokenUI(Player player, bool enable) 
     {
-        if (CurrentPlayer == Player.Cross)
+        if (player == Player.Cross)
         {
             CrossTokenSelection.SetActive(enable);
         }
-        else if (CurrentPlayer == Player.Circle)
+        else if (player == Player.Circle)
         {
             CircleTokenSelection.SetActive(enable);
         }
