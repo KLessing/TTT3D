@@ -218,6 +218,25 @@ namespace GG3DAI
 
         public static int AlphaBeta(int depth, StringState state, Player player, int alpha, int beta)
         {
+            // not necessary to look any further if win or loose
+            // the earlier the better
+            Player? winner = WinDetection.CheckWinner(state);
+
+            // not needed for first move (no state change yet)
+            // no last move = ai prefers multiple wins more than direct win
+            if (depth < Constants.AI_DEPTH && depth > 0)
+            {
+                if (winner == Constants.AI_PLAYER)
+                {
+                    return 1000 * (Constants.AI_DEPTH + 1);
+                }
+                if (winner == TypeConverter.GetOpponent(Constants.AI_PLAYER))
+                {
+                    return -1000 * (Constants.AI_DEPTH + 1);
+                }
+            }
+
+
             // eval if leaf
             if (depth == 0)
             {
@@ -333,20 +352,19 @@ namespace GG3DAI
                 // Otherwise no change of res
             }
 
-            // does not win directly if this is used
             //// Check if win
             //if (playerTokenCounter == 3)
-            //{
-            //    return int.MaxValue;
-            //}
+            //    {
+            //        return int.MaxValue;
+            //    }
 
             //// or loose
             //if (opponentTokenCounter == 3)
             //{
             //    return int.MinValue;
             //}
-           
-            // otherwiese return eval result
+
+            //// otherwiese return eval result
             return res;
         }
 
