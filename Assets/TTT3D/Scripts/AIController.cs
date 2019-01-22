@@ -10,23 +10,29 @@ namespace GG3DAI
 
     public static class AIController
     {        
+        // All available token names for each player
         private static readonly List<string> CrossTokenNames = new List<string> { "SmallCross1", "SmallCross2",  "MediumCross1", "MediumCross2", "LargeCross1", "LargeCross2" };
-
         private static readonly List<string> CircleTokenNames = new List<string> { "SmallCircle1", "SmallCircle2", "MediumCircle1", "MediumCircle2", "LargeCircle1", "LargeCircle2" };
 
-        public static MoveString GetBestMove(StringState state, Player player)
+
+        /***** Public Function *****/
+
+        // Returns the best AI Move for the given state
+        public static MoveString GetBestMove(StringState state)
         {
             // Execute the Alpha Beta Search with the appropriate params and return the best move directly as a MoveString
-            return AlphaBetaRoot(Constants.AI_DEPTH, state, player);
+            return AlphaBetaRoot(Constants.AI_DEPTH, state, Constants.AI_PLAYER);
         }
         
 
-        // Returns a List of available player Tokens for the given Gamestate and Player
-        // = All Player Tokens including the Tokens on the Peek of the Fields
-        // but without the covered Tokens
+        /***** Private Functions *****/
+
+        // Returns a List of available Tokennames for the given state and player
+        // (All Player Tokens including the Tokens on the Peek of the Fields
+        // but without the covered Tokens)
         private static List<string> GetAvailableTokensForGameState(StringState state, Player player)
         {
-            // Direct Init of all Tokens for the Player and the player String
+            // Direct Init of all Tokennames for the Player
             List<string> allTokens = player == Player.Cross ? CrossTokenNames : CircleTokenNames;
 
             List<string> coveredTokens = new List<string> ();
@@ -42,6 +48,7 @@ namespace GG3DAI
                     if (token != field.Peek())
                     {
                         // The Token is covered
+                        // => add to covered tokens
                         coveredTokens.Add(token);
                     }
                 }
@@ -54,6 +61,7 @@ namespace GG3DAI
                 if (!coveredTokens.Contains(token))
                 {
                     // The Token is available
+                    // => add to available tokens
                     availableTokens.Add(token);
                 }
             }
@@ -62,7 +70,7 @@ namespace GG3DAI
         }
 
 
-        // Returns the allowed player Tokens for the given Gamestate on a specific Field on the GameField
+        // Returns the allowed player Tokennames for the given Gamestate on a specific Field on the GameField
         // = The Tokens that are allowed to be placed on the Field which have to be Bigger than the current highest Token on the Field
         // @param availableTokens All available tokens of the Player for the GameState
         private static List<string> GetAllowedTokensForField(StringState state, Field field, List<string> availableTokens)
@@ -78,7 +86,6 @@ namespace GG3DAI
                     // Is the available Token "bigger" than the Token on the Field?
                     if (TypeConverter.GetValueForTokenName(token) > TypeConverter.GetValueForTokenName(state[field].Peek()))
                     {
-                        //Debug.Log("bigger");
                         // Token is allowed
                         allowedTokens.Add(token);                      
                     }
@@ -94,8 +101,8 @@ namespace GG3DAI
         }
 
 
-        // returns all possible moves for the player and the state
-        public static List<MoveString> GetPossibleMoves(StringState state, Player player)
+        // Returns a List of all possible moves for the given player on the given state
+        private static List<MoveString> GetPossibleMoves(StringState state, Player player)
         {
             List<MoveString> result = new List<MoveString>();
 
@@ -119,31 +126,31 @@ namespace GG3DAI
         }
 
 
-        // Returns a Gamestate without the given Token
+        // Returns a new Gamestate without the given Token with new reference
         // Removes the Token from the given GameState if it is on the Gamestate
-        // otherwise the given GameState will be returned
+        // otherwise the given GameState will be returned with new reference
         // (only has to check the peeks because the covered Tokens are ignored by GetAvailableTokensForGameState)
         private static StringState RemoveTokenFromGameState(StringState state, string token)
         {
-            // COPY the given state without reference
+            // Deep clone the given state without reference
             StringState resultState = TypeConverter.DeepCloneState(state);
 
-            // iterate through all available fields of the state
+            // Iterate through all available fields of the state
             foreach (var field in state)
             {
-                // check if the token is on the peek of the field
+                // Check if the token is on the peek of the field
                 if (field.Value.Peek() == token)
                 {
-                    // when the field has more than one token
+                    // When the field has more than one token
                     if (field.Value.Count > 1)
                     {
-                        // remove the highest token from the field
+                        // Remove the highest token from the field
                         resultState[field.Key].Pop();
                     }
-                    // when the token is the only token on the field
+                    // When the token is the only token on the field
                     else
                     {
-                        // remove the field from the state
+                        // Remove the field from the state
                         resultState.Remove(field.Key);
                     }
                 }
@@ -153,8 +160,8 @@ namespace GG3DAI
         }
 
 
-        // Return a new state with the move on the state (with other reference)
-        public static StringState GetStateWithMove(StringState state, MoveString move)
+        // Return a new state with the given move on the given state with new reference
+        private static StringState GetStateWithMove(StringState state, MoveString move)
         {
             // Deep clone previous state
             StringState resultState = TypeConverter.DeepCloneState(state);
@@ -188,79 +195,105 @@ namespace GG3DAI
 
         /***** ALPHA BETA *****/
 
-        // iterates through all possible root moves
-        public static MoveString AlphaBetaRoot(int depth, StringState state, Player player)
+        // Starts the Alpha Beta Algorithm for every first move (root) by the start parameters
+        // (The Player to start is the ai player)
+        private static MoveString AlphaBetaRoot(int depth, StringState state, Player player)
         {
-            // start with the lowest possible value
+            // Start with the lowest possible value
             int bestValue = int.MinValue;
-            // the best move result
+            // The best move result
             MoveString bestMove = new MoveString();
 
-            // get all first moves
+            // Get all first moves
             List<MoveString> possibleMoves = GetPossibleMoves(state, player);
 
+            // Iterate through all possible moves
             foreach (MoveString move in possibleMoves)
             {
+                // Execute the move on a new reference of the main state
                 StringState moveState = GetStateWithMove(state, move);
 
+                // Get the value for this route by alpha beta algorithm
                 int value = AlphaBeta(depth - 1, moveState, player, int.MinValue, int.MaxValue);
 
-                if (value >= bestValue)
+                // Is the value for this route better than the previos value?
+                if (value >= bestValue) // TODO check > without = for win calculation in eval
                 {
+                    // Overwrite the best value
                     bestValue = value;
+                    // Save the appropriate move
                     bestMove = move;
                 }
             }
 
+            // Return only the best move without the value
             return bestMove;
         }
 
-
-        public static int AlphaBeta(int depth, StringState state, Player player, int alpha, int beta)
+        // The recursive alpha beta function
+        // Checks every possible move for every recursion step (depth)
+        // Stops the search by the alpha and beta cap value
+        // Optimization: Checks for win or loose when depth is not reached yet
+        // Returns the value for the root move, calculated by the evaluation function         
+        private static int AlphaBeta(int depth, StringState state, Player player, int alpha, int beta)
         {
-            // not necessary to look any further if win or loose
-            // the earlier the better
-            Player? winner = WinDetection.CheckWinner(state);
-
-            // not needed for first move (no state change yet)
-            // no last move = ai prefers multiple wins more than direct win
-            if (depth < Constants.AI_DEPTH && depth > 0)
+            // Optimization: Checks for win or loose when depth is not reached yet
+            // It is not necessary to look any further if win or loose
+            // The earlier the detection the higher the value
+            if (depth > 0)
             {
+                // TODO Spieler der aktuellen Rekursionsstufe berücksichtigen?
+                
+                // Check for the winner (may be empty)
+                Player? winner = WinDetection.CheckWinner(state);
+
+                // Has the ai won the game?
                 if (winner == Constants.AI_PLAYER)
                 {
-                    return 1000 * (Constants.AI_DEPTH + 1);
+                    // Return high value
+                    // The higher the left recursion count the better the value
+                    return 1000 * Constants.AI_DEPTH;
                 }
+
+                // Has the ai lost the game?
                 if (winner == TypeConverter.GetOpponent(Constants.AI_PLAYER))
                 {
-                    return -1000 * (Constants.AI_DEPTH + 1);
+                    // Return low value
+                    // The higher the left recursion count the lower the value                    
+                    return -1000 * Constants.AI_DEPTH;
                 }
             }
-
-
-            // eval if leaf
-            if (depth == 0)
+            // Otherwise the depth is reached (last recursion step)
+            else
             {
+                // Evaluate the leaf
                 return EvaluateState(state, player);
             }
 
             // Switch player after win detection
-            // after evaluation this won't be necessary anymore
-            // but eval has to be calculated for the previous player
+            // After evaluation this won't be necessary anymore
+            // But eval has to be calculated for the player for which the current recursion call was made
             player = TypeConverter.GetOpponent(player);
 
+            // Get all possible moves for the current state and player
             List<MoveString> possibleMoves = GetPossibleMoves(state, player);            
 
+            // If the Player is the ai the vale will be maxed
             if (player == Constants.AI_PLAYER)
             {
-                // start with lowest possible value
+                // Start with lowest possible value
                 int bestValue = int.MinValue + 1; // TODO test if + 1 necessary
 
+                // Iterate through each possible move
                 foreach (MoveString move in possibleMoves)
                 {
+                    // Generate a new reference state with the move on the previous state
                     StringState moveState = GetStateWithMove(state, move);
 
+                    // Check for the highest value in the recursion
                     bestValue = Math.Max(bestValue, AlphaBeta(depth - 1, moveState, player, alpha, beta));
 
+                    // Alpha beta Pruning
                     alpha = Math.Max(alpha, bestValue);
                     if (beta <= alpha)
                     {
@@ -270,17 +303,22 @@ namespace GG3DAI
 
                 return bestValue;
             }
+            // Ohterwise the value will be minned for the opponent
             else
             {
                 // start with highest possible value
                 int bestValue = int.MaxValue - 1; // TODO test if - 1 necessary
 
+                // Iterate through each possible move
                 foreach (MoveString move in possibleMoves)
                 {
+                    // Generate a new reference state with the move on the previous state
                     StringState moveState = GetStateWithMove(state, move);
 
+                    // Check for the lowest value in the recursion
                     bestValue = Math.Min(bestValue, AlphaBeta(depth - 1, moveState, player, alpha, beta));
 
+                    // Alpha beta Pruning
                     beta = Math.Min(beta, bestValue);
                     if (beta <= alpha)
                     {
@@ -294,6 +332,7 @@ namespace GG3DAI
 
         
         // Evaluate the given State for the given Player
+        // Calls the Evaluation for each possible three field combination
         private static int EvaluateState(StringState state, Player player)
         {
             int res = 0;
@@ -318,70 +357,64 @@ namespace GG3DAI
             return res;
         }
 
-        // Returns the evaluation value for three Fields on the given State for the given Player        
-        private static int EvaluateThreeFields(StringState state, Player player, Field[] fields) // array for iteration
+        // Returns the evaluation value for three Fields on the given State for the given Player 
+        // (Used an array as fields parameter for iteration)       
+        private static int EvaluateThreeFields(StringState state, Player player, Field[] fields)
         {
             int res = 0;
-            // Count of the tokens of the player
-            int playerTokenCounter = 0;
-            int opponentTokenCounter = 0;
-
             int currentValue = 0;
 
+            // Count the tokens for each player
+            int playerTokenCounter = 0;
+            int opponentTokenCounter = 0;            
+
+            // Iterate through all three fields
             foreach (Field field in fields)
             {
+                // Get the tokenString on the peek of the field or use an empty string
                 string tokenString = state.ContainsKey(field) ? state[field].Peek() : "";
 
                 // Evaluate the tokens on the field
                 currentValue = EvaluateToken(player, tokenString);
-                // the result is positive for player token
+
+                // The result is positive for the players token
                 if (currentValue > 0)
                 {
-                    // inc player counter
+                    // Inc player token counter
                     playerTokenCounter++;
                     res += currentValue * (playerTokenCounter + 1);
                 }
-                // the result is negative for opponent token
+                // The result is negative for opponent token
                 else if (currentValue < 0)
                 {
-                    // inc opponent counter
+                    // Inc opponent counter
                     opponentTokenCounter++;
-                    // add current Value * opponent counter
+                    // Add current Value * opponent counter
                     res += currentValue * (opponentTokenCounter + 1);
                 }
                 // Otherwise no change of res
             }
 
-            //// Check if win
-            //if (playerTokenCounter == 3)
-            //    {
-            //        return int.MaxValue;
-            //    }
+            // TODO res erst am Ende multiplizieren um die einzelnen tokens besser zu werten? (2 Dreier in einer Reihe extrem hoch...)
 
-            //// or loose
-            //if (opponentTokenCounter == 3)
-            //{
-            //    return int.MinValue;
-            //}
-
-            //// otherwiese return eval result
             return res;
         }
 
+        // Evaluate a given tokenString of the given player
         private static int EvaluateToken(Player player, string tokenString)
         {
             int res = 0;
 
-            // is there a token on the field? (otherwise the value is 0)
+            // Is there a token on the field? (otherwise the value is 0)
             if (tokenString != "")
             {               
-                // Get the value for the token (currently 1 - 3 for small - large)
+                // Get the value for the token (currently 1 - 3 for small - large) // TODO use constant variables and test higher prio for green
                 res = TypeConverter.GetValueForTokenName(tokenString);
 
-                // is the token from the opponent?
+                // Is the token from the opponent?
                 if (TypeConverter.GetPlayerForTokenName(tokenString) != player)
                 {
-                    // invert the value
+                    // Invert the value
                     res *= -1;
                 }
             }
@@ -392,6 +425,8 @@ namespace GG3DAI
 
         /***** DEBUG *****/
 
+        // Debug function for the state
+        // Debugs all fields with the peek token
         private static void DebugState(StringState state)
         {
             foreach (var field in state)
@@ -401,6 +436,8 @@ namespace GG3DAI
             }
         }
 
+        // Debug function for a move
+        // Debugs the field and the token
         private static void DebugMove(MoveString move)
         {
             Debug.Log("field: " + move.Field);
