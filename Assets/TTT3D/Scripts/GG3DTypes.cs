@@ -23,6 +23,13 @@
         // The Player that starts the game
         // who makes the first move
         public const Player START_PLAYER = Player.Circle;
+        // The AI Quantifier values for the token sizes
+        // These values determine which deposit the ai prefers
+        // And may reduce baiting from the player
+        public const int SMALL_QUANTIFIER = 1;
+        public const int MEDIUM_QUANTIFIER = 2;
+        public const int LARGE_QUANTIFIER = 3;
+        
     };
 
     // Typedef workaround for a GameState with Tokens on Gamefield

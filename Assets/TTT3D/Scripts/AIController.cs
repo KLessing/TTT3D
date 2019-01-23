@@ -169,8 +169,6 @@ namespace GG3DAI
             // Remove the token from the previous field (if already placed)
             resultState = RemoveTokenFromGameState(resultState, move.Token);
 
-            // TODO DIRECT init of state with token remove function?
-
             // If the field already has a token
             if (resultState.ContainsKey(move.Field))
             {
@@ -217,7 +215,7 @@ namespace GG3DAI
                 int value = AlphaBeta(depth - 1, moveState, player, int.MinValue, int.MaxValue);
 
                 // Is the value for this route better than the previos value?
-                if (value >= bestValue) // TODO check > without = for win calculation in eval
+                if (value >= bestValue)
                 {
                     // Overwrite the best value
                     bestValue = value;
@@ -241,9 +239,7 @@ namespace GG3DAI
             // It is not necessary to look any further if win or loose
             // The earlier the detection the higher the value
             if (depth > 0)
-            {
-                // TODO Spieler der aktuellen Rekursionsstufe berücksichtigen?
-                
+            {                
                 // Check for the winner (may be empty)
                 Player? winner = WinDetection.CheckWinner(state);
 
@@ -282,7 +278,7 @@ namespace GG3DAI
             if (player == Constants.AI_PLAYER)
             {
                 // Start with lowest possible value
-                int bestValue = int.MinValue + 1; // TODO test if + 1 necessary
+                int bestValue = int.MinValue; 
 
                 // Iterate through each possible move
                 foreach (MoveString move in possibleMoves)
@@ -303,11 +299,11 @@ namespace GG3DAI
 
                 return bestValue;
             }
-            // Ohterwise the value will be minned for the opponent
+            // Otherwise the value will be minned for the opponent
             else
             {
-                // start with highest possible value
-                int bestValue = int.MaxValue - 1; // TODO test if - 1 necessary
+                // Start with highest possible value
+                int bestValue = int.MaxValue; 
 
                 // Iterate through each possible move
                 foreach (MoveString move in possibleMoves)
@@ -395,8 +391,6 @@ namespace GG3DAI
                 // Otherwise no change of res
             }
 
-            // TODO res erst am Ende multiplizieren um die einzelnen tokens besser zu werten? (2 Dreier in einer Reihe extrem hoch...)
-
             return res;
         }
 
@@ -408,8 +402,8 @@ namespace GG3DAI
             // Is there a token on the field? (otherwise the value is 0)
             if (tokenString != "")
             {               
-                // Get the value for the token (currently 1 - 3 for small - large) // TODO use constant variables and test higher prio for green
-                res = TypeConverter.GetValueForTokenName(tokenString);
+                // Get the value for the token
+                res = GetTokenQuantifier(tokenString);
 
                 // Is the token from the opponent?
                 if (TypeConverter.GetPlayerForTokenName(tokenString) != player)
@@ -420,6 +414,14 @@ namespace GG3DAI
             }
 
             return res;
+        }
+
+        // Returns the quantifier for the size of the given tokenName
+        private static int GetTokenQuantifier(string tokenName)
+        {
+            return tokenName.Contains("Small") ? Constants.SMALL_QUANTIFIER 
+                                               : (tokenName.Contains("Medium") ? Constants.MEDIUM_QUANTIFIER 
+                                                                               : Constants.LARGE_QUANTIFIER);
         }
 
 
