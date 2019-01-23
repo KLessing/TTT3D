@@ -12,14 +12,15 @@ public class GameFieldController : MonoBehaviour {
     // The largest Token is at the top of the stack (Peek)
     public GameState GameField = new GameState();
 
+    // Resets the GameField    
     public void Reset()
     {
         GameField.Clear();
     }
 
-
-    // Sets a Token on a Field on the GameField
-    // (The validation is handeld via button enabling)
+    // Sets a Token on a Field from the given Move on the GameField
+    // (The Validation is handled via button enabling.
+    //  There the placement is allowed!)
     // Return the winner or null
     public Player? SetTokenOnField(Move move)
     {
@@ -57,7 +58,8 @@ public class GameFieldController : MonoBehaviour {
     }
 
 
-    // Return if selection possible or token is covered by a bigger token
+    // Returns if the given token is covered by a bigger token
+    // True = token is covered    
     public bool TokenIsCovered(GameObject token)
     {
         bool res = false;
@@ -65,7 +67,7 @@ public class GameFieldController : MonoBehaviour {
 
         // check all used GameField Fields till 
         // Token found on Peek
-        // or detected that Token is covered 
+        // or detected that Token is covered
         while (!res && index < GameField.Count)
         {
             if (GameField.ElementAt(index).Value.Peek().name == token.name)
@@ -76,6 +78,7 @@ public class GameFieldController : MonoBehaviour {
             else
             {
                 // Search onward
+                // Set result to true if field Stack contains the token
                 res = GameField.ElementAt(index).Value.Contains(token);
             }
 
@@ -85,7 +88,7 @@ public class GameFieldController : MonoBehaviour {
         return res;
     }
 
-    // Return if the given token is on a peek of a field on the gamefield
+    // Returns if the given token is on a peek of a field on the gamefield
     // Needed for Button coloring in Token Button Controller
     public bool TokenIsOnPeek(GameObject token)
     {
@@ -125,7 +128,8 @@ public class GameFieldController : MonoBehaviour {
         return null;
     }
 
-    // Return if the placement of a specific token on a specific field is possible
+    // Returns if the placement of a specific token on a specific field is possible
+    // True = Placement is possible
     public bool PlacementPossible(GameObject token, Field field)
     {      
         return !GameField.ContainsKey(field) || System.Convert.ToInt32(GameField[field].Peek().tag) < System.Convert.ToInt32(token.tag);                
@@ -134,7 +138,7 @@ public class GameFieldController : MonoBehaviour {
     // Removes Token from upper Field (if possible)
     // and returns the success status
     // Return = true : the Token was removed successfully
-    //          false : the Token could not be removed because
+    //          false : the Token could not be removed because:
     //                  1. it is not on the Gamefield
     //                  2. it is covered by a bigger Token
     private bool RemoveTokenFromField(GameObject token)

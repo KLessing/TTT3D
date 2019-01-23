@@ -3,8 +3,10 @@
     using System.Collections.Generic;
     using UnityEngine;
 
+    // All possible (classic) Tic Tac Toe Player
     public enum Player { Cross, Circle };
 
+    // All Fields on the GameField
     public enum Field { TopLeft, TopMiddle, TopRight, MiddleLeft, Middle, MiddleRight, BottomLeft, BottomMiddle, BottomRight };
 
     // The different Token Sizes (The Index serves as comparison value)
@@ -44,7 +46,8 @@
         }
     }
 
-    // Move with TokenString for AI
+    // Move with the token Name instead of the Token GameObject 
+    // (needed for independent AI)
     public struct MoveString
     {
         // The string consists of the size, the player AND the number of the token (1 or 2)

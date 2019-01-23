@@ -3,9 +3,11 @@
     using GG3DTypes;
     using GG3DConverter;
 
+    // Static class used for win detection by strings to ensure usement for GameField and AI
     public static class WinDetection
     {
-        // Compares the player tag on the given Fields and return the winner or null
+        // Compares the player on the given Fields and returns the winner or null
+        // The parameters contain the TokenName for the peek Token on the fields
         private static Player? ComparePlayerOnFields(string firstField, string secondField, string thirdField)
         {
             // Get the Player on the first field

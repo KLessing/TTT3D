@@ -4,7 +4,7 @@ using GG3DTypes;
 using GG3DAI;
 using GG3DConverter;
 
-
+// Controller for all UI Interfaces and most of the Game Logic
 public class UserInterfaceController : MonoBehaviour {
 
     /***** Controller Prefabs *****/

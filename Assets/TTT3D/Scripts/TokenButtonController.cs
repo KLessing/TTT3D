@@ -4,6 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using GG3DTypes;
 
+// This Controller is responsible for the coloring and the Field Information of the Token Buttons
+// Disables covered Token (red)
+// Marks token that are already on the peek of a field yellow
+// and sets the initals of the Field above the Button
+// The Field for covered tokens is not displayed to ensure the rules of the Gobit Gobblers Game
+// Additional the opacity of the available Tokens will be lowered to distinguish between the selected Token
 public class TokenButtonController : MonoBehaviour {
 
     // The Game Controller with the Gamefield

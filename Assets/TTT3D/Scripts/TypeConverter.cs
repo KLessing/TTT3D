@@ -5,7 +5,7 @@
     using UnityEngine;
 
 
-    // Static class for easy access without global variables
+    // Static class used for converting
     public static class TypeConverter
     {
         // Converts the given GameState with GameObjects to a StringState with Strings

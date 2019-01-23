@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using GG3DTypes;
 
-// Not static class with the Token objects for the Move
+// The class with all Tokens as GameObjects to convert a Movestring with a tokenName from the AI move calculation
+// to a real move with the token as a GameObject for the Game
 public class MoveConverter : MonoBehaviour
 {
     // The Tokens to visualize above the Augmented Image of the GameField
     public GameObject[] Tokens;
 
-    // Converts the given MoveString with String to a Move with GameObjects
+    // Converts the given MoveString with String to a Move with GameObjects and returns it
     public Move ConvertMove(MoveString moveString)
     {
         // Iterate through Tokens to get the one with the searched name

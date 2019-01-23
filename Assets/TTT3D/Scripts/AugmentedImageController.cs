@@ -66,18 +66,24 @@ namespace AugmentedImage
                 }
             }
 
-
-            // Show the fit-to-scan overlay if there are no images that are Tracking.
+            // Check each image for the trackingstate
+            // (only one Gamefield image in the database for now)
             foreach (var visualizer in m_Visualizers.Values)
             {
+                // When the image is tracked
                 if (visualizer.Image.TrackingState == TrackingState.Tracking)
-                {
+                {                         
+                    // Hide the fit to scan overlay 
+                    // and show the UI Interface                                  
                     FitToScanOverlay.SetActive(false);
                     UserInterfaceCanvas.SetActive(true);
                     return;
                 }
             }
-
+            
+            // Otherwise
+            // Show the fit-to-scan overlay if there are no images that are Tracking.
+            // And hide the UI Interface accordingly
             FitToScanOverlay.SetActive(true);
             UserInterfaceCanvas.SetActive(false);
         }
