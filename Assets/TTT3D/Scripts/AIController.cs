@@ -535,6 +535,41 @@ namespace GG3DAI
             return testState;
         }
 
+        // The ai is able to win with the next move and should prioritize this
+        // Expected: Set Medium Circle 1 to Top Right Field (previous peek SmallCross1)
+        // Previous Behaviour: Move Large Circle 1 to Top Right Field and loose
+        // Used ai depth: 3
+        // LX1   -   SX1 => MO1
+        // LX2  LO2   - 
+        // LO1   -    -
+        private static StringState WinPriority2()
+        {
+            StringState testState = new StringState();
+
+            Stack<string> stringStack1 = new Stack<string>();
+            stringStack1.Push("LargeCross1");
+            testState.Add(Field.TopLeft, stringStack1);
+
+            Stack<string> stringStack2 = new Stack<string>();
+            stringStack2.Push("LargeCross2");
+            testState.Add(Field.MiddleLeft, stringStack2);
+
+            Stack<string> stringStack3 = new Stack<string>();
+            stringStack3.Push("SmallCross1");
+            stringStack3.Push("LargeCircle1");
+            testState.Add(Field.BottomLeft, stringStack3);
+
+            Stack<string> stringStack4 = new Stack<string>();
+            stringStack4.Push("LargeCircle2");
+            testState.Add(Field.Middle, stringStack4);
+
+            Stack<string> stringStack5 = new Stack<string>();
+            stringStack5.Push("SmallCross2");
+            testState.Add(Field.TopRight, stringStack5);
+
+            return testState;
+        }
+
     }
 
 }
