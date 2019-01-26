@@ -9,9 +9,6 @@
     // All Fields on the GameField
     public enum Field { TopLeft, TopMiddle, TopRight, MiddleLeft, Middle, MiddleRight, BottomLeft, BottomMiddle, BottomRight };
 
-    // The different Token Sizes (The Index serves as comparison value)
-    public enum TokenSize { Small, Medium, Large };
-
     // Typedef workaround for constants
     public static class Constants {
         // The ai depth determines the count of calculated moves for the ai algrorithm

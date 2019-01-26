@@ -15,6 +15,7 @@
 
             foreach (var field in gameState)
             {
+                // NOTE: this is a string stack and can't be initialized directly with gameObject stack
                 Stack<string> tokenStringStack = new Stack<string>();
 
                 // Convert Stack to Array to access not only the peek or pop the peek
@@ -33,24 +34,14 @@
             return stringState;
         }
 
-        // Converts the given GameState with GameObjects to a StringState with Strings
+        // Deep Clones the given StringState to a new StringState with other Reference
         public static StringState DeepCloneState(StringState gameState)
         {
             StringState stringState = new StringState();
 
             foreach (var field in gameState)
             {
-                Stack<string> tokenStringStack = new Stack<string>();
-
-                // Convert Stack to Array to access not only the peek or pop the peek
-                // NOTE: the stack may not be destructed (reference to current GameState)
-                string[] tokenGameObjectArray = field.Value.ToArray();
-
-                // Iterate backwards to push in the right order
-                for (int i = tokenGameObjectArray.Length - 1; i >= 0; i--)
-                {
-                    tokenStringStack.Push(tokenGameObjectArray[i]);
-                }
+                Stack<string> tokenStringStack = new Stack<string>(field.Value);
 
                 stringState.Add(field.Key, tokenStringStack);
             }
