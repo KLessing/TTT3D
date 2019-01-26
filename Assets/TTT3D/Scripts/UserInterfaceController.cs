@@ -39,6 +39,9 @@ public class UserInterfaceController : MonoBehaviour {
     // Starts a new game or returns to the previous Token Selection
     public GameObject NewGameConfirmationUI;
 
+    // The User Interface to confirm an AI Move
+    public GameObject AIMoveConfirmationUI;
+
 
     /***** Global Variables *****/
 
@@ -46,17 +49,17 @@ public class UserInterfaceController : MonoBehaviour {
     private Player CurrentPlayer = Constants.START_PLAYER;
 
     // The nullable selected Token
-    private GameObject SelectedToken = null;
+    private GameObject SelectedToken;
 
     // The nullable selected Field on the GameField
     // (Field needs to be optional to be nullable 
     // because null is not in the Field Datatype)
-    private Field? SelectedField = null;
+    private Field? SelectedField;
 
     // AI Usage is true for Single Player Games
     // and false for Mutliplayer
     // Gets selected at the start of a Game    
-    private bool AIUsage = false;
+    private bool AIUsage;
 
 
     /***** Public Functions that are called by Unity *****/
@@ -174,6 +177,19 @@ public class UserInterfaceController : MonoBehaviour {
         return GameFieldControllerPrefab.PlacementPossible(SelectedToken, GetFieldEnumFromString(fieldName));
     }
 
+    public void ConfirmAIMove()
+    {
+        // Get the best AI Move for the state
+        MoveString moveString = AIController.GetBestMove(TypeConverter.ConvertState(GameFieldControllerPrefab.GameField));
+        // Convert MoveString to Move with Token GameObject
+        Move move = MoveConverterPrefab.ConvertMove(moveString);
+        // Execute the best ai move directly
+        ExecuteMove(move);
+
+        // Hide UI
+        AIMoveConfirmationUI.SetActive(false);
+    }
+
 
     /***** Private Helper Functions *****/
 
@@ -182,12 +198,8 @@ public class UserInterfaceController : MonoBehaviour {
     private void StartNewMove() {
         // Is ai used and is the current Player controlled by the ai?
         if (AIUsage && CurrentPlayer == Constants.AI_PLAYER) {
-            // Get the best AI Move for the state
-            MoveString moveString = AIController.GetBestMove(TypeConverter.ConvertState(GameFieldControllerPrefab.GameField));
-            // Convert MoveString to Move with Token GameObject
-            Move move = MoveConverterPrefab.ConvertMove(moveString);
-            // Execute the best ai move directly
-            ExecuteMove(move);
+            // Show the ai confirmation UI
+            AIMoveConfirmationUI.SetActive(true);
         }
         else {
             // Otherwise start a normal move for the CurrentPlayer
