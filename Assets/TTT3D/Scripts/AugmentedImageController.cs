@@ -5,6 +5,8 @@ namespace AugmentedImage
     using UnityEngine;
 
     // Controller for the Augmented Image
+    // This controller is based on the original ARCore script from Google
+    // Enhancement: Hide the User Interface while the image gets tracked with the fit to scan overlay
     public class AugmentedImageController : MonoBehaviour
     {
         /// <summary>

@@ -62,9 +62,23 @@
         }
 
         // Returns the value for the Size of the given tokenName
+        // Returns 0 for invalid token names
         public static int GetValueForTokenName(string tokenName)
         {
-            return tokenName.Contains("Small") ? 1 : (tokenName.Contains("Medium") ? 2 : 3);
+            if (tokenName.Contains("Small"))
+            {
+                return 1;
+            }
+            if (tokenName.Contains("Medium"))
+            {
+                return 2;
+            }
+            if (tokenName.Contains("Large"))
+            {
+                return 3;
+            }
+            // Otherwise = no tokenName
+            return 0;
         }
     }
 }

@@ -33,7 +33,7 @@
             Player? winner = null;
 
             // Check Horizontal Winner
-            while (winner == null && fieldIndex < 8)
+            for (fieldIndex = 0; fieldIndex < 8; fieldIndex += 3)
             {
                 // Check if fields are available (if they are they contain at least one token)
                 if (GameField.ContainsKey((Field)fieldIndex) && GameField.ContainsKey((Field)fieldIndex + 1) && GameField.ContainsKey((Field)fieldIndex + 2))
@@ -42,15 +42,16 @@
                     winner = ComparePlayerOnFields(GameField[(Field)fieldIndex].Peek(),
                                                    GameField[(Field)fieldIndex + 1].Peek(),
                                                    GameField[(Field)fieldIndex + 2].Peek());
+                    // return winner directly when detected
+                    if (winner != null)
+                    {
+                        return winner;
+                    }
                 }
-
-                fieldIndex += 3;
             }
 
-            fieldIndex = 0;
-
             // Check Vertical Winner
-            while (winner == null && fieldIndex < 3)
+            for (fieldIndex = 0; fieldIndex < 3; fieldIndex++)
             {
                 // Check if fields are available (if they are they contain at least one token)
                 if (GameField.ContainsKey((Field)fieldIndex) && GameField.ContainsKey((Field)fieldIndex + 3) && GameField.ContainsKey((Field)fieldIndex + 6))
@@ -59,21 +60,29 @@
                     winner = ComparePlayerOnFields(GameField[(Field)fieldIndex].Peek(),
                                                    GameField[(Field)fieldIndex + 3].Peek(),
                                                    GameField[(Field)fieldIndex + 6].Peek());
+                    // return winner directly when detected
+                    if (winner != null)
+                    {
+                        return winner;
+                    }
                 }
-
-                fieldIndex++;
             }
 
             // Check Diagonal Winner
-            if (winner == null && GameField.ContainsKey(Field.TopLeft) && GameField.ContainsKey(Field.Middle) && GameField.ContainsKey(Field.BottomRight))
+            if (GameField.ContainsKey(Field.TopLeft) && GameField.ContainsKey(Field.Middle) && GameField.ContainsKey(Field.BottomRight))
             {
                 // Check the parent name (= Player Name) of the peek (= highest Token) on the Fields
                 winner = ComparePlayerOnFields(GameField[Field.TopLeft].Peek(),
                                                GameField[Field.Middle].Peek(),
                                                GameField[Field.BottomRight].Peek());
+                // return winner directly when detected
+                if (winner != null)
+                {
+                    return winner;
+                }
             }
 
-            if (winner == null && GameField.ContainsKey(Field.TopRight) && GameField.ContainsKey(Field.Middle) && GameField.ContainsKey(Field.BottomLeft))
+            if (GameField.ContainsKey(Field.TopRight) && GameField.ContainsKey(Field.Middle) && GameField.ContainsKey(Field.BottomLeft))
             {
                 // Check the parent name (= Player Name) of the peek (= highest Token) on the Fields
                 winner = ComparePlayerOnFields(GameField[Field.TopRight].Peek(),
@@ -81,7 +90,7 @@
                                                GameField[Field.BottomLeft].Peek());
             }
 
-
+            // return winner or null when no winner detected
             return winner;
         }
     }

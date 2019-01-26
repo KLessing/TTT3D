@@ -246,7 +246,7 @@ namespace GG3DAI
                 // Has the ai won the game?
                 if (winner == Constants.AI_PLAYER)
                 {
-                    // Return high value
+                    // Return high value (like 1000)
                     // The higher the left recursion count the better the value
                     return 1000 * Constants.AI_DEPTH;
                 }
@@ -254,7 +254,7 @@ namespace GG3DAI
                 // Has the ai lost the game?
                 if (winner == TypeConverter.GetOpponent(Constants.AI_PLAYER))
                 {
-                    // Return low value
+                    // Return low value (like -1000)
                     // The higher the left recursion count the lower the value                    
                     return -1000 * Constants.AI_DEPTH;
                 }
@@ -337,18 +337,18 @@ namespace GG3DAI
             // Check Horizontal
             for (fieldIndex = 0; fieldIndex < 8; fieldIndex += 3)
             {
-                res += EvaluateThreeFields(state, player, new Field[] { (Field)fieldIndex, (Field)fieldIndex + 1, (Field)fieldIndex + 2 });
+                res += EvaluateThreeFields(state, player, new[] { (Field)fieldIndex, (Field)fieldIndex + 1, (Field)fieldIndex + 2 });
             }
 
             // Check Vertical
             for (fieldIndex = 0; fieldIndex < 3; fieldIndex++)
             {
-                res += EvaluateThreeFields(state, player, new Field[] { (Field)fieldIndex, (Field)fieldIndex + 3, (Field)fieldIndex + 6 });
+                res += EvaluateThreeFields(state, player, new[] { (Field)fieldIndex, (Field)fieldIndex + 3, (Field)fieldIndex + 6 });
             }
 
             // Check Diagonal
-            res += EvaluateThreeFields(state, player, new Field[] { Field.TopLeft, Field.Middle, Field.BottomRight });
-            res += EvaluateThreeFields(state, player, new Field[] { Field.TopRight, Field.Middle, Field.BottomLeft });
+            res += EvaluateThreeFields(state, player, new[] { Field.TopLeft, Field.Middle, Field.BottomRight });
+            res += EvaluateThreeFields(state, player, new[] { Field.TopRight, Field.Middle, Field.BottomLeft });
 
             return res;
         }
@@ -419,9 +419,20 @@ namespace GG3DAI
         // Returns the quantifier for the size of the given tokenName
         private static int GetTokenQuantifier(string tokenName)
         {
-            return tokenName.Contains("Small") ? Constants.SMALL_QUANTIFIER 
-                                               : (tokenName.Contains("Medium") ? Constants.MEDIUM_QUANTIFIER 
-                                                                               : Constants.LARGE_QUANTIFIER);
+            if (tokenName.Contains("Small"))
+            {
+                return Constants.SMALL_QUANTIFIER;
+            }
+            if (tokenName.Contains("Medium"))
+            {
+                return Constants.MEDIUM_QUANTIFIER;
+            }
+            if (tokenName.Contains("Large"))
+            {
+                return Constants.LARGE_QUANTIFIER;
+            }
+            // Otherwise = no tokenName
+            return 0;
         }
 
 

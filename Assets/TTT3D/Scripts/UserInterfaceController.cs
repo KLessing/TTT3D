@@ -240,7 +240,7 @@ public class UserInterfaceController : MonoBehaviour {
         {
             res += "Kreuz ";
         }
-        else if (winner == Player.Circle)
+        else
         {
             res += "Kreis ";
         }
@@ -262,7 +262,7 @@ public class UserInterfaceController : MonoBehaviour {
         {
             CrossTokenSelection.SetActive(enable);
         }
-        else if (player == Player.Circle)
+        else
         {
             CircleTokenSelection.SetActive(enable);
         }

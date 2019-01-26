@@ -59,57 +59,50 @@ public class GameFieldController : MonoBehaviour {
 
 
     // Returns if the given token is covered by a bigger token
-    // True = token is covered    
     public bool TokenIsCovered(GameObject token)
     {
-        bool res = false;
-        int index = 0;
-
-        // check all used GameField Fields till 
+        // Check all used GameField Fields till 
         // Token found on Peek
         // or detected that Token is covered
-        while (!res && index < GameField.Count)
+        for (int index = 0; index < GameField.Count; index++)
         {
+            // If the token is on the peek of the field
             if (GameField.ElementAt(index).Value.Peek().name == token.name)
             {
-                // Token is on upper Field therefore it cant be covered
+                // The token is not covered
                 return false;
             }
-            else
-            {
-                // Search onward
-                // Set result to true if field Stack contains the token
-                res = GameField.ElementAt(index).Value.Contains(token);
-            }
 
-            index++;
+            // If the rest of the stack contains the token
+            if (GameField.ElementAt(index).Value.Contains(token))
+            {
+                // The token is covered
+                return true;
+            }
         }
 
-        return res;
+        // Otherwise token is not on the GameField and therefore not covered
+        return false;
     }
 
-    // Returns if the given token is on a peek of a field on the gamefield
+    // Returns if the given token is on a peek of a field on the GameField
     // Needed for Button coloring in Token Button Controller
     public bool TokenIsOnPeek(GameObject token)
     {
-        bool res = false;
-        int index = 0;
-
         // check all used GameField Fields till 
         // Token found on Peek
         // or detected that Token is covered 
-        while (!res && index < GameField.Count)
+        for(int index = 0; index < GameField.Count; index++)
         {
             if (GameField.ElementAt(index).Value.Peek().name == token.name)
             {
                 // Token is on peek
                 return true;
             }
-
-            index++;
         }
 
-        return res;
+        // Token not found on GameField peek
+        return false;
     }
 
     // Returns the field for the given peek token
@@ -141,7 +134,7 @@ public class GameFieldController : MonoBehaviour {
     //          false : the Token could not be removed because:
     //                  1. it is not on the Gamefield
     //                  2. it is covered by a bigger Token
-    private bool RemoveTokenFromField(GameObject token)
+    private void RemoveTokenFromField(GameObject token)
     {
         bool res = false;
         int index = 0;
@@ -168,8 +161,6 @@ public class GameFieldController : MonoBehaviour {
 
             index++;
         }
-
-        return res;
     }
 
 
